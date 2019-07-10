@@ -15,14 +15,18 @@ class Screenshare(commands.Cog):
             Creates a screenshare link for voicechannel
             
         """
+        found = True
         
         sid = str(ctx.guild.id)
         # get guild(server id)
+        
         try:
                 vc = ctx.message.author.voice.channel
                 vcid = str(ctx.message.author.voice.channel.id)
         except:
                 await ctx.send("PLease join a voice channel first")
+                found = False
         # try except block to handle if user not in vc        
-         
-        await ctx.send(text_string.format(voicechannel = vc) + link_string.format(serverid = sid, voicechannelid = vcid))
+        
+        if found:
+            await ctx.send(text_string.format(voicechannel = vc) + link_string.format(serverid = sid, voicechannelid = vcid))
