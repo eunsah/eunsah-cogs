@@ -1,0 +1,24 @@
+{
+    "author" : [
+        "ba"
+    ],
+    "bot_version" : [
+        3,
+        0,
+        0
+    ],
+    "description" : "Creates a Server Screenshare link",
+    "disabled" : false,
+    "hidden" : false,
+    "install_msg" : "Usage: `[p]screenshare`",
+    
+    "name" : "ScreenLink",
+    "permissions" : [],
+    "required_cogs" : [],
+    "requirements" : [],
+    "short" : "Creates the Server Screenshare link",
+    "tags" : [
+        "utility"
+    ],
+    "type" : "COG"
+}
