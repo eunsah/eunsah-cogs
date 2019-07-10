@@ -25,7 +25,7 @@ class Screenshare(commands.Cog):
                 vc = ctx.message.author.voice.channel
                 vcid = str(ctx.message.author.voice.channel.id)
         except:
-                await ctx.send("{name}, Join a voice channel first.".format(name = user.name))
+                await ctx.send("{name}, join a voice channel first.".format(name = user.name))
                 found = False
         # try except block to handle if user not in vc        
         
