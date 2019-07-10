@@ -1,7 +1,7 @@
 import discord
 from redbot.core import commands
 
-link_string = ['https://discordapp.com/channels/{serverid}/{voicechannelid}']
+link_string = "https://discordapp.com/channels/{serverid}/{voicechannelid}"
 
 class Screenshare(commands.Cog):
 
@@ -17,9 +17,10 @@ class Screenshare(commands.Cog):
 
         msg = " "
         user = ctx.message.author
-        serverid = ctx.guild.id
-        voicechannelid = ctx.message.author.voice.channel.id
-        await ctx.send(voicechannelid)
+        sid = str(ctx.guild.id)
+        vcid = str(ctx.message.author.voice.channel.id)
+        #await ctx.send(voicechannelid)
+	await ctx.send(link_string.format(serverid = sid, voicechannelid = vcid))
 	
 
 
