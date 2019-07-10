@@ -21,4 +21,4 @@ class Screenshare(commands.Cog):
         if vcid == 0:
                 await ctx.send("PLease join a voice channel first")
         else:
-        await ctx.send(text_string.format(voicechannel = vc) + link_string.format(serverid = sid, voicechannelid = vcid))
+                await ctx.send(text_string.format(voicechannel = vc) + link_string.format(serverid = sid, voicechannelid = vcid))
