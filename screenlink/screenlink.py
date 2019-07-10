@@ -9,7 +9,7 @@ class ScreenLink(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def screenlink(self, ctx, victim: discord.Member):
+    async def screenlink(self, ctx):
         """
             Creates a screenlink for voicechannel
             
@@ -17,8 +17,8 @@ class ScreenLink(commands.Cog):
 
         msg = " "
         user = ctx.message.author
-        serverid = guild.id
-        voicechannelid = voicechannel.id
+        serverid = ctx.guild.id
+        voicechannelid = ctx.voicechannel.id
         await ctx.send(serverid+" : "+voicechannelid)
 	
 
