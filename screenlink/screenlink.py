@@ -3,15 +3,15 @@ from redbot.core import commands
 
 link_string = ['https://discordapp.com/channels/{serverid}/{voicechannelid}']
 
-class ScreenLink(commands.Cog):
+class Screenshare(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command()
-    async def screenlink(self, ctx):
+    async def screenshare(self, ctx):
         """
-            Creates a screenlink for voicechannel
+            Creates a screenshare link for voicechannel
             
         """
 
