@@ -20,7 +20,7 @@ class Screenshare(commands.Cog):
         sid = str(ctx.guild.id)
         vcid = str(ctx.message.author.voice.channel.id)
         #await ctx.send(voicechannelid)
-	await ctx.send(link_string.format(serverid = sid, voicechannelid = vcid))
+        await ctx.send(link_string.format(serverid = sid, voicechannelid = vcid))
 	
 
 
