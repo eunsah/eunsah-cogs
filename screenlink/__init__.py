@@ -1,6 +1,6 @@
-from .screenlink import ScreenLink
+from .screenshare import Screenshare
 
 
 def setup(bot):
-    n = ScreenLink(bot)
-    bot.add_cog(n)
+    ss = Screenshare(bot)
+    bot.add_cog(ss)
