@@ -18,7 +18,7 @@ class Screenshare(commands.Cog):
         msg = " "
         user = ctx.message.author
         serverid = ctx.guild.id
-        voicechannelid = ctx.message.author.voice.channel
+        voicechannelid = ctx.message.author.voice.channel.id
         await ctx.send(voicechannelid)
 	
 
