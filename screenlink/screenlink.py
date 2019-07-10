@@ -17,10 +17,9 @@ class ScreenLink(commands.Cog):
 
         msg = " "
         user = ctx.message.author
-	serverid = guild.id
-	voicechannelid = voicechannel.id
-
-	await ctx.send(serverid+" : "+voicechannelid)
+        serverid = guild.id
+        voicechannelid = voicechannel.id
+        await ctx.send(serverid+" : "+voicechannelid)
 	
 
 
