@@ -1,7 +1,8 @@
 import discord
 from redbot.core import commands
 
-link_string = "https://discordapp.com/channels/{serverid}/{voicechannelid}"
+text_string = "Join {voicechannel} and click on this link : "
+link_string = "<https://discordapp.com/channels/{serverid}/{voicechannelid}>"
 
 class Screenshare(commands.Cog):
 
@@ -15,12 +16,12 @@ class Screenshare(commands.Cog):
             
         """
 
-        msg = " "
         user = ctx.message.author
+        vc = ctx.message.author.voice.channel
         sid = str(ctx.guild.id)
         vcid = str(ctx.message.author.voice.channel.id)
         #await ctx.send(voicechannelid)
-        await ctx.send(link_string.format(serverid = sid, voicechannelid = vcid))
+        await ctx.send(text_string.format(voicechannel = vc) + link_string.format(serverid = sid, voicechannelid = vcid))
 	
 
 
