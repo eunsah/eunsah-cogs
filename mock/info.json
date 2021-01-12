@@ -14,7 +14,7 @@
     
     "name" : "Mock",
     "permissions" : [],
-    "required_cogs" : [],
+    "required_cogs" : {},
     "requirements" : [],
     "short" : "makes your sentence satire",
     "tags" : [
