@@ -14,7 +14,7 @@
     
     "name" : "ScreenLink",
     "permissions" : [],
-    "required_cogs" : [],
+    "required_cogs" : {},
     "requirements" : [],
     "short" : "Creates the Server Screenshare link",
     "tags" : [
