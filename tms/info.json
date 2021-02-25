@@ -1,0 +1,24 @@
+{
+    "author" : [
+        "ba"
+    ],
+    "bot_version" : [
+        3,
+        4,
+        6
+    ],
+    "description" : "Pushes update from TMS official website",
+    "disabled" : false,
+    "hidden" : false,
+    "install_msg" : "Usage: `[p]`",
+    
+    "name" : "Tms",
+    "permissions" : [],
+    "required_cogs" : {},
+    "requirements" : ["bs4", "selenium"],
+    "short" : "not yet ",
+    "tags" : [
+        "utility"
+    ],
+    "type" : "COG"
+}
