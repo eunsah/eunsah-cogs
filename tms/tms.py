@@ -35,6 +35,9 @@ class Tms(commands.Cog):
 
         options = webdriver.chrome.options.Options()
         options.headless = True
+
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--window-size=1920,1200")
         self.driver = webdriver.Chrome(options=options, executable_path=binary_path)
 
