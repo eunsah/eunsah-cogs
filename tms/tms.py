@@ -2,13 +2,12 @@
 """
 import os
 import asyncio
-import pickle
 import datetime
 import logging
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from chromedriver_py import binary_path
 
 import discord
 from redbot.core import commands, checks, Config
@@ -32,14 +31,12 @@ class Tms(commands.Cog):
         self.LOOP_INTERVAL = 30
 
         self.url = "https://tw.beanfun.com/MapleStory/"
-        self.file = os.path.dirname(os.path.realpath(__file__))+"/PIK.dat"
         self.mainpage = "main?section=mBulletin"
 
-        DRIVER_PATH =  "/Users/ba/Documents/chromedriver"
-        options = Options()
+        options = webdriver.chrome.options.Options()
         options.headless = True
         options.add_argument("--window-size=1920,1200")
-        self.driver = webdriver.Chrome(options=options, executable_path=DRIVER_PATH)
+        self.driver = webdriver.Chrome(options=options, executable_path=binary_path)
 
     async def check_update(self):
         # load saved
@@ -61,7 +58,7 @@ class Tms(commands.Cog):
             n = list([cate, title, date, self.url+href])
             # print (f"Found {n}")
             if n not in past_announcements:
-                print ("Announcement not in past!")
+                print ("red.eunsahcogs.tms: Found new announcement!")
                 new_announcements.append(n)
                 # print ("line 67", n)
             else:
@@ -148,14 +145,14 @@ class Tms(commands.Cog):
 
     @checks.is_owner()
     @tms.command()
-    async def update_now(self, ctx):
+    async def updatenow(self, ctx):
         """Manually checks official websites announcements"""
         await self.check_update()
-        await ctx.send("Finished Updating")
+        await ctx.send("Up to date!")
 
     @checks.is_owner()
     @tms.command()
-    async def clear_cache(self, ctx):
+    async def clearcache(self, ctx):
         """Clears all cached announcements"""
         await self.config.announcements.set(list())
-        await ctx.send("cleared past announcements!")
+        await ctx.send("cleared past announcements.")

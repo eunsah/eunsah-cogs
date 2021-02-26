@@ -2,20 +2,15 @@
     "author" : [
         "ba"
     ],
-    "bot_version" : [
-        3,
-        4,
-        6
-    ],
     "description" : "Pushes update from TMS official website",
     "disabled" : false,
     "hidden" : false,
-    "install_msg" : "Usage: `[p]`",
+    "install_msg" : "Usage: `[p]tms`",
     
     "name" : "Tms",
     "permissions" : [],
     "required_cogs" : {},
-    "requirements" : ["bs4", "selenium"],
+    "requirements" : ["bs4", "selenium", "chromedriver-py==88.0.4324.96"],
     "short" : "not yet ",
     "tags" : [
         "utility"
