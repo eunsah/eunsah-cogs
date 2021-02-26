@@ -116,7 +116,7 @@ class Tms(commands.Cog):
         channel = data["gochannel"]
         channel = self.bot.get_channel(channel)
 
-        if channel == 0:
+        if channel == 0 or channel == None:
             print ("channel unset, set a channel using [p]setchannel")
         else:
             e = discord.Embed(
