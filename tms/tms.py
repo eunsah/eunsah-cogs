@@ -35,10 +35,6 @@ class Tms(commands.Cog):
 
         options = webdriver.chrome.options.Options()
         options.headless = True
-
-        # options.add_argument("--no-sandbox")
-        # options.add_argument("--disable-dev-shm-usage")
-        # options.add_argument("--window-size=1920,1200")
         options.add_argument("start-maximized")
         options.add_argument("disable-infobars")
         options.add_argument("--disable-extensions")
@@ -156,6 +152,7 @@ class Tms(commands.Cog):
     @tms.command()
     async def updatenow(self, ctx):
         """Manually checks official websites announcements"""
+        await ctx.channel.send("Checking updates...")
         await self.check_update()
         await ctx.send("Up to date!")
 
