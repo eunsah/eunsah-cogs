@@ -39,7 +39,7 @@ class Tms(commands.Cog):
         options.add_argument("disable-infobars")
         options.add_argument("--disable-extensions")
         options.add_argument("--disable-gpu")
-        options.add_argument("--disable-dev-shm-usage");
+        options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--no-sandbox")
         self.driver = webdriver.Chrome(options=options, executable_path=binary_path)
 
