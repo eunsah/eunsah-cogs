@@ -57,10 +57,14 @@ class Tms(commands.Cog):
         # Iterate uBulletin
         for item in mBulletin:
             href = item['href']
+            if href[0:8] not "bulletin":
+                link = href
+            else:
+                link = self.url + href
             date = item.find(class_="mBulletin-items-date").text
             cate = item.find(class_="mBulletin-items-cate").text
             title = item.find(class_="mBulletin-items-title").text
-            n = list([cate, title, date, self.url+href])
+            n = list([cate, title, date, link])
             # print (f"Found {n}")
             if n not in past_announcements:
                 print ("red.eunsahcogs.tms: Found new announcement!")
@@ -122,14 +126,19 @@ class Tms(commands.Cog):
                 timestamp = datetime.datetime.utcnow(),
                 color=0x69D4C2,
             )
-            # e.set_thumbnail(url="https://imgur.com/zCBuRCE.jpg")
             await channel.send(embed=e)
 
     async def bg_loop(self):
         await self.bot.wait_until_ready()
         await asyncio.sleep(self.LOOP_INTERVAL*2)
         while True:
-            await self.check_update()
+            try:
+                await self.check_update()
+            except Exception as err:
+                print ("Exceptions occured in eunsah.tms within bg_loop function :")
+                print (err)
+            finally:
+                pass
             await asyncio.sleep(self.LOOP_INTERVAL)
 
     @checks.is_owner()
