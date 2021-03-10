@@ -57,7 +57,7 @@ class Tms(commands.Cog):
         # Iterate uBulletin
         for item in mBulletin:
             href = item['href']
-            if href[0:8] not "bulletin":
+            if href[0:8] != "bulletin":
                 link = href
             else:
                 link = self.url + href
