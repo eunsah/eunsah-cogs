@@ -49,7 +49,7 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @exp.command()
     async def initialize(self, ctx):
-        await self.config.user(ctx.author).name.set(default_user['name'])
+        await self.config.user(ctx.author).name.set(default_user['name']+'ddddkfmelkfwme')
         await self.config.user(ctx.author).level.set(default_user['level'])
         await self.config.user(ctx.author).exp.set(default_user['exp'])
         await self.config.user(ctx.author).previous_date.set(default_user['previous_date'])
