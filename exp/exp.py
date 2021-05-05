@@ -45,4 +45,4 @@ class Exp(commands.Cog):
         e.add_field(name="Exp", value=exp, inline=True)
         e.add_field(name="Level", value=level, inline=True)
 
-        await ctx.send(e)
+        await ctx.send(embed=e)
