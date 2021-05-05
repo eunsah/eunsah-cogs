@@ -135,7 +135,7 @@ class Tms(commands.Cog):
             try:
                 await self.check_update()
             except Exception as err:
-                print ("Exceptions occured in eunsah.tms within bg_loop function :")
+                log.exception("Exceptions occured in eunsah.tms within bg_loop function :")
                 print (err)
             finally:
                 pass

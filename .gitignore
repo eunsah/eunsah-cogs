@@ -49,4 +49,7 @@ __pycache__/
 audiotest/
 *.sublime-workspace
 
-# i stole this from TrustyJAID
+# i stole above from TrustyJAID
+
+# vscode
+.vscode/

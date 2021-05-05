@@ -1,0 +1,19 @@
+{
+    "author" : [
+        "ba"
+    ],
+    "description" : "Saves and calculates accumulate exp from Maplestory",
+    "disabled" : false,
+    "hidden" : false,
+    "install_msg" : "Usage: `[p]exp`",
+    
+    "name" : "Tms",
+    "permissions" : [],
+    "required_cogs" : {},
+    "requirements" : [""],
+    "short" : "",
+    "tags" : [
+        "utility"
+    ],
+    "type" : "COG"
+}
