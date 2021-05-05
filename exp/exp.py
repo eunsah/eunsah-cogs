@@ -49,6 +49,14 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @exp.command()
     async def initialize(self, ctx):
+        default_user = {
+            'name':'角色',
+            'level' : 0,
+            'exp' : 0,
+            'previous_date' : datetime.datetime.timestamp(datetime.datetime.utcnow()),
+            'daily_velocity' : 0.0,
+            'char_select' : {}
+        }
         await self.config.user(ctx.author).name.set(default_user['name']+'ddddkfmelkfwme')
         await self.config.user(ctx.author).level.set(default_user['level'])
         await self.config.user(ctx.author).exp.set(default_user['exp'])
