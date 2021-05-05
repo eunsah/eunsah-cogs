@@ -11,7 +11,7 @@
     "permissions" : [],
     "required_cogs" : {},
     "requirements" : [""],
-    "short" : "",
+    "short" : "Track a players exp in maplestory",
     "tags" : [
         "utility"
     ],
