@@ -10,7 +10,7 @@
     "name" : "Tms",
     "permissions" : [],
     "required_cogs" : {},
-    "requirements" : [""],
+    "requirements" : ["datetime", "json"],
     "short" : "Track a players exp in maplestory",
     "tags" : [
         "utility"
