@@ -31,10 +31,10 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @exp.command()
     async def info(self,ctx):
-        name = await self.config.user(ctx.author).name
-        level = await self.config.user(ctx.author).level
-        exp = await self.config.user(ctx.author).exp
-        previous_date = await self.config.user(ctx.author).previous_date
+        name = self.config.user(ctx.author).name
+        level = self.config.user(ctx.author).level
+        exp = self.config.user(ctx.author).exp
+        previous_date = self.config.user(ctx.author).previous_date
 
         e = discord.Embed(
             title = "Character Info",
@@ -45,4 +45,4 @@ class Exp(commands.Cog):
         e.add_field(name="Exp", value=exp, inline=True)
         e.add_field(name="Level", value=level, inline=True)
 
-        ctx.send(e)
+        await ctx.send(e)
