@@ -13,7 +13,7 @@ class Exp(commands.Cog):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=164900704526401545001)
         default_user = {
-            'name':'角色deklfmwelkfmwe',
+            'name':'角色',
             'level' : 0,
             'exp' : 0,
             'previous_date' : datetime.datetime.timestamp(datetime.datetime.utcnow()),
