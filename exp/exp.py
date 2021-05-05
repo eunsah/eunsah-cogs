@@ -57,7 +57,7 @@ class Exp(commands.Cog):
             'daily_velocity' : 0.0,
             'char_select' : {}
         }
-        await self.config.user(ctx.author).name.set(default_user['name']+'ddddkfmelkfwme')
+        await self.config.user(ctx.author).name.set(default_user['name']+'ddqqqqqqqqe')
         await self.config.user(ctx.author).level.set(default_user['level'])
         await self.config.user(ctx.author).exp.set(default_user['exp'])
         await self.config.user(ctx.author).previous_date.set(default_user['previous_date'])
