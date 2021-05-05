@@ -54,7 +54,7 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).name.set(name)
         await self.config.user(ctx.author).level.set(level)
         await self.config.user(ctx.author).exp.set(exp)
-        await self.config.user(ctx.author).previous_date.set(previous_date)
+        await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(previous_date))
         # await self.config.user(ctx.author).daily_velocity.set(default_user['daily_velocity'])
 
         await ctx.send(f'user value has been reseted.')
