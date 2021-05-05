@@ -50,7 +50,7 @@ class Exp(commands.Cog):
     @exp.command()
     async def initialize(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.utcnow().strftime('%Y/%m/%d')):
 
-        previous_date = datetime.strptime(date_time_str, '%Y/%m/%d')
+        previous_date = datetime.datetime.strptime(date_time_str, '%Y/%m/%d')
         await self.config.user(ctx.author).name.set(name)
         await self.config.user(ctx.author).level.set(level)
         await self.config.user(ctx.author).exp.set(exp)
