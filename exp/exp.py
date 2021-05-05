@@ -24,6 +24,11 @@ class Exp(commands.Cog):
 
 
     @checks.is_owner()
+    @commands.group()
+    async def exp(self, ctx):
+        pass
+
+    @checks.is_owner()
     @exp.command()
     async def info(self,ctx):
         name = await self.config.user(ctx.author).name
