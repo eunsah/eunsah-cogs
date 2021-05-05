@@ -24,7 +24,7 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @commands.command()
-    async def info(self,ctx):
+    async def ms_info(self,ctx):
         name = await self.config.user(ctx.author).name()
         level = await self.config.user(ctx.author).level()
         exp = await self.config.user(ctx.author).exp()
