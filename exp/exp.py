@@ -11,7 +11,7 @@ log=logging.getLogger('red.eunsahcogs.exp')
 class Exp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.config = Config.get_conf(self, identifier=164900704526401545001)
+        self.config = Config.get_conf(self, identifier=164900704526401545001,  force_registration=True)
         default_user = {
             'name':'角色',
             'level' : 0,
