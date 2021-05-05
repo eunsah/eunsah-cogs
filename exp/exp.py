@@ -38,7 +38,7 @@ class Exp(commands.Cog):
 
         e = discord.Embed(
             title = "Character Info",
-            description = "Last update: "+previous_date,
+            description = "Last update: "+str(previous_date),
             color = ctx.author.color
         )
         e.add_field(name="Name", value=name, inline=False)
