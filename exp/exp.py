@@ -32,7 +32,7 @@ class Exp(commands.Cog):
 
         e = discord.Embed(
             title = 'Character Info',
-            description = 'Last update: ' + datetime.fromtimestamp(previous_date).strftime('%Y %m %d'),
+            description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y %m %d'),
             color = ctx.author.color
         )
         e.add_field(name="Name", value=name, inline=False)
