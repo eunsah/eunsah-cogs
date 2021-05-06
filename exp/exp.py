@@ -59,7 +59,7 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).exp.set(int(exp))
         await self.config.user(ctx.author).raw.set(int(raw))
 
-    async def embedout(self, ctx) -> discord.Embed:
+    async def embedout(self, title, ctx) -> discord.Embed:
         name = await self.config.user(ctx.author).name()
         level = await self.config.user(ctx.author).level()
         exp = await self.config.user(ctx.author).exp()
@@ -67,7 +67,7 @@ class Exp(commands.Cog):
         daily_velocity = await self.config.user(ctx.author).daily_velocity()
 
         e = discord.Embed(
-            title = 'Character Info',
+            title = title,
             description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
             color = ctx.author.color
         )
@@ -81,7 +81,7 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @commands.command()
     async def msinfo(self,ctx):
-        await ctx.send(embed=await self.embedout(ctx))
+        await ctx.send(embed=await self.embedout(ctx, title = 'Charactor Info'))
 
     @checks.is_owner()
     @commands.command()
@@ -109,7 +109,10 @@ class Exp(commands.Cog):
         raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
         avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400), 2) # 86400 is the total seconds in a day
 
-        e = await self.embedout(ctx)
+        daily_velocity = await self.config.user(ctx.author).daily_velocity()
+        await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
+
+        e = await self.embedout(ctx, title='Character Update')
         e.add_field(name="Average Daily Exp (Update)", value=avg_exp, inline=True)
         e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
 
