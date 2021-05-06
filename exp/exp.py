@@ -28,7 +28,7 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def get_who(self, user):
+    async def get_who(self, ctx, user):
         if user == None:
             user = ctx.author
         else:
@@ -86,7 +86,7 @@ class Exp(commands.Cog):
 
     @commands.command()
     async def msinfo(self, ctx, user = None):
-        user = await self.get_who(user)
+        user = await self.get_who(ctx, user)
         await ctx.send(embed=await self.embedout(target=user, title = 'Charactor Info'))
 
     @commands.command()
@@ -144,14 +144,14 @@ class Exp(commands.Cog):
 
     @expset.command()
     async def _name(self, ctx, value, user=None):
-        user = await self.get_who(user)
+        user = await self.get_who(ctx, user)
         await self.config.user(user).name.set(value)
         await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
     async def _level(self, ctx, value, user=None):
-        user = await self.get_who(user)
+        user = await self.get_who(ctx, user)
         exp = await self.config.user(user).exp()
         self.levelexp_verification(ctx, level=value, exp=exp)
         await ctx.send('Done')
@@ -159,7 +159,7 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @expset.command()
     async def _exp(self, ctx, value, user=None):
-        user = await self.get_who(user)
+        user = await self.get_who(ctx, user)
         level = await self.config.user(user).level()
         self.levelexp_verification(ctx, level=level, exp=value)
         await ctx.send('Done')
@@ -167,14 +167,14 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @expset.command()
     async def _date(self, ctx, value, user=None):
-        user = await self.get_who(user)
+        user = await self.get_who(ctx, user)
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
         await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
     async def _average(self, ctx, value, user=None):
-        user = await self.get_who(user)
+        user = await self.get_who(ctx, user)
         await self.config.user(user).daily_velocity.set(int(value))
         await ctx.send('Done')
 
