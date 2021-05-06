@@ -104,7 +104,7 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
 
         raw_diff = await self.config.user(ctx.author).raw() - raw
-        date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date
+        date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
 
         raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
         avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400), 2) # 86400 is the total seconds in a day
