@@ -54,7 +54,6 @@ class Exp(commands.Cog):
             if int(key) == level:
                 break
         raw += exp
-
         await self.config.user(ctx.author).level.set(int(level))
         await self.config.user(ctx.author).exp.set(int(exp))
         await self.config.user(ctx.author).raw.set(int(raw))
@@ -74,8 +73,7 @@ class Exp(commands.Cog):
         e.add_field(name="Name", value=name, inline=True)
         e.add_field(name="Level", value=level, inline=True)
         e.add_field(name="Exp", value=f'{exp:,}', inline=False)
-        e.add_field(name="Average Daily Exp (Total)", value=f'{round(daily_velocity,2):,} exp per day', inline=False)
-
+        e.add_field(name="Average Daily Exp (Total)", value=f'{round(daily_velocity,2):,.20f} exp per day', inline=False)
         return e
 
     @checks.is_owner()
@@ -113,10 +111,9 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
 
         e = await self.embedout(ctx, title='Character Update')
-        e.add_field(name="Average Daily Exp (Update)", value=f'{avg_exp:,}', inline=True)
+        e.add_field(name="Average Daily Exp (Update)", value=f'{avg_exp:,.20f}', inline=True)
         # e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
-        e.add_field(name="Total Exp Growth", value=f'{raw_diff:,} ({raw_diff_percentage:,}%)', inline=True)
-
+        e.add_field(name="Total Exp Growth", value=f'{raw_diff:,.20f} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.send(embed=e)
 
     @checks.is_owner()
@@ -127,11 +124,36 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @expset.command()
     async def init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d')):
-
         await self.levelexp_verification(ctx, level=level, exp=exp)
         await self.config.user(ctx.author).name.set(name)
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(previous_date))
-
         await ctx.send(f'user value has been initialized.')
+
+    @checks.is_owner()
+    @expset.command()
+    async def name(ctx, value):
+        await self.config.user(ctx.author).name.set(value)
+
+    @checks.is_owner()
+    @expset.command()
+    async def level(ctx, value):
+        exp = await self.config.user(ctx.author).exp()
+        self.levelexp_verification(ctx, level=value, exp=exp)
+
+    @checks.is_owner()
+    @expset.command()
+    async def exp(ctx, value):
+        level = await self.config.user(ctx.author).level()
+        self.levelexp_verification(ctx, level=level, exp=exp)
+
+    @checks.is_owner()
+    @expset.command()
+    async def date(ctx, value):
+        await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
+
+    @checks.is_owner()
+    @expset.command()
+    async def average(ctx, value):
+        await self.config.user(ctx.author).daily_velocity.set(int(value))
 
