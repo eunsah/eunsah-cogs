@@ -28,10 +28,10 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def levelexp_verification(self, ctx, level, exp):
+    async def levelexp_verification(self, user, level, exp):
         '''
         Verify level, exp and sets level, exp, raw
-        parameters : ctx, level, exp
+        parameters : user, level, exp
         '''
         try:
             level = int(level)
@@ -53,9 +53,9 @@ class Exp(commands.Cog):
             if int(key) == level:
                 break
         raw += exp
-        await self.config.user(ctx.author).level.set(int(level))
-        await self.config.user(ctx.author).exp.set(int(exp))
-        await self.config.user(ctx.author).raw.set(int(raw))
+        await self.config.user(user).level.set(int(level))
+        await self.config.user(user).exp.set(int(exp))
+        await self.config.user(user).raw.set(int(raw))
 
     async def embedout(self, user, title) -> discord.Embed:
         name = await self.config.user(user).name()
@@ -99,7 +99,7 @@ class Exp(commands.Cog):
         if name == '角色':
             await self.config.user(ctx.author).name.set(ctx.author.name)
 
-        await self.levelexp_verification(ctx, level=argv[0], exp=argv[1])
+        await self.levelexp_verification(ctx.author, level=argv[0], exp=argv[1])
 
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
 
@@ -127,17 +127,19 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @expset.command()
-    async def init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d')):
-        await self.levelexp_verification(ctx, level=level, exp=exp)
-        await self.config.user(ctx.author).name.set(name)
+    async def init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
+        if user is None:
+            user = ctx.author
+        await self.levelexp_verification(user, level=level, exp=exp)
+        await self.config.user(user).name.set(name)
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
-        await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(previous_date))
-        await ctx.send(f'user value has been initialized.')
+        await self.config.user(user).previous_date.set(datetime.datetime.timestamp(previous_date))
+        await ctx.send(f'角色初始化完成')
 
     @expset.command()
     async def name(self, ctx, value):
         await self.config.user(ctx.author).name.set(value)
-        await ctx.send(f'Name set to {value}')
+        await ctx.send(f'已變更名稱為：{value}')
 
     @checks.is_owner()
     @expset.command()
@@ -145,7 +147,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).name.set(value)
-        await ctx.send('Done')
+        await ctx.send('ok.')
 
     @checks.is_owner()
     @expset.command()
@@ -153,8 +155,8 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         exp = await self.config.user(user).exp()
-        self.levelexp_verification(ctx, level=value, exp=exp)
-        await ctx.send('Done')
+        self.levelexp_verification(user, level=value, exp=exp)
+        await ctx.send('ok.')
 
     @checks.is_owner()
     @expset.command()
@@ -162,8 +164,8 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         level = await self.config.user(user).level()
-        self.levelexp_verification(ctx, level=level, exp=value)
-        await ctx.send('Done')
+        self.levelexp_verification(user, level=level, exp=value)
+        await ctx.send('ok.')
 
     @checks.is_owner()
     @expset.command()
@@ -171,7 +173,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
-        await ctx.send('Done')
+        await ctx.send('ok.')
 
     @checks.is_owner()
     @expset.command()
@@ -179,5 +181,5 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
-        await ctx.send('Done')
+        await ctx.send('ok.')
 
