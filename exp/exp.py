@@ -63,7 +63,7 @@ class Exp(commands.Cog):
             await ctx.send(f'Invalid range for level')
         await ctx.send(type(exp))
         await ctx.send(os.path.dirname(os.path.realpath(__file__)))
-)
+
 
 
     @checks.is_owner()
