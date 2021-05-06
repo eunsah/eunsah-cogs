@@ -140,11 +140,13 @@ class Exp(commands.Cog):
     @expset.command()
     async def name(self, ctx, value):
         await self.config.user(ctx.author).name.set(value)
+        await ctx.send(f'Name set to {value}')
 
     @expset.command()
     async def _name(self, ctx, value, user=None):
         user = get_who(user)
         await self.config.user(user).name.set(value)
+        await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
@@ -152,6 +154,7 @@ class Exp(commands.Cog):
         user = get_who(user)
         exp = await self.config.user(user).exp()
         self.levelexp_verification(ctx, level=value, exp=exp)
+        await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
@@ -159,16 +162,19 @@ class Exp(commands.Cog):
         user = get_who(user)
         level = await self.config.user(user).level()
         self.levelexp_verification(ctx, level=level, exp=value)
+        await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
     async def _date(self, ctx, value, user=None):
         user = get_who(user)
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
+        await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
     async def _average(self, ctx, value, user=None):
         user = get_who(user)
         await self.config.user(user).daily_velocity.set(int(value))
+        await ctx.send('Done')
 
