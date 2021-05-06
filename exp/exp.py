@@ -43,7 +43,7 @@ class Exp(commands.Cog):
         e.add_field(name="Name", value=name, inline=True)
         e.add_field(name="Level", value=level, inline=False)
         e.add_field(name="Exp", value=exp, inline=False)
-        e.add_field(name="Daily total Average", value=daily_velocity, inline=False)
+        e.add_field(name="Daily total Average", value=str(round(daily_velocity))+' exp per day', inline=False)
 
         return e
 
