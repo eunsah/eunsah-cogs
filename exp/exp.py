@@ -74,7 +74,7 @@ class Exp(commands.Cog):
         e.add_field(name="玩家名稱", value=name, inline=True)
         e.add_field(name="等級", value=level, inline=True)
         e.add_field(name="經驗值", value=f'{exp:,} ({round(exp/top_exp, 2)}%)', inline=False)
-        e.add_field(name="經驗成長日平均 (總合)", value=f'{round(daily_velocity):,} 經驗/日', inline=False)
+        e.add_field(name="經驗成長日平均 (總合)", value=f'{round(daily_velocity):,} 經驗值/日', inline=False)
         return e
 
     @commands.command()
@@ -117,7 +117,7 @@ class Exp(commands.Cog):
             avg_exp = 0.0
 
         e = await self.embedout(user=ctx.author, title='經驗值更新')
-        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,} 經驗/日', inline=True)
+        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,} 經驗值/日', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.send(embed=e)
 
