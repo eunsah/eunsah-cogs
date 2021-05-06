@@ -56,7 +56,7 @@ class Exp(commands.Cog):
             # argv check
             await ctx.send(f'Not enough arguments')
             return
-        level = argv[0]
+        level = int(argv[0])
         exp = argv[1]
         if level < 0 or level > MAX_LEVEL:
             # level verify
