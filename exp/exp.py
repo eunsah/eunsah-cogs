@@ -5,12 +5,16 @@ import logging
 import discord
 import json
 from redbot.core import commands, checks, Config
-log=logging.getLogger('red.eunsahcogs.exp')
+log = logging.getLogger('red.eunsahcogs.exp')
+MAX_LEVEL = 275
+level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 
 
 class Exp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        with open(level_json) as j:
+            self.levelchart = json.loads(j)
         self.config = Config.get_conf(self, identifier=164900704526401545001,  force_registration=True)
         default_user = {
             'name':'角色',
@@ -24,7 +28,7 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @commands.command()
-    async def ms_info(self,ctx):
+    async def msinfo(self,ctx):
         name = await self.config.user(ctx.author).name()
         level = await self.config.user(ctx.author).level()
         exp = await self.config.user(ctx.author).exp()
@@ -42,13 +46,32 @@ class Exp(commands.Cog):
         await ctx.send(embed=e)
 
     @checks.is_owner()
+    @commands.command()
+    async def exp(self, ctx, *argv):
+        '''
+            [p]exp {level} {percentage || raw exp}
+            Update exp
+        '''
+        if len(argv) != 2:
+            # argv check
+            await ctx.send(f'Not enough arguments')
+            return
+        level = argv[0]
+        exp = argv[1]
+        if level < 0 or level > MAX_LEVEL:
+            # level verify
+            await ctx.send(f'Invalid range for level')
+        await ctx.send(type(exp))
+
+
+    @checks.is_owner()
     @commands.group()
-    async def exp(self, ctx):
+    async def expset(self, ctx):
         pass
 
     @checks.is_owner()
-    @exp.command()
-    async def initialize(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.utcnow().strftime('%Y/%m/%d')):
+    @expset.command()
+    async def init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.utcnow().strftime('%Y/%m/%d')):
 
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
         await self.config.user(ctx.author).name.set(name)
@@ -58,3 +81,4 @@ class Exp(commands.Cog):
         # await self.config.user(ctx.author).daily_velocity.set(default_user['daily_velocity'])
 
         await ctx.send(f'user value has been reseted.')
+
