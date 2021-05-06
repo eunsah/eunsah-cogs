@@ -68,13 +68,13 @@ class Exp(commands.Cog):
 
         e = discord.Embed(
             title = title,
-            footer = '更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
             color = user.color
         )
         e.add_field(name="玩家名稱", value=name, inline=True)
         e.add_field(name="等級", value=level, inline=True)
         e.add_field(name="經驗值", value=f'{exp:,} ({round(exp/top_exp, 2)}%)', inline=False)
         e.add_field(name="經驗成長日平均 (總合)", value=f'{round(daily_velocity):,} 經驗值/日', inline=False)
+        e.set_footer(text = '更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'))
         return e
 
     @commands.command()
