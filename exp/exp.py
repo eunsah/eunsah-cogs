@@ -156,7 +156,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         exp = await self.config.user(user).exp()
-        self.levelexp_verification(user, level=value, exp=exp)
+        await self.levelexp_verification(user, level=value, exp=exp)
         await ctx.send('完成')
 
     @checks.is_owner()
@@ -165,7 +165,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         level = await self.config.user(user).level()
-        self.levelexp_verification(user, level=level, exp=value)
+        await self.levelexp_verification(user, level=level, exp=value)
         await ctx.send('完成')
 
     @checks.is_owner()
