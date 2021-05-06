@@ -45,7 +45,7 @@ class Exp(commands.Cog):
             else:
                 exp = int(exp)
         except ValueError:
->            return
+            return
 
         raw = 0
         for key in self.levelchart:
