@@ -78,7 +78,6 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @commands.command()
     async def msinfo(self,ctx):
-        await ctx.send('msinfo called')
         await ctx.send(embed=await self.embedout(ctx, title = 'Charactor Info'))
 
     @checks.is_owner()
@@ -132,28 +131,28 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @expset.command()
-    async def NAME(ctx, value):
+    async def NAME(self, ctx, value):
         await self.config.user(ctx.author).name.set(value)
 
     @checks.is_owner()
     @expset.command()
-    async def LEVEL(ctx, value):
+    async def LEVEL(self, ctx, value):
         exp = await self.config.user(ctx.author).exp()
         self.levelexp_verification(ctx, level=value, exp=exp)
 
     @checks.is_owner()
     @expset.command()
-    async def EXP(ctx, value):
+    async def exp(self, ctx, value):
         level = await self.config.user(ctx.author).level()
         self.levelexp_verification(ctx, level=level, exp=value)
 
     @checks.is_owner()
     @expset.command()
-    async def DATE(ctx, value):
+    async def DATE(self, ctx, value):
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
 
     @checks.is_owner()
     @expset.command()
-    async def AVERAGE(ctx, value):
+    async def AVERAGE(self, ctx, value):
         await self.config.user(ctx.author).daily_velocity.set(int(value))
 
