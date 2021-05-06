@@ -64,6 +64,8 @@ class Exp(commands.Cog):
         previous_date = await self.config.user(user).previous_date()
         daily_velocity = await self.config.user(user).daily_velocity()
 
+        top_exp = self.levelchart[str(level)]
+
         e = discord.Embed(
             title = title,
             description = '更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
@@ -71,8 +73,8 @@ class Exp(commands.Cog):
         )
         e.add_field(name="玩家名稱", value=name, inline=True)
         e.add_field(name="等級", value=level, inline=True)
-        e.add_field(name="經驗值", value=f'{exp:,}', inline=False)
-        e.add_field(name="經驗成長日平均 (整合)", value=f'每日約{round(daily_velocity):,}經驗', inline=False)
+        e.add_field(name="經驗值", value=f'{exp:,} ({round(exp/top_exp, 2)}%)', inline=False)
+        e.add_field(name="經驗成長日平均 (總合)", value=f'{round(daily_velocity):,} 經驗/日', inline=False)
         return e
 
     @commands.command()
@@ -115,7 +117,7 @@ class Exp(commands.Cog):
             avg_exp = 0.0
 
         e = await self.embedout(user=ctx.author, title='經驗值更新')
-        e.add_field(name="經驗成長日平均 (更新)", value=f'每日約{avg_exp:,}經驗', inline=True)
+        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,} 經驗/日', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.send(embed=e)
 
