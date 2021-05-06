@@ -22,15 +22,13 @@ class Exp(commands.Cog):
             'level' : 0,
             'exp' : 0,
             'raw' : 0,
-            'previous_date' : datetime.datetime.timestamp(datetime.datetime.utcnow()),
+            'previous_date' : datetime.datetime.timestamp(datetime.datetime.now()),
             'daily_velocity' : 0.0,
             'char_select' : {}
         }
         self.config.register_user(**default_user)
 
-    @checks.is_owner()
-    @commands.command()
-    async def msinfo(self,ctx):
+    async def embedout(self, ctx):
         name = await self.config.user(ctx.author).name()
         level = await self.config.user(ctx.author).level()
         exp = await self.config.user(ctx.author).exp()
@@ -44,12 +42,29 @@ class Exp(commands.Cog):
         e.add_field(name="Name", value=name, inline=True)
         e.add_field(name="Level", value=level, inline=False)
         e.add_field(name="Exp", value=exp, inline=False)
-        e.add_field(name="Exp gain", value=exp, inline=True)
-        e.add_field(name="Daily since Last Update", value=exp, inline=True)
         e.add_field(name="Daily total Average", value=exp, inline=False)
 
+        return e
 
-        await ctx.send(embed=e)
+    @checks.is_owner()
+    @commands.command()
+    async def msinfo(self,ctx):
+        # name = await self.config.user(ctx.author).name()
+        # level = await self.config.user(ctx.author).level()
+        # exp = await self.config.user(ctx.author).exp()
+        # previous_date = await self.config.user(ctx.author).previous_date()
+
+        # e = discord.Embed(
+        #     title = 'Character Info',
+        #     description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
+        #     color = ctx.author.color
+        # )
+        # e.add_field(name="Name", value=name, inline=True)
+        # e.add_field(name="Level", value=level, inline=False)
+        # e.add_field(name="Exp", value=exp, inline=False)
+        # e.add_field(name="Daily total Average", value=exp, inline=False)
+
+        await ctx.send(embed=self.embedout(ctx))
 
     @checks.is_owner()
     @commands.command()
@@ -86,8 +101,28 @@ class Exp(commands.Cog):
             if int(key) == level:
                 break
         raw += exp
+        # level exp raw
 
+        await self.config.user(ctx.author).level.set(level)
+        await self.config.user(ctx.author).exp.set(exp)
+        await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
 
+        name = await self.config.user(ctx.author).name()
+        # level = await self.config.user(ctx.author).level()
+        # exp = await self.config.user(ctx.author).exp()
+        previous_date = await self.config.user(ctx.author).previous_date()
+
+        e = discord.Embed(
+            title = 'Character Update',
+            description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
+            color = ctx.author.color
+        )
+        e.add_field(name="Name", value=name, inline=True)
+        e.add_field(name="Level", value=level, inline=False)
+        e.add_field(name="Exp", value=exp, inline=False)
+        e.add_field(name="Exp gain", value=exp, inline=True)
+        e.add_field(name="Daily since Last Update", value=exp, inline=True)
+        e.add_field(name="Daily total Average", value=exp, inline=False)
 
 
 
@@ -100,7 +135,7 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @expset.command()
-    async def init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.utcnow().strftime('%Y/%m/%d')):
+    async def init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d')):
 
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
         await self.config.user(ctx.author).name.set(name)
