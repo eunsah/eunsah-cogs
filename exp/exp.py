@@ -73,8 +73,8 @@ class Exp(commands.Cog):
         )
         e.add_field(name="Name", value=name, inline=True)
         e.add_field(name="Level", value=level, inline=True)
-        e.add_field(name="Exp", value=exp, inline=False)
-        e.add_field(name="Average Daily Exp (Total)", value=str(round(daily_velocity))+' exp per day', inline=False)
+        e.add_field(name="Exp", value=f'{exp:,}', inline=False)
+        e.add_field(name="Average Daily Exp (Total)", value=f'{round(daily_velocity)):,} exp per day', inline=False)
 
         return e
 
@@ -113,8 +113,9 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
 
         e = await self.embedout(ctx, title='Character Update')
-        e.add_field(name="Average Daily Exp (Update)", value=avg_exp, inline=True)
-        e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
+        e.add_field(name="Average Daily Exp (Update)", value=f'{avg_exp:,}', inline=True)
+        # e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
+        e.add_field(name="Total Exp Growth", value=f'{raw_diff:,} ({raw_diff_percentage:,}%)', inline=True)
 
         await ctx.send(embed=e)
 
