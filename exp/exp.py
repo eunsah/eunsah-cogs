@@ -7,13 +7,14 @@ import json
 from redbot.core import commands, checks, Config
 log = logging.getLogger('red.eunsahcogs.exp')
 MAX_LEVEL = 275
+folder = 'leveling'
 level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class Exp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        with open(os.path.join(dir_path,level_json)) as j:
+        with open(os.path.join(dir_path, folder, level_json)) as j:
             self.levelchart = json.loads(j)
         self.config = Config.get_conf(self, identifier=164900704526401545001,  force_registration=True)
         default_user = {
