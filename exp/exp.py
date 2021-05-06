@@ -66,13 +66,13 @@ class Exp(commands.Cog):
 
         e = discord.Embed(
             title = title,
-            description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
+            description = '更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
             color = user.color
         )
-        e.add_field(name="Name", value=name, inline=True)
-        e.add_field(name="Level", value=level, inline=True)
-        e.add_field(name="Exp", value=f'{exp:,}', inline=False)
-        e.add_field(name="Average Daily Exp (Total)", value=f'{round(daily_velocity,2):,.2f} exp per day', inline=False)
+        e.add_field(name="玩家名稱", value=name, inline=True)
+        e.add_field(name="等級", value=level, inline=True)
+        e.add_field(name="經驗值", value=f'{exp:,}', inline=False)
+        e.add_field(name="經驗成長日平均 (整合)", value=f'每日約{round(daily_velocity,2):,.2f}經驗', inline=False)
         return e
 
     @commands.command()
@@ -115,7 +115,7 @@ class Exp(commands.Cog):
             avg_exp = 0.0
 
         e = await self.embedout(user=ctx.author, title='經驗值更新')
-        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
+        e.add_field(name="經驗成長日平均 (更新)", value=f'每日約{avg_exp:,}經驗', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.send(embed=e)
 
