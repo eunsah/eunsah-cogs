@@ -76,8 +76,12 @@ class Exp(commands.Cog):
         return e
 
     @commands.command()
-    async def msinfo(self,ctx):
-        await ctx.send(embed=await self.embedout(ctx, title = 'Charactor Info'))
+    async def msinfo(self,ctx,user = None):
+        # if user is None:
+        #     user = ctx.author
+        # else:
+        #     user = ctx.message.guild.get_member(user)
+        await ctx.send(embed=await self.embedout(target=ctx.author, title = 'Charactor Info'))
 
     @commands.command()
     async def exp(self, ctx, *argv):
