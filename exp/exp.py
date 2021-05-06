@@ -28,15 +28,6 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def get_who(self, ctx, user):
-        if user == None:
-            user = ctx.author
-        else:
-            foo = user
-            user = discord.user
-            user.id = foo
-        return user
-
     async def levelexp_verification(self, ctx, level, exp):
         '''
         Verify level, exp and sets level, exp, raw
@@ -85,8 +76,9 @@ class Exp(commands.Cog):
         return e
 
     @commands.command()
-    async def msinfo(self, ctx, user = None):
-        user = await self.get_who(ctx, user)
+    async def msinfo(self, ctx, user: discord.User = None):
+        if user is None:
+            user = ctx.author
         await ctx.send(embed=await self.embedout(target=user, title = 'Charactor Info'))
 
     @commands.command()
@@ -146,37 +138,40 @@ class Exp(commands.Cog):
     async def _name(self, ctx, value, user: discord.User = None):
         if user is None:
             user = ctx.author
-
         await self.config.user(user).name.set(value)
         await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
-    async def _level(self, ctx, value, user=None):
-        user = await self.get_who(ctx, user)
+    async def _level(self, ctx, value, user: discord.User = None):
+        if user is None:
+            user = ctx.author
         exp = await self.config.user(user).exp()
         self.levelexp_verification(ctx, level=value, exp=exp)
         await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
-    async def _exp(self, ctx, value, user=None):
-        user = await self.get_who(ctx, user)
+    async def _exp(self, ctx, value, user: discord.User = None):
+        if user is None:
+            user = ctx.author
         level = await self.config.user(user).level()
         self.levelexp_verification(ctx, level=level, exp=value)
         await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
-    async def _date(self, ctx, value, user=None):
-        user = await self.get_who(ctx, user)
+    async def _date(self, ctx, value, user: discord.User = None):
+        if user is None:
+            user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
         await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
-    async def _average(self, ctx, value, user=None):
-        user = await self.get_who(ctx, user)
+    async def _average(self, ctx, value, user: discord.User = None):
+        if user is None:
+            user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
         await ctx.send('Done')
 
