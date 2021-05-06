@@ -132,28 +132,38 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).name.set(value)
 
     @expset.command()
-    async def _name(self, ctx, value, user=ctx.author):
+    async def _name(self, ctx, value, user=None):
+        if user == None:
+            user = ctx.author
         await self.config.user(user).name.set(value)
 
     @checks.is_owner()
     @expset.command()
-    async def _level(self, ctx, value, user=ctx.author):
+    async def _level(self, ctx, value, user=None):
+        if user == None:
+            user = ctx.author
         exp = await self.config.user(user).exp()
         self.levelexp_verification(ctx, level=value, exp=exp)
 
     @checks.is_owner()
     @expset.command()
-    async def _exp(self, ctx, value, user=ctx.author):
+    async def _exp(self, ctx, value, user=None):
+        if user == None:
+            user = ctx.author
         level = await self.config.user(user).level()
         self.levelexp_verification(ctx, level=level, exp=value)
 
     @checks.is_owner()
     @expset.command()
-    async def _date(self, ctx, value, user=ctx.author):
+    async def _date(self, ctx, value, user=None):
+        if user == None:
+            user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
 
     @checks.is_owner()
     @expset.command()
-    async def _average(self, ctx, value, user=ctx.author):
+    async def _average(self, ctx, value, user=None):
+        if user == None:
+            user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
 
