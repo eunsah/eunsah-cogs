@@ -140,7 +140,7 @@ class Exp(commands.Cog):
         if user == None:
             user = ctx.author
         else:
-            user = await self.bot.fetch_by_id(user)
+            user = await self.bot.fetch_user(user)
         await self.config.user(user).name.set(value)
 
     @checks.is_owner()
