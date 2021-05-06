@@ -109,7 +109,7 @@ class Exp(commands.Cog):
         raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
         avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400), 2) # 86400 is the total seconds in a day
 
-        e = await self.embedout()
+        e = await self.embedout(ctx)
         e.add_field(name="Average Daily Exp (Update)", value=avg_exp, inline=True)
         e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
 
