@@ -41,7 +41,7 @@ class Exp(commands.Cog):
             level_exp = self.levelchart[str(level)]
             if '.' in exp:
                 exp = float(exp)
-                exp = round((level_exp*exp)/100)
+                exp = round(level_exp*(exp/100))
             else:
                 exp = int(exp)
         except ValueError:
