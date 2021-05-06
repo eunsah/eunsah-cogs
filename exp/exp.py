@@ -73,7 +73,7 @@ class Exp(commands.Cog):
         e.add_field(name="名稱", value=name, inline=True)
         e.add_field(name="等級", value=level, inline=True)
         e.add_field(name="經驗值", value=f'{exp:,} ({round(exp/top_exp, 2)}%)', inline=False)
-        e.add_field(name="經驗成長日平均 (總合)", value=f'{round(daily_velocity):,} exp', inline=False)
+        e.add_field(name="經驗成長日平均", value=f'{round(daily_velocity):,}', inline=False)
         e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'))
         return e
 
@@ -117,7 +117,7 @@ class Exp(commands.Cog):
             avg_exp = 0
 
         e = await self.embedout(user=ctx.author, title='經驗值更新')
-        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,} exp', inline=True)
+        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.send(embed=e)
 
