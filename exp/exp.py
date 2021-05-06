@@ -135,6 +135,8 @@ class Exp(commands.Cog):
     async def _name(self, ctx, value, user=None):
         if user == None:
             user = ctx.author
+        else:
+            user = ctx.message.server.get_member(user)
         await self.config.user(user).name.set(value)
 
     @checks.is_owner()
