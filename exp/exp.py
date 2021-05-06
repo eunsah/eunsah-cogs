@@ -13,7 +13,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 class Exp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        with open(os.path.json(dir_path,level_json)) as j:
+        with open(os.path.join(dir_path,level_json)) as j:
             self.levelchart = json.loads(j)
         self.config = Config.get_conf(self, identifier=164900704526401545001,  force_registration=True)
         default_user = {
