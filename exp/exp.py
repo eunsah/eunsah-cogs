@@ -61,7 +61,8 @@ class Exp(commands.Cog):
         if level < 0 or level > MAX_LEVEL:
             # level verify
             await ctx.send(f'Invalid range for level')
-        await ctx.send(type(exp), os.path.dirname(os.path.realpath(__file__))
+        await ctx.send(type(exp))
+        await ctx.send(os.path.dirname(os.path.realpath(__file__)))
 )
 
 
