@@ -13,13 +13,14 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 class Exp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # with open(level_json) as j:
-        #     self.levelchart = json.loads(j)
+        with open(os.path.json(dir_path,level_json)) as j:
+            self.levelchart = json.loads(j)
         self.config = Config.get_conf(self, identifier=164900704526401545001,  force_registration=True)
         default_user = {
             'name':'角色',
             'level' : 0,
             'exp' : 0,
+            'raw' : 0,
             'previous_date' : datetime.datetime.timestamp(datetime.datetime.utcnow()),
             'daily_velocity' : 0.0,
             'char_select' : {}
@@ -39,9 +40,13 @@ class Exp(commands.Cog):
             description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
             color = ctx.author.color
         )
-        e.add_field(name="Name", value=name, inline=False)
-        e.add_field(name="Level", value=level, inline=True)
-        e.add_field(name="Exp", value=exp, inline=True)
+        e.add_field(name="Name", value=name, inline=True)
+        e.add_field(name="Level", value=level, inline=False)
+        e.add_field(name="Exp", value=exp, inline=False)
+        e.add_field(name="Exp gain", value=exp, inline=True)
+        e.add_field(name="Daily since Last Update", value=exp, inline=True)
+        e.add_field(name="Daily total Average", value=exp, inline=False)
+
 
         await ctx.send(embed=e)
 
@@ -61,8 +66,29 @@ class Exp(commands.Cog):
         if level < 0 or level > MAX_LEVEL:
             # level verify
             await ctx.send(f'Invalid range for level')
-        await ctx.send(type(exp))
-        await ctx.send(os.path.dirname(os.path.realpath(__file__)))
+        level_exp = self.levelchart[argv[0]]
+        if '.' in exp:
+            try:
+                exp = float(exp)
+            except ValueError:
+                await ctx.send(f'Error in exp convert to float')
+            exp = round((level_exp*exp)/100)
+        else:
+            try:
+                exp = int(exp)
+            except ValueError:
+                await ctx.send(f'Error in exp convert to int')
+
+        raw = 0
+        for key in self.levelchart:
+            raw += self.levelchart[key]
+            if int(key) == level:
+                break
+        raw += exp
+
+
+
+
 
 
 
