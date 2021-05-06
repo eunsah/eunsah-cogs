@@ -15,7 +15,7 @@ class Exp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
-            self.levelchart = json.loads(j)
+            self.levelchart = json.load(j)
         self.config = Config.get_conf(self, identifier=164900704526401545001,  force_registration=True)
         default_user = {
             'name':'角色',
