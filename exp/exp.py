@@ -79,17 +79,17 @@ class Exp(commands.Cog):
     async def msinfo(self, ctx, user: discord.User = None):
         if user is None:
             user = ctx.author
-        await ctx.send(embed=await self.embedout(user=user, title = 'Charactor Info'))
+        await ctx.send(embed=await self.embedout(user=user, title = '玩家資料'))
 
     @commands.command()
     async def exp(self, ctx, *argv):
         '''
-            [p]exp {level} {percentage || raw exp}
-            Update exp
+            [p]exp {等級} {經驗值 || 經驗值%}
+            用於更新經驗值
         '''
         if len(argv) != 2:
             # argv check
-            await ctx.send(f'Not enough arguments')
+            await ctx.send(f'參數不足')
             return
 
         level = argv[0]
@@ -99,7 +99,7 @@ class Exp(commands.Cog):
         if name == '角色':
             await self.config.user(ctx.author).name.set(ctx.author.name)
 
-        await self.levelexp_verification(ctx.author, level=argv[0], exp=argv[1])
+        await self.levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
 
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
 
@@ -114,10 +114,9 @@ class Exp(commands.Cog):
         else:
             avg_exp = 0.0
 
-        e = await self.embedout(user=ctx.author, title='Character Update')
-        e.add_field(name="Average Daily Exp (Update)", value=f'{avg_exp:,}', inline=True)
-        # e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
-        e.add_field(name="Total Exp Growth", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
+        e = await self.embedout(user=ctx.author, title='經驗值更新')
+        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
+        e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.send(embed=e)
 
     @checks.is_owner()
@@ -147,7 +146,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).name.set(value)
-        await ctx.send('ok.')
+        await ctx.send('完成')
 
     @checks.is_owner()
     @expset.command()
@@ -156,7 +155,7 @@ class Exp(commands.Cog):
             user = ctx.author
         exp = await self.config.user(user).exp()
         self.levelexp_verification(user, level=value, exp=exp)
-        await ctx.send('ok.')
+        await ctx.send('完成')
 
     @checks.is_owner()
     @expset.command()
@@ -165,7 +164,7 @@ class Exp(commands.Cog):
             user = ctx.author
         level = await self.config.user(user).level()
         self.levelexp_verification(user, level=level, exp=value)
-        await ctx.send('ok.')
+        await ctx.send('完成')
 
     @checks.is_owner()
     @expset.command()
@@ -173,7 +172,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
-        await ctx.send('ok.')
+        await ctx.send('完成')
 
     @checks.is_owner()
     @expset.command()
@@ -181,5 +180,5 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
-        await ctx.send('ok.')
+        await ctx.send('完成')
 
