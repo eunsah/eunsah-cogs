@@ -95,6 +95,9 @@ class Exp(commands.Cog):
         level = argv[0]
         raw = await self.config.user(ctx.author).raw()
         previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
+        name = await self.config.user(ctx.author).name()
+        if name == '角色':
+            await self.config.user(ctx.author).name.set(ctx.author.name)
 
         await self.levelexp_verification(ctx, level=argv[0], exp=argv[1])
 
