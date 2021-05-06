@@ -113,6 +113,8 @@ class Exp(commands.Cog):
         e.add_field(name="Average Daily Exp (Update)", value=avg_exp, inline=True)
         e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
 
+        await ctx.send(embed=e)
+
     @checks.is_owner()
     @commands.group()
     async def expset(self, ctx):
