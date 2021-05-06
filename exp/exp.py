@@ -87,6 +87,7 @@ class Exp(commands.Cog):
             [p]exp {level} {percentage || raw exp}
             Update exp
         '''
+        log('exp called')
         if len(argv) != 2:
             # argv check
             await ctx.send(f'Not enough arguments')
