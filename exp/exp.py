@@ -28,7 +28,7 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def get_who(user):
+    async def get_who(self, user):
         if user == None:
             user = ctx.author
         else:
