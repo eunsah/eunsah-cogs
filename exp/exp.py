@@ -142,7 +142,7 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @expset.command()
-    async def exp(self, ctx, value):
+    async def EXP(self, ctx, value):
         level = await self.config.user(ctx.author).level()
         self.levelexp_verification(ctx, level=level, exp=value)
 
