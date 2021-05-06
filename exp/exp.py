@@ -86,7 +86,7 @@ class Exp(commands.Cog):
 
     @commands.command()
     async def msinfo(self, ctx, user = None):
-        user = get_who(user)
+        user = self.get_who(user)
         await ctx.send(embed=await self.embedout(target=user, title = 'Charactor Info'))
 
     @commands.command()
@@ -144,14 +144,14 @@ class Exp(commands.Cog):
 
     @expset.command()
     async def _name(self, ctx, value, user=None):
-        user = get_who(user)
+        user = self.get_who(user)
         await self.config.user(user).name.set(value)
         await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
     async def _level(self, ctx, value, user=None):
-        user = get_who(user)
+        user = self.get_who(user)
         exp = await self.config.user(user).exp()
         self.levelexp_verification(ctx, level=value, exp=exp)
         await ctx.send('Done')
@@ -159,7 +159,7 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @expset.command()
     async def _exp(self, ctx, value, user=None):
-        user = get_who(user)
+        user = self.get_who(user)
         level = await self.config.user(user).level()
         self.levelexp_verification(ctx, level=level, exp=value)
         await ctx.send('Done')
@@ -167,14 +167,14 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @expset.command()
     async def _date(self, ctx, value, user=None):
-        user = get_who(user)
+        user = self.get_who(user)
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
         await ctx.send('Done')
 
     @checks.is_owner()
     @expset.command()
     async def _average(self, ctx, value, user=None):
-        user = get_who(user)
+        user = self.get_who(user)
         await self.config.user(user).daily_velocity.set(int(value))
         await ctx.send('Done')
 
