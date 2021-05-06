@@ -72,7 +72,7 @@ class Exp(commands.Cog):
         e.add_field(name="玩家名稱", value=name, inline=True)
         e.add_field(name="等級", value=level, inline=True)
         e.add_field(name="經驗值", value=f'{exp:,}', inline=False)
-        e.add_field(name="經驗成長日平均 (整合)", value=f'每日約{round(daily_velocity,2):,.2f}經驗', inline=False)
+        e.add_field(name="經驗成長日平均 (整合)", value=f'每日約{round(daily_velocity):,}經驗', inline=False)
         return e
 
     @commands.command()
