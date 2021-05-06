@@ -22,7 +22,7 @@ class Exp(commands.Cog):
             'level' : 0,
             'exp' : 0,
             'raw' : 0,
-            'previous_date' : datetime.datetime.timestamp(datetime.datetime.now()),
+            'previous_date' : datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')),
             'daily_velocity' : 0.0,
             'char_select' : {}
         }
@@ -100,14 +100,16 @@ class Exp(commands.Cog):
 
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
 
-        raw_diff = await self.config.user(ctx.author).raw() - raw
-        date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
-
-        raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
-        avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400), 2) # 86400 is the total seconds in a day
-
         daily_velocity = await self.config.user(ctx.author).daily_velocity()
-        await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
+        raw_diff = await self.config.user(ctx.author).raw() - raw
+        raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
+
+        if previous_date_datetime != datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')):
+            date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
+            avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400), 2) # 86400 is the total seconds in a day
+            await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
+        else:
+            avg_exp = 0.0
 
         e = await self.embedout(user=ctx.author, title='Character Update')
         e.add_field(name="Average Daily Exp (Update)", value=f'{avg_exp:,}', inline=True)
