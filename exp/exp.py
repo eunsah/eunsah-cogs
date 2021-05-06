@@ -68,7 +68,7 @@ class Exp(commands.Cog):
 
         e = discord.Embed(
             title = title,
-            description = '更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
+            footer = '更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
             color = user.color
         )
         e.add_field(name="玩家名稱", value=name, inline=True)
