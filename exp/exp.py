@@ -28,28 +28,25 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def levelexp_verification(self, ctx, *kwargs):
+    async def levelexp_verification(self, ctx, level, exp):
         '''
         Verify level, exp and sets level, exp, raw
         parameters : ctx, level, exp
         '''
-        level = int(argv[0])
-        exp = argv[1]
-        if level < 0 or level > MAX_LEVEL:
-            # level verify
-            await ctx.send(f'Invalid range for level')
-        level_exp = self.levelchart[argv[0]]
-        if '.' in exp:
-            try:
+        try:
+            level = int(level)
+            if level < 0 or level > MAX_LEVEL:
+                # level verify
+                raise ValueError
+            level_exp = self.levelchart[argv[0]]
+            if '.' in exp:
                 exp = float(exp)
-            except ValueError:
-                await ctx.send(f'Error in exp convert to float')
-            exp = round((level_exp*exp)/100)
-        else:
-            try:
+                exp = round((level_exp*exp)/100)
+            else:
                 exp = int(exp)
-            except ValueError:
-                await ctx.send(f'Error in exp convert to int')
+        except ValueError:
+            await ctx.send('Error when converting level and exp')
+            return
 
         raw = 0
         for key in self.levelchart:
