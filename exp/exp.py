@@ -41,7 +41,7 @@ class Exp(commands.Cog):
             color = ctx.author.color
         )
         e.add_field(name="Name", value=name, inline=True)
-        e.add_field(name="Level", value=level, inline=False)
+        e.add_field(name="Level", value=level, inline=True)
         e.add_field(name="Exp", value=exp, inline=False)
         e.add_field(name="Daily total Average", value=str(round(daily_velocity))+' exp per day', inline=False)
 
@@ -50,21 +50,6 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @commands.command()
     async def msinfo(self,ctx):
-        # name = await self.config.user(ctx.author).name()
-        # level = await self.config.user(ctx.author).level()
-        # exp = await self.config.user(ctx.author).exp()
-        # previous_date = await self.config.user(ctx.author).previous_date()
-
-        # e = discord.Embed(
-        #     title = 'Character Info',
-        #     description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
-        #     color = ctx.author.color
-        # )
-        # e.add_field(name="Name", value=name, inline=True)
-        # e.add_field(name="Level", value=level, inline=False)
-        # e.add_field(name="Exp", value=exp, inline=False)
-        # e.add_field(name="Daily total Average", value=exp, inline=False)
-
         await ctx.send(embed=await self.embedout(ctx))
 
     @checks.is_owner()
@@ -108,22 +93,10 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).exp.set(exp)
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
 
-        name = await self.config.user(ctx.author).name()
-        # level = await self.config.user(ctx.author).level()
-        # exp = await self.config.user(ctx.author).exp()
-        previous_date = await self.config.user(ctx.author).previous_date()
+        e = await self.embedout()
 
-        e = discord.Embed(
-            title = 'Character Update',
-            description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
-            color = ctx.author.color
-        )
-        e.add_field(name="Name", value=name, inline=True)
-        e.add_field(name="Level", value=level, inline=False)
-        e.add_field(name="Exp", value=exp, inline=False)
         e.add_field(name="Exp gain", value=exp, inline=True)
         e.add_field(name="Daily since Last Update", value=exp, inline=True)
-        e.add_field(name="Daily total Average", value=exp, inline=False)
 
 
 
