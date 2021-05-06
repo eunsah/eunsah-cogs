@@ -57,17 +57,17 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).exp.set(int(exp))
         await self.config.user(ctx.author).raw.set(int(raw))
 
-    async def embedout(self, target, title) -> discord.Embed:
-        name = await self.config.user(target).name()
-        level = await self.config.user(target).level()
-        exp = await self.config.user(target).exp()
-        previous_date = await self.config.user(target).previous_date()
-        daily_velocity = await self.config.user(target).daily_velocity()
+    async def embedout(self, user, title) -> discord.Embed:
+        name = await self.config.user(user).name()
+        level = await self.config.user(user).level()
+        exp = await self.config.user(user).exp()
+        previous_date = await self.config.user(user).previous_date()
+        daily_velocity = await self.config.user(user).daily_velocity()
 
         e = discord.Embed(
             title = title,
             description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
-            color = ctx.author.color
+            color = user.color
         )
         e.add_field(name="Name", value=name, inline=True)
         e.add_field(name="Level", value=level, inline=True)
@@ -79,7 +79,7 @@ class Exp(commands.Cog):
     async def msinfo(self, ctx, user: discord.User = None):
         if user is None:
             user = ctx.author
-        await ctx.send(embed=await self.embedout(target=user, title = 'Charactor Info'))
+        await ctx.send(embed=await self.embedout(user=user, title = 'Charactor Info'))
 
     @commands.command()
     async def exp(self, ctx, *argv):
@@ -109,7 +109,7 @@ class Exp(commands.Cog):
         daily_velocity = await self.config.user(ctx.author).daily_velocity()
         await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
 
-        e = await self.embedout(target=ctx.author, title='Character Update')
+        e = await self.embedout(user=ctx.author, title='Character Update')
         e.add_field(name="Average Daily Exp (Update)", value=f'{avg_exp:,}', inline=True)
         # e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
         e.add_field(name="Total Exp Growth", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
