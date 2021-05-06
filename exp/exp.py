@@ -33,6 +33,7 @@ class Exp(commands.Cog):
         level = await self.config.user(ctx.author).level()
         exp = await self.config.user(ctx.author).exp()
         previous_date = await self.config.user(ctx.author).previous_date()
+        daily_velocity = await self.config.user(ctx.author).daily_velocity()
 
         e = discord.Embed(
             title = 'Character Info',
