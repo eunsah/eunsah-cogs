@@ -75,12 +75,10 @@ class Exp(commands.Cog):
         e.add_field(name="Average Daily Exp (Total)", value=f'{round(daily_velocity,2):,.2f} exp per day', inline=False)
         return e
 
-    @checks.is_owner()
     @commands.command()
     async def msinfo(self,ctx):
         await ctx.send(embed=await self.embedout(ctx, title = 'Charactor Info'))
 
-    @checks.is_owner()
     @commands.command()
     async def exp(self, ctx, *argv):
         '''
@@ -129,30 +127,33 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(previous_date))
         await ctx.send(f'user value has been initialized.')
 
-    @checks.is_owner()
     @expset.command()
-    async def NAME(self, ctx, value):
+    async def name(self, ctx, value):
         await self.config.user(ctx.author).name.set(value)
+
+    @expset.command()
+    async def _name(self, ctx, value, user=ctx.author):
+        await self.config.user(user).name.set(value)
 
     @checks.is_owner()
     @expset.command()
-    async def LEVEL(self, ctx, value):
-        exp = await self.config.user(ctx.author).exp()
+    async def _level(self, ctx, value, user=ctx.author):
+        exp = await self.config.user(user).exp()
         self.levelexp_verification(ctx, level=value, exp=exp)
 
     @checks.is_owner()
     @expset.command()
-    async def EXP(self, ctx, value):
-        level = await self.config.user(ctx.author).level()
+    async def _exp(self, ctx, value, user=ctx.author):
+        level = await self.config.user(user).level()
         self.levelexp_verification(ctx, level=level, exp=value)
 
     @checks.is_owner()
     @expset.command()
-    async def DATE(self, ctx, value):
-        await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
+    async def _date(self, ctx, value, user=ctx.author):
+        await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
 
     @checks.is_owner()
     @expset.command()
-    async def AVERAGE(self, ctx, value):
-        await self.config.user(ctx.author).daily_velocity.set(int(value))
+    async def _average(self, ctx, value, user=ctx.author):
+        await self.config.user(user).daily_velocity.set(int(value))
 
