@@ -73,7 +73,7 @@ class Exp(commands.Cog):
         e.add_field(name="名稱", value=name, inline=True)
         e.add_field(name="等級", value=level, inline=True)
         e.add_field(name="經驗值", value=f'{exp:,} ({round(exp/top_exp, 2)}%)', inline=False)
-        e.add_field(name="經驗成長日平均 (總合)", value=f'{round(daily_velocity):,} 經驗值/日', inline=False)
+        e.add_field(name="經驗成長日平均 (總合)", value=f'{round(daily_velocity):,} exp', inline=False)
         e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'))
         return e
 
@@ -111,13 +111,13 @@ class Exp(commands.Cog):
 
         if previous_date_datetime != datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')):
             date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
-            avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400), 2) # 86400 is the total seconds in a day
+            avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
             await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
         else:
-            avg_exp = 0.0
+            avg_exp = 0
 
         e = await self.embedout(user=ctx.author, title='經驗值更新')
-        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,} 經驗值/日', inline=True)
+        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,} exp', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.send(embed=e)
 
