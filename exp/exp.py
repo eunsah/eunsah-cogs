@@ -78,7 +78,7 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @commands.command()
     async def msinfo(self,ctx):
-        ctx.send('msinfo called')
+        await ctx.send('msinfo called')
         await ctx.send(embed=await self.embedout(ctx, title = 'Charactor Info'))
 
     @checks.is_owner()
@@ -88,13 +88,13 @@ class Exp(commands.Cog):
             [p]exp {level} {percentage || raw exp}
             Update exp
         '''
-        ctx.send('exp called')
+        await ctx.send('exp called')
 
         if len(argv) != 2:
             # argv check
             await ctx.send(f'Not enough arguments')
             return
-        ctx.send('exp line 97')
+        await ctx.send('exp line 97')
 
         level = argv[0]
         raw = await self.config.user(ctx.author).raw()
@@ -107,7 +107,7 @@ class Exp(commands.Cog):
         raw_diff = await self.config.user(ctx.author).raw() - raw
         date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
 
-        ctx.send('exp line 110')
+        await ctx.send('exp line 110')
 
         raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
         avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400), 2) # 86400 is the total seconds in a day
@@ -115,13 +115,13 @@ class Exp(commands.Cog):
         daily_velocity = await self.config.user(ctx.author).daily_velocity()
         await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
 
-        ctx.send('exp line 118')
+        await ctx.send('exp line 118')
 
         e = await self.embedout(ctx, title='Character Update')
         e.add_field(name="Average Daily Exp (Update)", value=f'{avg_exp:,}', inline=True)
         # e.add_field(name="Total Exp Growth", value=str(raw_diff) + ' (' + str(raw_diff_percentage) + '%)', inline=True)
         e.add_field(name="Total Exp Growth", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
-        ctx.send('exp line 124')
+        await ctx.send('exp line 124')
         await ctx.send(embed=e)
 
     @checks.is_owner()
