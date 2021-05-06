@@ -76,7 +76,7 @@ class Exp(commands.Cog):
         e = discord.Embed(
             title = title,
             description = 'Last update: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'),
-            color = target.color
+            color = ctx.author.color
         )
         e.add_field(name="Name", value=name, inline=True)
         e.add_field(name="Level", value=level, inline=True)
