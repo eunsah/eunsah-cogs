@@ -64,7 +64,7 @@ class Exp(commands.Cog):
         # e.add_field(name="Exp", value=exp, inline=False)
         # e.add_field(name="Daily total Average", value=exp, inline=False)
 
-        await ctx.send(embed=self.embedout(ctx))
+        await ctx.send(embed=await self.embedout(ctx))
 
     @checks.is_owner()
     @commands.command()
