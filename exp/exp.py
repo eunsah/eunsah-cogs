@@ -38,7 +38,7 @@ class Exp(commands.Cog):
             if level < 0 or level > MAX_LEVEL:
                 # level verify
                 raise ValueError
-            level_exp = self.levelchart[argv[0]]
+            level_exp = self.levelchart[str(level)]
             if '.' in exp:
                 exp = float(exp)
                 exp = round((level_exp*exp)/100)
