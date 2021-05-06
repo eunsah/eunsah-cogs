@@ -143,8 +143,10 @@ class Exp(commands.Cog):
         await ctx.send(f'Name set to {value}')
 
     @expset.command()
-    async def _name(self, ctx, value, user=None):
-        user = await self.get_who(ctx, user)
+    async def _name(self, ctx, value, user: discord.User = None):
+        if user is None:
+            user = ctx.author
+
         await self.config.user(user).name.set(value)
         await ctx.send('Done')
 
