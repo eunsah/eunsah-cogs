@@ -140,7 +140,7 @@ class Exp(commands.Cog):
         if user == None:
             user = ctx.author
         else:
-            user = ctx.message.guild.get_member(user)
+            user = await self.fetch_user(user)
         await self.config.user(user).name.set(value)
 
     @checks.is_owner()
