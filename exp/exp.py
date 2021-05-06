@@ -59,7 +59,7 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).exp.set(int(exp))
         await self.config.user(ctx.author).raw.set(int(raw))
 
-    async def embedout(self, title, ctx) -> discord.Embed:
+    async def embedout(self, ctx, title) -> discord.Embed:
         name = await self.config.user(ctx.author).name()
         level = await self.config.user(ctx.author).level()
         exp = await self.config.user(ctx.author).exp()
