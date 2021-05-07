@@ -151,7 +151,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).name.set(value)
-        await ctx.send('完成')
+        await ctx.react_quietly('✅')
 
     @checks.is_owner()
     @expset.command()
