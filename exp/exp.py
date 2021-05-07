@@ -28,7 +28,7 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def levelexp_verification(self, user, level, exp):
+    async def _levelexp_verification(self, user, level, exp):
         '''
         Verify level, exp and sets level, exp, raw
         parameters : user, level, exp
@@ -57,7 +57,7 @@ class Exp(commands.Cog):
         await self.config.user(user).exp.set(int(exp))
         await self.config.user(user).raw.set(int(raw))
 
-    async def embedout(self, user, title) -> discord.Embed:
+    async def _exp_embed(self, user, title) -> discord.Embed:
         name = await self.config.user(user).name()
         level = await self.config.user(user).level()
         exp = await self.config.user(user).exp()
@@ -78,18 +78,20 @@ class Exp(commands.Cog):
         return e
 
     @commands.command()
-    async def msinfo(self, ctx, user: discord.User = None):
+    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
+    async def expinfo(self, ctx, user: discord.User = None):
         if user is None:
             user = ctx.author
-        await ctx.send(embed=await self.embedout(user=user, title = '玩家資料'))
+        await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
 
-    @commands.command()
-    async def exp(self, ctx, *argv):
+
+    @commands.command(name = 'exp', aliases = ['e'])
+    @commands.bot_has_permissions(add_reactions=True)
+    async def _update_exp(self, ctx, *argv):
         '''
             [p]exp {等級} {經驗值 || 經驗值%}
             用於更新經驗值
-        '''
-        if len(argv) != 2:
+        '''        if len(argv) != 2:
             # argv check
             await ctx.send(f'參數不足')
             return
@@ -116,7 +118,7 @@ class Exp(commands.Cog):
         else:
             avg_exp = 0
 
-        e = await self.embedout(user=ctx.author, title='經驗值更新')
+        e = await self._exp_embed(user=ctx.author, title='經驗值更新')
         e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.send(embed=e)
