@@ -91,7 +91,8 @@ class Exp(commands.Cog):
         '''
             [p]exp {等級} {經驗值 || 經驗值%}
             用於更新經驗值
-        '''        if len(argv) != 2:
+        '''
+        if len(argv) != 2:
             # argv check
             await ctx.send(f'參數不足')
             return
