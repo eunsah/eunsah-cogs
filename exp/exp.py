@@ -35,6 +35,16 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
+    async def _ctx_permissions(self, ctx) -> bool:
+        ''' Verifies if user is in admin group '''
+        have_perm = int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator
+        if not have_perm:
+            have_perm = await self._ctx_permissions(ctx)
+            await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
+            await self._remove_after_seconds(ctx, 3)
+
+        return have_perm
+
     async def _levelexp_verification(self, user, level = None, exp = None) -> None:
         '''Verify level, exp and sets level, exp, raw
         parameters : user, level, exp
@@ -180,11 +190,8 @@ class Exp(commands.Cog):
             user = ctx.author
         elif user == ctx.author:
             pass
-        else:
-            if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
-                await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
-                await self._remove_after_seconds(ctx, 3)
-                return
+        elif await self._ctx_permissions(ctx):
+            return
 
         await self.config.user(ctx.author).name.set(name)
         await ctx.tick()
@@ -201,7 +208,8 @@ class Exp(commands.Cog):
         elif user == ctx.author:
             pass
         else:
-            if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
+            have_perm = await self._ctx_permissions(ctx)
+            if not have_perm:
                 await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
                 await self._remove_after_seconds(ctx, 3)
                 return
@@ -221,7 +229,8 @@ class Exp(commands.Cog):
         elif user == ctx.author:
             pass
         else:
-            if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
+            have_perm = await self._ctx_permissions(ctx)
+            if not have_perm:
                 await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
                 await self._remove_after_seconds(ctx, 3)
                 return
