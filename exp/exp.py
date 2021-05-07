@@ -17,8 +17,8 @@ level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 auid = 164900704526401545
 
-class Exp(commands.Cog):
-    '''Exp 紀錄楓之谷經驗值'''
+class Maplexp(commands.Cog):
+    '''Maplexp 紀錄楓之谷經驗值'''
     def __init__(self, bot):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
@@ -39,8 +39,9 @@ class Exp(commands.Cog):
         ''' Verifies if user is in admin group '''
         have_perm = int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator
         if not have_perm:
-            await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
-            await self._remove_after_seconds(ctx, 3)
+            msg = await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
+            await self._remove_after_seconds(ctx.message, 3)
+            await self._remove_after_seconds(msg, 3)
 
         return have_perm
 
@@ -100,12 +101,12 @@ class Exp(commands.Cog):
         e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'))
         return e
 
-    async def _remove_after_seconds(self, ctx, second):
+    async def _remove_after_seconds(self, message, second):
         time.sleep(second)
-        await ctx.message.clear_reactions()
-        await ctx.message.delete()
+        await message.clear_reactions()
+        await message.delete()
 
-    @commands.command(name='expinfo', aliases=['einfo', 'xpinfo'])
+    @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'])
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def _show_exp(self, ctx, user: discord.User = None):
         '''顯示目前資訊
@@ -113,9 +114,10 @@ class Exp(commands.Cog):
         '''
         if user is None:
             user = ctx.author
-        await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
+        msg = await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
+        await _remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
-    @commands.command(name='exp', aliases=['e', 'xp'])
+    @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
     async def _update_exp(self, ctx, *argv):
         '''用於更新經驗值
@@ -154,20 +156,20 @@ class Exp(commands.Cog):
         e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.tick()
-        await ctx.send(embed=e)
-        # await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
+        msg = await ctx.send(embed=e)
+        await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
-    @commands.group(name='expset', aliases=['eset', 'xpset'])
-    async def commands_expset(self, ctx):
+    @commands.group(name='mapleset', aliases=['mset', 'xpset'])
+    async def commands_mapleset(self, ctx):
         '''Exp相關各種設定
         '''
         pass
 
-    @commands_expset.command(name='init', hidden=True)
-    async def expset_init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
+    @commands_mapleset.command(name='init', hidden=True)
+    async def mapleset_init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
         '''完全設定使用者資料
-        [p]expset init [角色名稱] [等級] [經驗值] [日期] {@使用者}
+        [p]mapleset init [角色名稱] [等級] [經驗值] [日期] {@使用者}
         日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
         if user is None:
@@ -177,12 +179,12 @@ class Exp(commands.Cog):
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(previous_date))
         await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_expset.command(name='name', aliases=['ign', 'id'])
-    async def expset_name(self, ctx, name, user: discord.User = None):
+    @commands_mapleset.command(name='name', aliases=['ign', 'id'])
+    async def mapleset_name(self, ctx, name, user: discord.User = None):
         '''設定角色名稱
-        [p]expset name [角色名稱] {@使用者}
+        [p]mapleset name [角色名稱] {@使用者}
         - 指定重置使用者需要管理員權限
         '''
         if user is None:
@@ -196,12 +198,12 @@ class Exp(commands.Cog):
 
         await self.config.user(ctx.author).name.set(name)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_expset.command(name='levelexp')
-    async def expset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
+    @commands_mapleset.command(name='levelexp')
+    async def mapleset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
         '''設定經驗以及等級
-        [p]expset levelexp [level] [exp] {@使用者}
+        [p]mapleset levelexp [level] [exp] {@使用者}
         - 指定重置使用者需要管理員權限
         '''
         if user is None:
@@ -209,20 +211,18 @@ class Exp(commands.Cog):
         elif user == ctx.author:
             pass
         else:
-            have_perm = await self._ctx_permissions(ctx)
-            if not have_perm:
-                await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
-                await self._remove_after_seconds(ctx, 3)
+            ok = await self._ctx_permissions(ctx)
+            if not ok:
                 return
 
         await self._levelexp_verification(ctx.author, level=level, exp=value)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_expset.command(name='reset')
-    async def expset_clear_velocity(self, ctx, user: discord.User = None):
+    @commands_mapleset.command(name='reset')
+    async def mapleset_clear_velocity(self, ctx, user: discord.User = None):
         '''重置日平均
-        [p]expset reset {@使用者}
+        [p]mapleset reset {@使用者}
         - 指定重置使用者需要管理員權限
         '''
         if user is None:
@@ -230,10 +230,8 @@ class Exp(commands.Cog):
         elif user == ctx.author:
             pass
         else:
-            have_perm = await self._ctx_permissions(ctx)
-            if not have_perm:
-                await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
-                await self._remove_after_seconds(ctx, 3)
+            ok = await self._ctx_permissions(ctx)
+            if not ok:
                 return
 
         verify = await ctx.send('確定要重置日平均嗎？')
@@ -248,86 +246,60 @@ class Exp(commands.Cog):
 
         if not pred.result:
             await verify.delete()
-            await self._remove_after_seconds(ctx, 3)
+            await self._remove_after_seconds(ctx.message, 3)
             return
 
         await verify.delete()
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
         await self.config.user(user).daily_velocity.set(0.0)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
-    @commands_expset.command(name='setname', hidden=True)
-    async def expset_name_admin(self, ctx, value, user: discord.User = None):
-        '''設定角色名稱 (管理員)
-        [p]expset setname [角色名稱] [@使用者]
-        '''
-        if user is None:
-            user = ctx.author
-        await self.config.user(user).name.set(value)
-        await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
-
-    @commands.admin_or_permissions(administrator=True)
-    @commands_expset.command(name='setlevel')
-    async def expset_level_admin(self, ctx, value, user: discord.User = None):
-        '''設定角色等級 (管理員)
-        [p]expset setlevel [等級] {@使用者}
+    @commands_mapleset.command(name='level')
+    async def mapleset_level_admin(self, ctx, value, user: discord.User = None):
+        '''設定角色等級 (管理員限定)
+        [p]mapleset level [等級] {@使用者}
         '''
         if user is None:
             user = ctx.author
         await self._levelexp_verification(user, level=value)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
-    @commands_expset.command(name='setexp')
-    async def expset_exp_admin(self, ctx, value, user: discord.User = None):
-        '''設定角色經驗值 (管理員)
-        [p]expset setexp [經驗值] {@使用者}
+    @commands_mapleset.command(name='exp')
+    async def mapleset_exp_admin(self, ctx, value, user: discord.User = None):
+        '''設定角色經驗值 (管理員限定)
+        [p]mapleset exp [經驗值] {@使用者}
         '''
         if user is None:
             user = ctx.author
         await self._levelexp_verification(user, exp=value)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
-    @commands_expset.command(name='setdate')
-    async def expset_date_admin(self, ctx, value, user: discord.User = None):
-        '''設定更新日期 (管理員)
-        [p]expset setdate [日期] {@使用者}
+    @commands_mapleset.command(name='date')
+    async def mapleset_date_admin(self, ctx, value, user: discord.User = None):
+        '''設定更新日期 (管理員限定)
+        [p]mapleset date [日期] {@使用者}
         日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
         if user is None:
             user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
         await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @checks.is_owner()
-    @commands_expset.command(name='setvelocity')
-    async def expset_velocity(self, ctx, value, user: discord.User = None):
+    @commands_mapleset.command(name='velocity')
+    async def mapleset_velocity(self, ctx, value, user: discord.User = None):
         '''設定角色日平均 (擁有者)
-        [p]expset setvelocity [速率] {@使用者}
+        [p]mapleset velocity [速率] {@使用者}
         '''
         if user is None:
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
         await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
-
-    @commands.admin_or_permissions(administrator=True)
-    @commands_expset.command(name='setlevelexp')
-    async def expset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
-        '''設定使用者經驗以及等級 (管理員)
-        [p]expset setlevelexp [level] [exp]
-        '''
-        if user is None:
-            user = ctx.author
-        await self._levelexp_verification(user, level=level, exp=value)
-        await ctx.tick()
-        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
-
-
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)

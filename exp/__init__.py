@@ -1,8 +1,8 @@
 import asyncio
 from redbot.core.bot import Red
 
-from .exp import Exp
+from .maplexp import Maplexp
 
 async def setup(bot):
-    this = Exp(bot)
+    this = Maplexp(bot)
     bot.add_cog(this)
