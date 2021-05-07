@@ -201,7 +201,7 @@ class Exp(commands.Cog):
             pass
         else:
             if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
-                await ctx.send('笑死，你沒有權限')
+                await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
                 return
 
         verify = await ctx.send('確定要重置日平均嗎？')
