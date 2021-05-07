@@ -116,7 +116,7 @@ class Maplexp(commands.Cog):
         return e
 
     async def _remove_after_seconds(self, message, second):
-        time.sleep(second)
+        await asyncio.sleep(second)
         await message.clear_reactions()
         await message.delete()
 
