@@ -157,9 +157,9 @@ class Maplexp(commands.Cog):
         level = argv[0]
         raw = await self.config.user(ctx.author).raw()
         previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
-        name = await self.config.user(ctx.author).display_name()
+        name = await self.config.user(ctx.author).name()
         if name == '角色':
-            await self.config.user(ctx.author).name.set(ctx.author.name)
+            await self.config.user(ctx.author).name.set(ctx.author.display_name)
 
         await self._levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
 
