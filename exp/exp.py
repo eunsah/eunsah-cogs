@@ -107,6 +107,7 @@ class Exp(commands.Cog):
         if len(argv) != 2:
             # argv check
             await ctx.send(f'參數不足')
+            await ctx.send_help()
             return
 
         level = argv[0]
