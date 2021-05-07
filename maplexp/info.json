@@ -5,9 +5,9 @@
     "description" : "Saves and calculates accumulate exp from Maplestory",
     "disabled" : false,
     "hidden" : false,
-    "install_msg" : "Usage: `[p]exp`",
+    "install_msg" : "Maplexp 紀錄楓之谷經驗值 使用`[p]help Maplexp`查看更多",
     
-    "name" : "Tms",
+    "name" : "Maplexp",
     "permissions" : [
 		"add_reactions",
 		"manage_messages"
