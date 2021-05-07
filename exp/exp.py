@@ -192,7 +192,7 @@ class Exp(commands.Cog):
     @commands_expset.command(name='reset')
     async def expset_clear_velocity(self, ctx, user: discord.User = None):
         '''重置日平均
-        [p]expset reset [@使用者]
+        [p]expset reset {@使用者}
         - 指定重置使用者需要管理員權限
         '''
         if user is None:
