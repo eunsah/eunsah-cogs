@@ -115,7 +115,7 @@ class Maplexp(commands.Cog):
         if user is None:
             user = ctx.author
         msg = await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
-        await _remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
     @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
