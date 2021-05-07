@@ -124,7 +124,7 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def _show_exp(self, ctx, user: discord.User = None):
         '''顯示目前資訊
-        [p]mapleinfo {@使用者}
+        使用方式：[p]mapleinfo {@使用者}
         '''
         if user is None:
             user = ctx.author
@@ -145,9 +145,9 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def _update_exp(self, ctx, *argv):
         '''用於更新經驗值
-        [p]maplexp [等級] [經驗值]
-        經驗值可以為百分比(12.42%)或是整數(34593402)
-        可以用[p]help Maplexp 查看更多
+        使用方式：[p]maplexp [等級] [經驗值]
+        - 經驗值可以為百分比(12.42%)或是整數(34593402)
+        - 可以用[p]help Maplexp 查看更多
         '''
         if len(argv) != 2:
             # argv check
@@ -194,8 +194,8 @@ class Maplexp(commands.Cog):
     @commands_mapleset.command(name='init', hidden=True)
     async def mapleset_init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
         '''完全設定使用者資料
-        [p]mapleset init [角色名稱] [等級] [經驗值] [日期] {@使用者}
-        日期格式為：%Y/%m/%d (例：1996/11/30)
+        使用方式：[p]mapleset init [角色名稱] [等級] [經驗值] [日期] {@使用者}
+        - 日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
         if user is None:
             user = ctx.author
@@ -209,7 +209,7 @@ class Maplexp(commands.Cog):
     @commands_mapleset.command(name='name', aliases=['ign', 'id'])
     async def mapleset_name(self, ctx, name, user: discord.User = None):
         '''設定角色名稱
-        [p]mapleset name [角色名稱] {@使用者}
+        使用方式：[p]mapleset name [角色名稱] {@使用者}
         - 指定重置使用者需要管理員權限
         '''
         if user is None:
@@ -227,8 +227,8 @@ class Maplexp(commands.Cog):
 
     @commands_mapleset.command(name='levelexp')
     async def mapleset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
-        '''設定經驗以及等級
-        [p]mapleset levelexp [level] [exp] {@使用者}
+        '''設定等級及經驗值
+        使用方式：[p]mapleset levelexp [level] [exp] {@使用者}
         - 指定重置使用者需要管理員權限
         '''
         if user is None:
@@ -247,7 +247,7 @@ class Maplexp(commands.Cog):
     @commands_mapleset.command(name='reset')
     async def mapleset_clear_velocity(self, ctx, user: discord.User = None):
         '''重置日平均
-        [p]mapleset reset {@使用者}
+        使用方式：[p]mapleset reset {@使用者}
         - 指定重置使用者需要管理員權限
         '''
         if user is None:
@@ -282,7 +282,7 @@ class Maplexp(commands.Cog):
     @commands_mapleset.command(name='level')
     async def mapleset_level_admin(self, ctx, value, user: discord.User = None):
         '''設定角色等級 (管理員限定)
-        [p]mapleset level [等級] {@使用者}
+        使用方式：[p]mapleset level [等級] {@使用者}
         '''
         if user is None:
             user = ctx.author
@@ -294,7 +294,7 @@ class Maplexp(commands.Cog):
     @commands_mapleset.command(name='exp')
     async def mapleset_exp_admin(self, ctx, value, user: discord.User = None):
         '''設定角色經驗值 (管理員限定)
-        [p]mapleset exp [經驗值] {@使用者}
+        使用方式：[p]mapleset exp [經驗值] {@使用者}
         '''
         if user is None:
             user = ctx.author
@@ -306,8 +306,8 @@ class Maplexp(commands.Cog):
     @commands_mapleset.command(name='date')
     async def mapleset_date_admin(self, ctx, value, user: discord.User = None):
         '''設定更新日期 (管理員限定)
-        [p]mapleset date [日期] {@使用者}
-        日期格式為：%Y/%m/%d (例：1996/11/30)
+        使用方式：[p]mapleset date [日期] {@使用者}
+        - 日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
         if user is None:
             user = ctx.author
@@ -319,7 +319,7 @@ class Maplexp(commands.Cog):
     @commands_mapleset.command(name='velocity')
     async def mapleset_velocity(self, ctx, value, user: discord.User = None):
         '''設定角色日平均 (擁有者限定)
-        [p]mapleset velocity [速率] {@使用者}
+        使用方式：[p]mapleset velocity [速率] {@使用者}
         '''
         if user is None:
             user = ctx.author
@@ -327,9 +327,12 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands.command(name='cleardata', hidden=True)
     @commands.bot_has_permissions(add_reactions=True)
-    async def _clear_all_userdata(self, ctx):
+    @commands_mapleset.command(name='cleardata', hidden=True)
+    async def _mapleset_clear_all_userdata(self, ctx):
+        '''移除所有使用者資料 (擁有者限定)
+        使用方式：[p]mapleset cleardata
+        '''
         ok = await self._ctx_permissions(ctx, admin=False)
         if not ok:
             return
