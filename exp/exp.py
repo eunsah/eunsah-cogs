@@ -237,7 +237,7 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @checks.admin()
-    @commmands_expset.command(name='resetavg')
+    @commands_expset.command(name='resetavg')
     async def expset_clear_velocity(self, ctx, user: discord.User):
         '''重置日平均
         [p]expset resetavg [@使用者]
