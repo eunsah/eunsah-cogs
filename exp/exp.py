@@ -144,7 +144,7 @@ class Exp(commands.Cog):
         pass
 
     @checks.is_owner()
-    @checks.is_admin_or_superior()
+    @checks.admin()
     @commands_expset.command(name='init')
     async def expset_init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
         '''完全設定使用者資料
@@ -171,7 +171,7 @@ class Exp(commands.Cog):
         await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
-    @checks.is_admin_or_superior()
+    @checks.admin()
     @commands_expset.command(name='setname')
     async def expset_name_admin(self, ctx, value, user: discord.User = None):
         '''設定角色名稱
@@ -184,7 +184,7 @@ class Exp(commands.Cog):
         await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
-    @checks.is_admin_or_superior()
+    @checks.admin()
     @commands_expset.command(name='setlevel')
     async def expset_level_admin(self, ctx, value, user: discord.User = None):
         '''設定等級
@@ -197,7 +197,7 @@ class Exp(commands.Cog):
         await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
-    @checks.is_admin_or_superior()
+    @checks.admin()
     @commands_expset.command(name='setexp')
     async def expset_exp_admin(self, ctx, value, user: discord.User = None):
         '''設定經驗值
@@ -210,7 +210,7 @@ class Exp(commands.Cog):
         await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
-    @checks.is_admin_or_superior()
+    @checks.admin()
     @commands_expset.command(name='setdate')
     async def expset_date_admin(self, ctx, value, user: discord.User = None):
         '''設定日期
@@ -236,7 +236,7 @@ class Exp(commands.Cog):
         await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
-    @checks.is_admin_or_superior()
+    @checks.admin()
     @commmands_expset.command(name='resetavg')
     async def expset_clear_velocity(self, ctx, user: discord.User):
         '''重置日平均
@@ -248,7 +248,7 @@ class Exp(commands.Cog):
         await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
-    @checks.is_admin_or_superior()
+    @checks.admin()
     @commands_expset.command(name='setlevelexp')
     async def expset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
         '''設定使用者經驗以及等級
