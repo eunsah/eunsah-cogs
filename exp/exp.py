@@ -213,9 +213,10 @@ class Exp(commands.Cog):
 
         if not pred.result:
             await verify.delete()
-            await self._remove_after_seconds(ctx, 0)
+            await self._remove_after_seconds(ctx, 3)
             return
 
+        await verify.delete()
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
         await self.config.user(user).daily_velocity.set(0.0)
         await ctx.tick()
