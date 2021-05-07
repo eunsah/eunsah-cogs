@@ -53,7 +53,7 @@ class Maplexp(commands.Cog):
                 ])
             else:
                 prefix = ''
-            msg = await ctx.send(prefix+'你沒有權限ʕ´•ᴥ•`ʔ')
+            msg = await ctx.send(prefix+r'你沒有權限ʕ´•ᴥ•`ʔ')
             await self._remove_after_seconds(ctx.message, 3)
             await self._remove_after_seconds(msg, 3)
 
@@ -133,7 +133,7 @@ class Maplexp(commands.Cog):
         new_data = bool(date == datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
         if new_data:
             await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-            reminder = await ctx.send('你的資料一片空白ʕ´•ᴥ•\`ʔ\n可以使用`>xp [等級] [經驗值]`來新增資料！')
+            reminder = await ctx.send(r'你的資料一片空白ʕ´•ᴥ•`ʔ\n可以使用`>xp [等級] [經驗值]`來新增資料！')
             await self._remove_after_seconds(reminder, 300)
             return
 
