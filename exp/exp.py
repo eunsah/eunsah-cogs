@@ -39,7 +39,6 @@ class Exp(commands.Cog):
         ''' Verifies if user is in admin group '''
         have_perm = int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator
         if not have_perm:
-            have_perm = await self._ctx_permissions(ctx)
             await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
             await self._remove_after_seconds(ctx, 3)
 
