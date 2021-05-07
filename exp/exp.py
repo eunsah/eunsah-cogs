@@ -190,8 +190,10 @@ class Exp(commands.Cog):
             user = ctx.author
         elif user == ctx.author:
             pass
-        elif await self._ctx_permissions(ctx):
-            return
+        else:
+            ok = await self._ctx_permissions(ctx)
+            if not ok:
+                return
 
         await self.config.user(ctx.author).name.set(name)
         await ctx.tick()
