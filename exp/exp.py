@@ -141,6 +141,10 @@ class Exp(commands.Cog):
         await ctx.send(embed=e)
         # await self._remove_after_seconds(ctx, 5)
 
+
+
+
+
     @checks.is_owner()
     @commands.group(name='expset')
     async def commands_expset(self, ctx):
@@ -174,73 +178,15 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, 5)
 
-    @checks.is_owner()
-    @checks.admin()
-    @commands_expset.command(name='setname')
-    async def expset_name_admin(self, ctx, value, user: discord.User = None):
-        '''設定角色名稱
-        [p]expset setname [角色名稱] [@使用者]
+    @commands_expset.command(name='levelexp')
+    async def expset_setlevelexp(self, ctx, level, exp):
+        '''設定經驗以及等級
+        [p]expset levelexp [level] [exp]
         '''
-        if user is None:
-            user = ctx.author
-        await self.config.user(user).name.set(value)
+        await self._levelexp_verification(ctx.author, level=level, exp=value)
         await ctx.tick()
         await self._remove_after_seconds(ctx, 5)
 
-    @checks.is_owner()
-    @checks.admin()
-    @commands_expset.command(name='setlevel')
-    async def expset_level_admin(self, ctx, value, user: discord.User = None):
-        '''設定等級
-        [p]expset setlevel [等級] {@使用者}
-        '''
-        if user is None:
-            user = ctx.author
-        await self._levelexp_verification(user, level=value)
-        await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
-
-    @checks.is_owner()
-    @checks.admin()
-    @commands_expset.command(name='setexp')
-    async def expset_exp_admin(self, ctx, value, user: discord.User = None):
-        '''設定經驗值
-        [p]expset setexp [經驗值] {@使用者}
-        '''
-        if user is None:
-            user = ctx.author
-        await self._levelexp_verification(user, exp=value)
-        await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
-
-    @checks.is_owner()
-    @checks.admin()
-    @commands_expset.command(name='setdate')
-    async def expset_date_admin(self, ctx, value, user: discord.User = None):
-        '''設定日期
-        [p]expset setdate [日期] {@使用者}
-        日期格式為：%Y/%m/%d (例：1996/11/30)
-        '''
-        if user is None:
-            user = ctx.author
-        await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
-        await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
-
-    @checks.is_owner()
-    @commands_expset.command(name='setvelocity')
-    async def expset_velocity(self, ctx, value, user: discord.User = None):
-        '''設定日平均
-        [p]expset setvelocity [速率] {@使用者}
-        '''
-        if user is None:
-            user = ctx.author
-        await self.config.user(user).daily_velocity.set(int(value))
-        await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
-
-    @checks.is_owner()
-    @checks.admin()
     @commands_expset.command(name='resetavg')
     async def expset_clear_velocity(self, ctx, user: discord.User):
         '''重置日平均
@@ -253,9 +199,74 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @checks.admin()
+    @commands_expset.command(name='setname')
+    async def expset_name_admin(self, ctx, value, user: discord.User = None):
+        '''設定角色名稱 (管理員)
+        [p]expset setname [角色名稱] [@使用者]
+        '''
+        if user is None:
+            user = ctx.author
+        await self.config.user(user).name.set(value)
+        await ctx.tick()
+        await self._remove_after_seconds(ctx, 5)
+
+    @checks.is_owner()
+    @checks.admin()
+    @commands_expset.command(name='setlevel')
+    async def expset_level_admin(self, ctx, value, user: discord.User = None):
+        '''設定角色等級 (管理員)
+        [p]expset setlevel [等級] {@使用者}
+        '''
+        if user is None:
+            user = ctx.author
+        await self._levelexp_verification(user, level=value)
+        await ctx.tick()
+        await self._remove_after_seconds(ctx, 5)
+
+    @checks.is_owner()
+    @checks.admin()
+    @commands_expset.command(name='setexp')
+    async def expset_exp_admin(self, ctx, value, user: discord.User = None):
+        '''設定角色經驗值 (管理員)
+        [p]expset setexp [經驗值] {@使用者}
+        '''
+        if user is None:
+            user = ctx.author
+        await self._levelexp_verification(user, exp=value)
+        await ctx.tick()
+        await self._remove_after_seconds(ctx, 5)
+
+    @checks.is_owner()
+    @checks.admin()
+    @commands_expset.command(name='setdate')
+    async def expset_date_admin(self, ctx, value, user: discord.User = None):
+        '''設定更新日期 (管理員)
+        [p]expset setdate [日期] {@使用者}
+        日期格式為：%Y/%m/%d (例：1996/11/30)
+        '''
+        if user is None:
+            user = ctx.author
+        await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
+        await ctx.tick()
+        await self._remove_after_seconds(ctx, 5)
+
+    @checks.is_owner()
+    @commands_expset.command(name='setvelocity')
+    async def expset_velocity(self, ctx, value, user: discord.User = None):
+        '''設定角色日平均 (擁有者)
+        [p]expset setvelocity [速率] {@使用者}
+        '''
+        if user is None:
+            user = ctx.author
+        await self.config.user(user).daily_velocity.set(int(value))
+        await ctx.tick()
+        await self._remove_after_seconds(ctx, 5)
+
+    @checks.is_owner()
+    @checks.admin()
     @commands_expset.command(name='setlevelexp')
     async def expset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
-        '''設定使用者經驗以及等級
+        '''設定使用者經驗以及等級 (管理員)
         [p]expset setlevelexp [level] [exp]
         '''
         if user is None:
@@ -264,12 +275,4 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, 5)
 
-    @checks.is_owner()
-    @commands_expset.command(name='levelexp')
-    async def expset_setlevelexp(self, ctx, level, exp):
-        '''設定經驗以及等級
-        [p]expset levelexp [level] [exp]
-        '''
-        await self._levelexp_verification(ctx.author, level=level, exp=value)
-        await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+
