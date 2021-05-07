@@ -84,8 +84,8 @@ class Exp(commands.Cog):
 
     async def _remove_after_seconds(self, ctx, second):
         time.sleep(second)
-        ctx.message.clear_reactions()
-        ctx.message.delete()
+        await ctx.message.clear_reactions()
+        await ctx.message.delete()
 
     @commands.command()
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
