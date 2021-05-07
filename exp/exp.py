@@ -101,7 +101,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
 
-    @commands.command(name='exp', aliases=['e'])
+    @commands.command(name='exp', aliases=['e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
     async def _update_exp(self, ctx, *argv):
         '''用於更新經驗值
