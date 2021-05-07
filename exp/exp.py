@@ -6,12 +6,16 @@ import discord
 import json
 import time
 from redbot.core import commands, checks, Config
+from redbot.core.utils.menus import start_adding_reactions
+from redbot.core.utils.predicates import ReactionPredicate
+
 log = logging.getLogger('red.eunsahcogs.exp')
 MAX_LEVEL = 275
 MESSAGE_REMOVE_DELAY = 30
 folder = 'leveling'
 level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
+auid = 164900704526401545
 
 class Exp(commands.Cog):
     '''Exp 紀錄楓之谷經驗值'''
@@ -19,7 +23,7 @@ class Exp(commands.Cog):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.levelchart = json.load(j)
-        self.config = Config.get_conf(self, identifier=164900704526401545001,  force_registration=True)
+        self.config = Config.get_conf(self, identifier=int(str(auid)+'001')),  force_registration=True)
         default_user = {
             'name':'角色',
             'level' : 1,
@@ -151,7 +155,7 @@ class Exp(commands.Cog):
         '''
         pass
 
-    @commands_expset.command(name='init')
+    @commands_expset.command(name='init', hidden=True)
     async def expset_init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
         '''完全設定使用者資料
         [p]expset init [角色名稱] [等級] [經驗值] [日期] {@使用者}
@@ -166,13 +170,14 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
+
     @commands_expset.command(name='name', aliases=['ign', 'id'])
-    async def expset_name(self, ctx, value):
+    async def expset_name(self, ctx, name):
         '''設定角色名稱
         [p]expset name [角色名稱]
         '''
-        await self.config.user(ctx.author).name.set(value)
-        # await ctx.send(f'已變更名稱為：{value}')
+        await self.config.user(ctx.author).name.set(name)
+        # await ctx.send(f'已變更名稱為：{name}')
         await ctx.tick()
         await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
@@ -186,17 +191,38 @@ class Exp(commands.Cog):
         await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands_expset.command(name='resetavg')
-    async def expset_clear_velocity(self, ctx, user: discord.User):
+    async def expset_clear_velocity(self, ctx, user: discord.User = None):
         '''重置日平均
         [p]expset resetavg [@使用者]
         '''
+        if user is None:
+            user = ctx.author
+        else:
+            if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
+                await ctx.send('你沒有權限')
+
+        verify = await ctx.send('確定要重置日平均嗎？')
+        start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
+        pred = ReactionPredicate.yes_or_no(verify, ctx.author)
+
+        try:
+            await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
+        except asyncio.TimeoutError:
+            await self._clear_react(verify)
+            return
+
+        if not pred.result:
+            await verify.delete()
+            await self._remove_after_seconds(ctx, 0)
+            return
+
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
         await self.config.user(user).daily_velocity.set(0.0)
         await ctx.tick()
         await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
-    @commands_expset.command(name='setname')
+    @commands_expset.command(name='setname', hidden=True)
     async def expset_name_admin(self, ctx, value, user: discord.User = None):
         '''設定角色名稱 (管理員)
         [p]expset setname [角色名稱] [@使用者]
