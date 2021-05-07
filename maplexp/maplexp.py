@@ -12,7 +12,7 @@ from redbot.core.utils.predicates import ReactionPredicate
 
 log = logging.getLogger('red.eunsahcogs.maplexp')
 MAX_LEVEL = 275
-MESSAGE_REMOVE_DELAY = 18
+MESSAGE_REMOVE_DELAY = 10
 folder = 'leveling'
 level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
