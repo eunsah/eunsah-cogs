@@ -197,6 +197,8 @@ class Exp(commands.Cog):
         '''
         if user is None:
             user = ctx.author
+        elif user == ctx.author:
+            pass
         else:
             if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
                 await ctx.send('你沒有權限')
