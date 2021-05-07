@@ -15,7 +15,7 @@ MESSAGE_REMOVE_DELAY = 30
 folder = 'leveling'
 level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
-auid = 164900704526401545
+AU_ID = 164900704526401545
 
 class Maplexp(commands.Cog):
     '''Maplexp 紀錄楓之谷經驗值'''
@@ -23,7 +23,7 @@ class Maplexp(commands.Cog):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.levelchart = json.load(j)
-        self.config = Config.get_conf(self, identifier=int(str(auid)+'001'),  force_registration=True)
+        self.config = Config.get_conf(self, identifier=int(str(AU_ID)+'001'),  force_registration=True)
         default_user = {
             'name':'角色',
             'level' : 1,
@@ -37,7 +37,7 @@ class Maplexp(commands.Cog):
 
     async def _ctx_permissions(self, ctx) -> bool:
         ''' Verifies if user is in admin group '''
-        have_perm = int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator
+        have_perm = int(ctx.author.id) == AU_ID or ctx.author.guild_permissions.administrator
         if not have_perm:
             msg = await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
             await self._remove_after_seconds(ctx.message, 3)
