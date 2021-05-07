@@ -91,7 +91,7 @@ class Exp(commands.Cog):
         await ctx.message.clear_reactions()
         await ctx.message.delete()
 
-    @commands.command(name='expinfo', aliases=['einfo'])
+    @commands.command(name='expinfo', aliases=['einfo', 'xpinfo'])
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def _show_exp(self, ctx, user: discord.User = None):
         '''顯示目前資訊
