@@ -120,13 +120,12 @@ class Maplexp(commands.Cog):
 
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
-        await message.clear_reactions()
         await message.delete()
 
     @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'])
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def _show_exp(self, ctx, user: discord.User = None):
-        '''顯示目前資訊
+        '''顯示角色資訊 (mapleinfo || minfo || xpinfo)
         使用方式：[p]mapleinfo {@使用者}
         '''
         if user is None:
