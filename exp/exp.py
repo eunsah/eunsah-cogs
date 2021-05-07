@@ -138,16 +138,19 @@ class Exp(commands.Cog):
         await self.config.user(user).name.set(name)
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(previous_date))
-        await ctx.send(f'角色初始化完成')
+        await ctx.tick()
+
 
     @expset.command()
     async def name(self, ctx, value):
         await self.config.user(ctx.author).name.set(value)
-        await ctx.send(f'已變更名稱為：{value}')
+        # await ctx.send(f'已變更名稱為：{value}')
+        await ctx.tick()
+
 
     @checks.is_owner()
     @expset.command()
-    async def _name(self, ctx, value, user: discord.User = None):
+    async def _name(self, ctx, user: discord.User = None, value):
         if user is None:
             user = ctx.author
         await self.config.user(user).name.set(value)
@@ -160,7 +163,7 @@ class Exp(commands.Cog):
             user = ctx.author
         exp = await self.config.user(user).exp()
         await self.levelexp_verification(user, level=value, exp=exp)
-        await ctx.react_quietly('✅')
+        await ctx.tick()
 
     @checks.is_owner()
     @expset.command()
@@ -169,7 +172,7 @@ class Exp(commands.Cog):
             user = ctx.author
         level = await self.config.user(user).level()
         await self.levelexp_verification(user, level=level, exp=value)
-        await ctx.react_quietly('✅')
+        await ctx.tick()
 
     @checks.is_owner()
     @expset.command()
@@ -177,7 +180,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
-        await ctx.react_quietly('✅')
+        await ctx.tick()
 
     @checks.is_owner()
     @expset.command()
@@ -185,5 +188,5 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
-        await ctx.react_quietly('✅')
+        await ctx.tick()
 
