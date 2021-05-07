@@ -55,7 +55,7 @@ class Maplexp(commands.Cog):
                 prefix = ''
             msg = await ctx.send(prefix+r'你沒有權限ʕ´•ᴥ•`ʔ')
             await self._remove_after_seconds(ctx.message, 3)
-            await self._remove_after_seconds(msg, 3)
+            await self._remove_after_seconds(msg, 10)
 
         return have_perm
 
