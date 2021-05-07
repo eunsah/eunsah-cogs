@@ -8,6 +8,7 @@ import time
 from redbot.core import commands, checks, Config
 log = logging.getLogger('red.eunsahcogs.exp')
 MAX_LEVEL = 275
+MESSAGE_REMOVE_DELAY = 30
 folder = 'leveling'
 level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -141,7 +142,7 @@ class Exp(commands.Cog):
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.tick()
         await ctx.send(embed=e)
-        # await self._remove_after_seconds(ctx, 5)
+        # await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands.group(name='expset', aliases=['eset', 'xpset'])
@@ -163,7 +164,7 @@ class Exp(commands.Cog):
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(previous_date))
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands_expset.command(name='name', aliases=['ign', 'id'])
     async def expset_name(self, ctx, value):
@@ -173,7 +174,7 @@ class Exp(commands.Cog):
         await self.config.user(ctx.author).name.set(value)
         # await ctx.send(f'已變更名稱為：{value}')
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands_expset.command(name='levelexp')
     async def expset_setlevelexp(self, ctx, level, exp):
@@ -182,7 +183,7 @@ class Exp(commands.Cog):
         '''
         await self._levelexp_verification(ctx.author, level=level, exp=value)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands_expset.command(name='resetavg')
     async def expset_clear_velocity(self, ctx, user: discord.User):
@@ -192,7 +193,7 @@ class Exp(commands.Cog):
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
         await self.config.user(user).daily_velocity.set(0.0)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setname')
@@ -204,7 +205,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self.config.user(user).name.set(value)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setlevel')
@@ -216,7 +217,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self._levelexp_verification(user, level=value)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setexp')
@@ -228,7 +229,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self._levelexp_verification(user, exp=value)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setdate')
@@ -241,7 +242,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @checks.is_owner()
     @commands_expset.command(name='setvelocity')
@@ -253,7 +254,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setlevelexp')
@@ -265,6 +266,6 @@ class Exp(commands.Cog):
             user = ctx.author
         await self._levelexp_verification(user, level=level, exp=value)
         await ctx.tick()
-        await self._remove_after_seconds(ctx, 5)
+        await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
 
