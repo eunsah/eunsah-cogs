@@ -40,7 +40,7 @@ class Maplexp(commands.Cog):
         ''' Verifies if user is in admin group '''
         have_perm = int(ctx.author.id) == AUTH_UID or ctx.author.guild_permissions.administrator if admin else int(ctx.author.id) == AUTH_UID
         if not have_perm:
-            if numpy.random.choice(5) == 4:
+            if numpy.random.choice(10) == 5:
                 prefix = numpy.random.choice([
                     '可以啊，只是',
                     '笑死，',
