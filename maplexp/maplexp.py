@@ -60,7 +60,7 @@ class Maplexp(commands.Cog):
             try:
                 await self._remove_after_seconds(ctx.message, 3)
                 await self._remove_after_seconds(msg, 20)
-            except Exception as e:
+            except:
                 pass
 
         return have_perm
