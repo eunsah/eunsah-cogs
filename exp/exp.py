@@ -102,11 +102,11 @@ class Exp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def _update_exp(self, ctx, *argv):
         '''用於更新經驗值
-        [p]exp {等級} {經驗值 || 經驗值%}
+        [p]exp [等級] [經驗值]
+        經驗值可以為百分比(12.42%)或是整數(34593402)
         '''
         if len(argv) != 2:
             # argv check
-            await ctx.send(f'參數不足')
             await ctx.send_help()
             return
 
