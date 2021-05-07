@@ -83,7 +83,7 @@ class Exp(commands.Cog):
         return e
 
     async def _remove_after_seconds(self, ctx, second):
-        await time.sleep(second)
+        time.sleep(second)
         ctx.message.clear_reactions()
         ctx.message.delete()
 
