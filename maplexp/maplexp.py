@@ -181,7 +181,7 @@ class Maplexp(commands.Cog):
         else:
             avg_exp = 0
 
-        e = await self._exp_embed(user=ctx.author, title='更新'+str(user.display_name)+'的經驗值')
+        e = await self._exp_embed(user=ctx.author, title='更新'+str(ctx.author.display_name)+'的經驗值')
         e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.tick()
