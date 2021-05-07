@@ -171,20 +171,41 @@ class Exp(commands.Cog):
         await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands_expset.command(name='name', aliases=['ign', 'id'])
-    async def expset_name(self, ctx, name):
+    async def expset_name(self, ctx, name, user: discord.User = None):
         '''設定角色名稱
-        [p]expset name [角色名稱]
+        [p]expset name [角色名稱] {@使用者}
+        - 指定重置使用者需要管理員權限
         '''
+        if user is None:
+            user = ctx.author
+        elif user == ctx.author:
+            pass
+        else:
+            if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
+                await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
+                await self._remove_after_seconds(ctx, 3)
+                return
+
         await self.config.user(ctx.author).name.set(name)
-        # await ctx.send(f'已變更名稱為：{name}')
         await ctx.tick()
         await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
     @commands_expset.command(name='levelexp')
-    async def expset_setlevelexp(self, ctx, level, exp):
+    async def expset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
         '''設定經驗以及等級
-        [p]expset levelexp [level] [exp]
+        [p]expset levelexp [level] [exp] {@使用者}
+        - 指定重置使用者需要管理員權限
         '''
+        if user is None:
+            user = ctx.author
+        elif user == ctx.author:
+            pass
+        else:
+            if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
+                await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
+                await self._remove_after_seconds(ctx, 3)
+                return
+
         await self._levelexp_verification(ctx.author, level=level, exp=value)
         await ctx.tick()
         await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
