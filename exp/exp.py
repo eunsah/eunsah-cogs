@@ -190,10 +190,10 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, MESSAGE_REMOVE_DELAY)
 
-    @commands_expset.command(name='resetavg')
+    @commands_expset.command(name='reset')
     async def expset_clear_velocity(self, ctx, user: discord.User = None):
         '''重置日平均
-        [p]expset resetavg [@使用者]
+        [p]expset reset [@使用者]
         '''
         if user is None:
             user = ctx.author
