@@ -192,8 +192,7 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, 5)
 
-    @checks.is_owner()
-    @checks.admin()
+    @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setname')
     async def expset_name_admin(self, ctx, value, user: discord.User = None):
         '''設定角色名稱 (管理員)
@@ -205,8 +204,7 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, 5)
 
-    @checks.is_owner()
-    @checks.admin()
+    @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setlevel')
     async def expset_level_admin(self, ctx, value, user: discord.User = None):
         '''設定角色等級 (管理員)
@@ -218,8 +216,7 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, 5)
 
-    @checks.is_owner()
-    @checks.admin()
+    @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setexp')
     async def expset_exp_admin(self, ctx, value, user: discord.User = None):
         '''設定角色經驗值 (管理員)
@@ -231,8 +228,7 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, 5)
 
-    @checks.is_owner()
-    @checks.admin()
+    @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setdate')
     async def expset_date_admin(self, ctx, value, user: discord.User = None):
         '''設定更新日期 (管理員)
@@ -257,8 +253,7 @@ class Exp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx, 5)
 
-    @checks.is_owner()
-    @checks.admin()
+    @commands.admin_or_permissions(administrator=True)
     @commands_expset.command(name='setlevelexp')
     async def expset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
         '''設定使用者經驗以及等級 (管理員)
