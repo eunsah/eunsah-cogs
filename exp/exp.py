@@ -21,7 +21,7 @@ class Exp(commands.Cog):
         self.config = Config.get_conf(self, identifier=164900704526401545001,  force_registration=True)
         default_user = {
             'name':'角色',
-            'level' : 0,
+            'level' : 1,
             'exp' : 0,
             'raw' : 0,
             'previous_date' : datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')),
@@ -72,6 +72,8 @@ class Exp(commands.Cog):
         daily_velocity = await self.config.user(user).daily_velocity()
 
         top_exp = self.levelchart[str(level)]
+        if top_exp == 0:
+            top_exp = 1
 
         e = discord.Embed(
             title = title,
