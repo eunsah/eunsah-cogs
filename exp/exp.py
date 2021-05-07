@@ -150,7 +150,7 @@ class Exp(commands.Cog):
 
     @checks.is_owner()
     @expset.command()
-    async def _name(self, ctx, user: discord.User = None, value):
+    async def _name(self, ctx, user: discord.User, value):
         if user is None:
             user = ctx.author
         await self.config.user(user).name.set(value)
