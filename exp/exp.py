@@ -202,6 +202,7 @@ class Exp(commands.Cog):
         else:
             if not (int(ctx.author.id) == auid or ctx.author.guild_permissions.administrator):
                 await ctx.send('你沒有權限')
+                return
 
         verify = await ctx.send('確定要重置日平均嗎？')
         start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
