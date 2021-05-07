@@ -318,7 +318,7 @@ class Maplexp(commands.Cog):
     @checks.is_owner()
     @commands_mapleset.command(name='velocity')
     async def mapleset_velocity(self, ctx, value, user: discord.User = None):
-        '''設定角色日平均 (擁有者)
+        '''設定角色日平均 (擁有者限定)
         [p]mapleset velocity [速率] {@使用者}
         '''
         if user is None:
