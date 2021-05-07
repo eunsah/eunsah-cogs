@@ -131,10 +131,10 @@ class Maplexp(commands.Cog):
 
         date = await self.config.user(user).previous_date()
         new_data = bool(date == datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
-            if new_data:
-                reminder = await ctx.send('你的資料一片空白ʕ´•ᴥ•`ʔ\n可以使用`>xp [等級] [經驗值]`來新增資料！')
-                await self._remove_after_seconds(reminder, MESSAGE_REMOVE_DELAY)
-                return
+        if new_data:
+            reminder = await ctx.send('你的資料一片空白ʕ´•ᴥ•`ʔ\n可以使用`>xp [等級] [經驗值]`來新增資料！')
+            await self._remove_after_seconds(reminder, MESSAGE_REMOVE_DELAY)
+            return
 
         msg = await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
