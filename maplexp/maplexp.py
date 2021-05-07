@@ -157,7 +157,7 @@ class Maplexp(commands.Cog):
         level = argv[0]
         raw = await self.config.user(ctx.author).raw()
         previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
-        name = await self.config.user(ctx.author).name()
+        name = await self.config.user(ctx.author).display_name()
         if name == '角色':
             await self.config.user(ctx.author).name.set(ctx.author.name)
 
@@ -206,7 +206,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_mapleset.command(name='name', aliases=['ign', 'id'])
+    @commands_mapleset.command(name='name', aliases=['ign', 'id'])l
     async def mapleset_name(self, ctx, name, user: discord.User = None):
         '''設定角色名稱
         使用方式：[p]mapleset name [角色名稱] {@使用者}
