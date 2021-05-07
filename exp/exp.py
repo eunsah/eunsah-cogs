@@ -139,7 +139,7 @@ class Exp(commands.Cog):
         # await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
-    @commands.group()
+    @commands.group(name='commands_expset')
     async def commands_expset(self, ctx):
         pass
 
