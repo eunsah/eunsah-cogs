@@ -206,7 +206,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_mapleset.command(name='name', aliases=['ign', 'id'])l
+    @commands_mapleset.command(name='name', aliases=['ign', 'id'])
     async def mapleset_name(self, ctx, name, user: discord.User = None):
         '''設定角色名稱
         使用方式：[p]mapleset name [角色名稱] {@使用者}
