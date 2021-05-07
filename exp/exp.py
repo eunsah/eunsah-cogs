@@ -151,7 +151,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).name.set(value)
-        await ctx.react_quietly('✅')
+        await ctx.tick()
 
     @checks.is_owner()
     @expset.command()
@@ -160,7 +160,7 @@ class Exp(commands.Cog):
             user = ctx.author
         exp = await self.config.user(user).exp()
         await self.levelexp_verification(user, level=value, exp=exp)
-        await ctx.send('完成')
+        await ctx.react_quietly('✅')
 
     @checks.is_owner()
     @expset.command()
@@ -169,7 +169,7 @@ class Exp(commands.Cog):
             user = ctx.author
         level = await self.config.user(user).level()
         await self.levelexp_verification(user, level=level, exp=value)
-        await ctx.send('完成')
+        await ctx.react_quietly('✅')
 
     @checks.is_owner()
     @expset.command()
@@ -177,7 +177,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
-        await ctx.send('完成')
+        await ctx.react_quietly('✅')
 
     @checks.is_owner()
     @expset.command()
@@ -185,5 +185,5 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
-        await ctx.send('完成')
+        await ctx.react_quietly('✅')
 
