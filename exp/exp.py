@@ -13,6 +13,7 @@ level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class Exp(commands.Cog):
+    '''Exp 紀錄楓之谷經驗值'''
     def __init__(self, bot):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
@@ -29,7 +30,7 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def __levelexp_verification(self, user, level = None, exp = None) -> None:
+    async def _levelexp_verification(self, user, level = None, exp = None) -> None:
         '''Verify level, exp and sets level, exp, raw
         parameters : user, level, exp
         '''
@@ -104,6 +105,7 @@ class Exp(commands.Cog):
         '''用於更新經驗值
         [p]exp [等級] [經驗值]
         經驗值可以為百分比(12.42%)或是整數(34593402)
+        可以用[p]help Exp 查看更多
         '''
         if len(argv) != 2:
             # argv check
@@ -142,6 +144,8 @@ class Exp(commands.Cog):
     @checks.is_owner()
     @commands.group(name='expset')
     async def commands_expset(self, ctx):
+        '''Exp相關各種設定
+        '''
         pass
 
     @commands.bot_has_permissions(add_reactions=True)
