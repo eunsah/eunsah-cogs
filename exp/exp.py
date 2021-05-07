@@ -4,6 +4,7 @@ import datetime
 import logging
 import discord
 import json
+import time
 from redbot.core import commands, checks, Config
 log = logging.getLogger('red.eunsahcogs.exp')
 MAX_LEVEL = 275
@@ -28,11 +29,15 @@ class Exp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def _levelexp_verification(self, user, level, exp):
+    async def __levelexp_verification(self, user, level = None, exp = None) -> None:
         '''
         Verify level, exp and sets level, exp, raw
         parameters : user, level, exp
         '''
+        if level is None:
+            level = await self.config.user(user).level()
+        if exp is None:
+            exp = await self.config.user(user).exp()
         try:
             level = int(level)
             if level < 0 or level > MAX_LEVEL:
@@ -77,13 +82,18 @@ class Exp(commands.Cog):
         e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'))
         return e
 
+    async def _remove_after_seconds(self, ctx, second):
+        await time.sleep(second)
+        ctx.message.clear_reactions()
+        ctx.message.delete()
+
     @commands.command()
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def expinfo(self, ctx, user: discord.User = None):
         if user is None:
             user = ctx.author
         await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
-
+        await self._remove_after_seconds(5)
 
     @commands.command(name = 'exp', aliases = ['e'])
     @commands.bot_has_permissions(add_reactions=True)
@@ -104,7 +114,7 @@ class Exp(commands.Cog):
         if name == '角色':
             await self.config.user(ctx.author).name.set(ctx.author.name)
 
-        await self.levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
+        await self._levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
 
         await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
 
@@ -122,7 +132,10 @@ class Exp(commands.Cog):
         e = await self._exp_embed(user=ctx.author, title='經驗值更新')
         e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
+        await ctx.tick()
         await ctx.send(embed=e)
+        await self._remove_after_seconds(5)
+
 
     @checks.is_owner()
     @commands.group()
@@ -134,53 +147,58 @@ class Exp(commands.Cog):
     async def init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
         if user is None:
             user = ctx.author
-        await self.levelexp_verification(user, level=level, exp=exp)
+        await self._levelexp_verification(user, level=level, exp=exp)
         await self.config.user(user).name.set(name)
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(previous_date))
         await ctx.tick()
-
+        await self._remove_after_seconds(5)
 
     @expset.command()
     async def name(self, ctx, value):
         await self.config.user(ctx.author).name.set(value)
         # await ctx.send(f'已變更名稱為：{value}')
         await ctx.tick()
-
+        await self._remove_after_seconds(5)
 
     @checks.is_owner()
     @expset.command()
-    async def _name(self, ctx, user: discord.User, value):
+    async def _name(self, ctx, value, user: discord.User = None):
         if user is None:
             user = ctx.author
         await self.config.user(user).name.set(value)
         await ctx.tick()
+        await self._remove_after_seconds(5)
 
     @checks.is_owner()
     @expset.command()
     async def _level(self, ctx, value, user: discord.User = None):
         if user is None:
             user = ctx.author
-        exp = await self.config.user(user).exp()
-        await self.levelexp_verification(user, level=value, exp=exp)
+        await self._levelexp_verification(user, level=value)
         await ctx.tick()
+        await self._remove_after_seconds(5)
 
     @checks.is_owner()
     @expset.command()
     async def _exp(self, ctx, value, user: discord.User = None):
         if user is None:
             user = ctx.author
-        level = await self.config.user(user).level()
-        await self.levelexp_verification(user, level=level, exp=value)
+        await self._levelexp_verification(user, exp=value)
         await ctx.tick()
+        await self._remove_after_seconds(5)
 
     @checks.is_owner()
     @expset.command()
     async def _date(self, ctx, value, user: discord.User = None):
+        '''
+        date format = 2020/03/14
+        '''
         if user is None:
             user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
         await ctx.tick()
+        await self._remove_after_seconds(5)
 
     @checks.is_owner()
     @expset.command()
@@ -189,4 +207,5 @@ class Exp(commands.Cog):
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
         await ctx.tick()
+        await self._remove_after_seconds(5)
 
