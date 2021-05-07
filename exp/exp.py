@@ -93,7 +93,7 @@ class Exp(commands.Cog):
         if user is None:
             user = ctx.author
         await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
     @commands.command(name = 'exp', aliases = ['e'])
     @commands.bot_has_permissions(add_reactions=True)
@@ -134,7 +134,7 @@ class Exp(commands.Cog):
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.tick()
         await ctx.send(embed=e)
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
 
     @checks.is_owner()
@@ -152,14 +152,14 @@ class Exp(commands.Cog):
         previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(previous_date))
         await ctx.tick()
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
     @expset.command()
     async def name(self, ctx, value):
         await self.config.user(ctx.author).name.set(value)
         # await ctx.send(f'已變更名稱為：{value}')
         await ctx.tick()
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
     @expset.command()
@@ -168,7 +168,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self.config.user(user).name.set(value)
         await ctx.tick()
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
     @expset.command()
@@ -177,7 +177,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self._levelexp_verification(user, level=value)
         await ctx.tick()
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
     @expset.command()
@@ -186,7 +186,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self._levelexp_verification(user, exp=value)
         await ctx.tick()
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
     @expset.command()
@@ -198,7 +198,7 @@ class Exp(commands.Cog):
             user = ctx.author
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
         await ctx.tick()
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
     @checks.is_owner()
     @expset.command()
@@ -207,5 +207,5 @@ class Exp(commands.Cog):
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
         await ctx.tick()
-        await self._remove_after_seconds(5)
+        await self._remove_after_seconds(ctx, 5)
 
