@@ -5,6 +5,7 @@ import logging
 import discord
 import json
 import time
+import numpy
 from redbot.core import commands, checks, Config
 from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import ReactionPredicate
@@ -35,11 +36,24 @@ class Maplexp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    async def _ctx_permissions(self, ctx) -> bool:
+    async def _ctx_permissions(self, ctx, admin=True) -> bool:
         ''' Verifies if user is in admin group '''
-        have_perm = int(ctx.author.id) == AU_ID or ctx.author.guild_permissions.administrator
+        have_perm = int(ctx.author.id) == AU_ID or ctx.author.guild_permissions.administrator if admin else int(ctx.author.id) == AU_ID
         if not have_perm:
-            msg = await ctx.send('你沒有權限ʕ´•ᴥ•`ʔ')
+            if numpy.random.choice(5) == 4:
+                prefix = numpy.random.choice([
+                    '可以啊，只是',
+                    '笑死，',
+                    '哭啊？',
+                    '可憐啊，',
+                    '好扯，',
+                    '白抽，',
+                    '哎等等...',
+                    '想不到吧？'
+                ])
+            else:
+                prefix = ''
+            msg = await ctx.send(prefix+'你沒有權限ʕ´•ᴥ•`ʔ')
             await self._remove_after_seconds(ctx.message, 3)
             await self._remove_after_seconds(msg, 3)
 
@@ -115,6 +129,7 @@ class Maplexp(commands.Cog):
         if user is None:
             user = ctx.author
         msg = await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
     @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
@@ -157,6 +172,7 @@ class Maplexp(commands.Cog):
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.tick()
         msg = await ctx.send(embed=e)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
@@ -237,19 +253,17 @@ class Maplexp(commands.Cog):
         verify = await ctx.send('確定要重置日平均嗎？')
         start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
         pred = ReactionPredicate.yes_or_no(verify, ctx.author)
-
         try:
             await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
         except asyncio.TimeoutError:
             await self._clear_react(verify)
             return
-
         if not pred.result:
             await verify.delete()
             await self._remove_after_seconds(ctx.message, 3)
             return
-
         await verify.delete()
+
         await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
         await self.config.user(user).daily_velocity.set(0.0)
         await ctx.tick()
@@ -301,5 +315,30 @@ class Maplexp(commands.Cog):
         if user is None:
             user = ctx.author
         await self.config.user(user).daily_velocity.set(int(value))
+        await ctx.tick()
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
+    @commands.command(name='cleardata')
+    @commands.bot_has_permissions(add_reactions=True)
+    async def _clear_all_userdata(self, ctx):
+        ok = await self._ctx_permissions(ctx, admin=False)
+        if not ok:
+            return
+
+        verify = await ctx.send('確定要移除所有使用者資料嗎？')
+        start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
+        pred = ReactionPredicate.yes_or_no(verify, ctx.author)
+        try:
+            await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
+        except asyncio.TimeoutError:
+            await self._clear_react(verify)
+            return
+        if not pred.result:
+            await verify.delete()
+            await self._remove_after_seconds(ctx.message, 3)
+            return
+        await verify.delete()
+
+        await self.config.clear_all_users()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)

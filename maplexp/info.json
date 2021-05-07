@@ -13,7 +13,9 @@
 		"manage_messages"
 	],
     "required_cogs" : {},
-    "requirements" : [],
+    "requirements" : [
+        "numpy"
+    ],
     "short" : "Track a players exp in maplestory",
     "tags" : [
         "utility"
