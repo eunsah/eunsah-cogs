@@ -16,7 +16,7 @@ MESSAGE_REMOVE_DELAY = 30
 folder = 'leveling'
 level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
-AU_ID = 164900704526401545
+AUTH_UID = 164900704526401545
 
 class Maplexp(commands.Cog):
     '''Maplexp 紀錄楓之谷經驗值'''
@@ -24,7 +24,7 @@ class Maplexp(commands.Cog):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.levelchart = json.load(j)
-        self.config = Config.get_conf(self, identifier=int(str(AU_ID)+'001'),  force_registration=True)
+        self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=True)
         default_user = {
             'name':'角色',
             'level' : 1,
@@ -38,7 +38,7 @@ class Maplexp(commands.Cog):
 
     async def _ctx_permissions(self, ctx, admin=True) -> bool:
         ''' Verifies if user is in admin group '''
-        have_perm = int(ctx.author.id) == AU_ID or ctx.author.guild_permissions.administrator if admin else int(ctx.author.id) == AU_ID
+        have_perm = int(ctx.author.id) == AUTH_UID or ctx.author.guild_permissions.administrator if admin else int(ctx.author.id) == AUTH_UID
         if not have_perm:
             if numpy.random.choice(5) == 4:
                 prefix = numpy.random.choice([
@@ -327,7 +327,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands.command(name='cleardata')
+    @commands.command(name='cleardata', hidden=True)
     @commands.bot_has_permissions(add_reactions=True)
     async def _clear_all_userdata(self, ctx):
         ok = await self._ctx_permissions(ctx, admin=False)
