@@ -144,7 +144,7 @@ class Exp(commands.Cog):
         # await self._remove_after_seconds(ctx, 5)
 
     @commands.bot_has_permissions(add_reactions=True)
-    @commands.group(name='expset', aliases=['eset'])
+    @commands.group(name='expset', aliases=['eset', 'xpset'])
     async def commands_expset(self, ctx):
         '''Exp相關各種設定
         '''
