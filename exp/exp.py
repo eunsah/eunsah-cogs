@@ -143,8 +143,7 @@ class Exp(commands.Cog):
     async def commands_expset(self, ctx):
         pass
 
-    @checks.is_owner()
-    @checks.admin()
+    @commands.bot_has_permissions(add_reactions=True)
     @commands_expset.command(name='init')
     async def expset_init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
         '''完全設定使用者資料
