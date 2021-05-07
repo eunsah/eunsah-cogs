@@ -12,7 +12,7 @@ from redbot.core.utils.predicates import ReactionPredicate
 
 log = logging.getLogger('red.eunsahcogs.maplexp')
 MAX_LEVEL = 275
-MESSAGE_REMOVE_DELAY = 10
+MESSAGE_REMOVE_DELAY = 30
 folder = 'leveling'
 level_json = 'exp_'+str(MAX_LEVEL)+'.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -134,7 +134,7 @@ class Maplexp(commands.Cog):
         if new_data:
             await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
             reminder = await ctx.send('你的資料一片空白ʕ´•ᴥ•\`ʔ\n可以使用`>xp [等級] [經驗值]`來新增資料！')
-            await self._remove_after_seconds(reminder, MESSAGE_REMOVE_DELAY)
+            await self._remove_after_seconds(reminder, 300)
             return
 
         msg = await ctx.send(embed=await self._exp_embed(user=user, title = '玩家資料'))
