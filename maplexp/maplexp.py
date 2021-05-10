@@ -204,7 +204,7 @@ class Maplexp(commands.Cog):
                         await self._show_exp(ctx, user)
                         return
                     except ValueError: # if argv is not in list nor a user
-                        ctx.send('User not found!!')
+                        await ctx.send('User not found!!')
                         return
 
         elif choice in [2, 3]:
