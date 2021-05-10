@@ -25,13 +25,14 @@ class Maplexp(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
-            self.levelchart = json.load(j)
+            self.level_chart = json.load(j)
         self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=True)
+        self.base_time = datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d'))
         self.default_profile = {
-            'name' : '角色',
-            'raw' : 0,
-            'previous_date' : datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')),
-            'daily_velocity' : 0.0
+            'char_name' : '角色',
+            'net_exp' : 0,
+            'previous_date' : self.base_time,
+            'avg_exp' : 0.0
         }
         default_user = {
             'ptr_d' : '0',
@@ -83,7 +84,7 @@ class Maplexp(commands.Cog):
             if level < 0 or level > MAX_LEVEL:
                 # level verify
                 raise ValueError
-            level_exp = self.levelchart[str(level)]
+            level_exp = self.level_chart[str(level)]
             if '.' in str(exp):
                 exp = float(exp)
                 exp = round(level_exp*(exp/100))
@@ -93,14 +94,26 @@ class Maplexp(commands.Cog):
             return
 
         raw = 0
-        for key in self.levelchart:
-            raw += self.levelchart[key]
+        for key in self.level_chart:
+            raw += self.level_chart[key]
             if int(key) == level:
                 break
         raw += exp
         await self.config.user(user).level.set(int(level))
         await self.config.user(user).exp.set(int(exp))
         await self.config.user(user).raw.set(int(raw))
+
+    def _net_levelexp(self, net_val:int) -> tuple(int, int, int):
+        ''' Converts net to level, exp, req
+        parameters : net_exp 
+        return : level, exp, xp_req 
+        '''
+        for key in self.level_chart:
+            xp_req = self.level_chart[key]
+            if xp_req >= net_val:
+                return int(key), net_val, int(xp_req)
+            net_val -= xp_req
+        
 
     async def _embed(self, title, color, name, level, exp, top_exp, avg_exp, p_date) -> discord.Embed:
         '''
@@ -127,7 +140,7 @@ class Maplexp(commands.Cog):
         previous_date = await self.config.user(user).previous_date()
         daily_velocity = await self.config.user(user).daily_velocity()
 
-        top_exp = self.levelchart[str(level)]
+        top_exp = self.level_chart[str(level)]
         if top_exp == 0:
             top_exp = 1
 
@@ -146,6 +159,26 @@ class Maplexp(commands.Cog):
         await asyncio.sleep(second)
         await message.delete()
 
+    def _dict_to_embed(self, title:str, data_d:dict, usr_c:discord.User.color) -> discord.Embed:
+        '''
+        parameters : title, data_d, usr_c
+        return : discord.Embed
+        '''
+        level, exp, req_exp = self._net_levelexp(data_d['net_exp'])
+
+        e = discord.Embed(
+            description = title,
+            color = usr_c
+        )
+        e.add_field(name="名稱", value=data_d['name'], inline=True)
+        e.add_field(name="等級", value=level, inline=True)
+        e.add_field(name="經驗值", value=f'{exp:,} ({round((exp/req_exp)*100, 2):.2f}%)', inline=False)
+        e.add_field(name="經驗成長日平均", value=f'{round(data_d['avg_exp']):,}', inline=False)
+        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(data_d['previous_date']).strftime('%Y/%m/%d'))
+
+        return e
+
+
     @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'], hidden=True)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def _show_exp(self, ctx, user: discord.User = None):
@@ -156,21 +189,21 @@ class Maplexp(commands.Cog):
         if user is None:
             user = ctx.author
 
-        ptr_to_d = await self.config.user(user).ptr_d()
-        usr_dict = await self.config.user(user).usr_d()
+        ptr_to_d = await self.config.user(user).ptr_d() # str
+        usr_dict = await self.config.user(user).usr_d() # dict
 
-        await ctx.send(type(ptr_to_d))
-        await ctx.send(type(usr_dict))
+        tar_d = usr_dict[ptr_to_d]
 
-        # date = await self.config.user(user).previous_date()
-        # new_data = bool(date == datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
-        # if new_data:
-        #     reminder = await ctx.send(r'你的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
-        #     await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-        #     await self._remove_after_seconds(reminder, 60)
-        #     return
+        date = tar_d['previous_date']
+        no_data = bool(date == self.base_time)
+        if data_init:
+            reminder = await ctx.send(r'你的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
+            await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+            await self._remove_after_seconds(reminder, 60)
+            return
 
-        # msg = await ctx.send(embed=await self._get_user_embed(user=user, title = str(user.display_name)+'的玩家資料'))
+        e = self._dict_to_embed(title=str(user.display_name)+'的玩家資料', data_d=tar_d, usr_c=user.color)
+        msg = await ctx.send(embed=e)
         # await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         # await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
@@ -231,7 +264,7 @@ class Maplexp(commands.Cog):
 
                     daily_velocity = await self.config.user(ctx.author).daily_velocity()
                     raw_diff = await self.config.user(ctx.author).raw() - raw
-                    raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
+                    raw_diff_percentage = round((raw_diff / self.level_chart[str(level)])*100, 2)
 
                     if previous_date_datetime != datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')):
                         date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
@@ -253,7 +286,6 @@ class Maplexp(commands.Cog):
         msg = await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         return
-
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
