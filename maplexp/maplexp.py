@@ -235,10 +235,8 @@ class Maplexp(commands.Cog):
                         await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
                     else:
                         avg_exp = 0
-                else: # else 
-
-            else: # 3
-                pass
+                else: # else
+                    pass 
         else:
             await ctx.send('Something went wrong')
             await ctx.send_help()
