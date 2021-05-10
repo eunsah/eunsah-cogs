@@ -178,7 +178,7 @@ class Maplexp(commands.Cog):
                 await ctx.send(type(argv[0]))
                 await ctx.send(argv[0])
 
-                user = await self.bot.get_or_fetch_user(int(argv[0]))
+                user = await self.bot.get_or_fetch_user(int(argv[0][3:-1]))
 
                 await ctx.send(type(argv[0]))
                 await ctx.send(argv[0])
