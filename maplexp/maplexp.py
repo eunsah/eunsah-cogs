@@ -99,7 +99,20 @@ class Maplexp(commands.Cog):
         await self.config.user(user).exp.set(int(exp))
         await self.config.user(user).raw.set(int(raw))
 
-    async def _exp_embed(self, user, title) -> discord.Embed:
+    async def _embed(self, title, color, name, level, exp, top_exp, avg_exp, p_date) -> discord.Embed:
+        '''
+        '''
+        return discord.Embed(
+            description = title,
+            color = user.color
+        )
+        e.add_field(name="名稱", value=name, inline=True)
+        e.add_field(name="等級", value=level, inline=True)
+        e.add_field(name="經驗值", value=f'{exp:,} ({round((exp/top_exp)*100, 2):.2f}%)', inline=False)
+        e.add_field(name="經驗成長日平均", value=f'{round(daily_velocity):,}', inline=False)
+        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(p_date).strftime('%Y/%m/%d'))
+
+    async def _get_user_embed(self, user, title) -> discord.Embed:
         '''Process Embeds
         '''
         name = await self.config.user(user).name()
@@ -112,16 +125,16 @@ class Maplexp(commands.Cog):
         if top_exp == 0:
             top_exp = 1
 
-        e = discord.Embed(
-            description = title,
-            color = user.color
+        return self._embed(
+            title=title,
+            color=user.color,
+            name=name,
+            level=level,
+            exp=exp,
+            top_exp=top_exp,
+            avg_exp=daily_velocity,
+            p_date=previous_date
         )
-        e.add_field(name="名稱", value=name, inline=True)
-        e.add_field(name="等級", value=level, inline=True)
-        e.add_field(name="經驗值", value=f'{exp:,} ({round((exp/top_exp)*100, 2):.2f}%)', inline=False)
-        e.add_field(name="經驗成長日平均", value=f'{round(daily_velocity):,}', inline=False)
-        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(previous_date).strftime('%Y/%m/%d'))
-        return e
 
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
@@ -144,7 +157,7 @@ class Maplexp(commands.Cog):
             await self._remove_after_seconds(reminder, 60)
             return
 
-        msg = await ctx.send(embed=await self._exp_embed(user=user, title = str(user.display_name)+'的玩家資料'))
+        msg = await ctx.send(embed=await self._get_user_embed(user=user, title = str(user.display_name)+'的玩家資料'))
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         # await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
@@ -175,13 +188,12 @@ class Maplexp(commands.Cog):
             if choice == 0:
                 await self._show_exp(ctx, ctx.author)
             else: # 1
-                await ctx.send(type(argv[0]))
-                await ctx.send(argv[0])
+                char_list = await self.config.user(ctx.author).char_list() 
+                if argv[0] in char_list: # if parameter in char list, return their character
 
-                user = await self.bot.get_or_fetch_user(int(argv[0][3:-1]))
 
-                await ctx.send(type(argv[0]))
-                await ctx.send(argv[0])
+                name = argv[0] # this is either char name or discord.user
+
         elif choice in [2, 3]:
             if choice == 2:
                 pass
@@ -214,7 +226,7 @@ class Maplexp(commands.Cog):
         else:
             avg_exp = 0
 
-        e = await self._exp_embed(user=ctx.author, title='更新'+str(ctx.author.display_name)+'的經驗值')
+        e = await self._get_user_embed(user=ctx.author, title='更新'+str(ctx.author.display_name)+'的經驗值')
         e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.tick()
