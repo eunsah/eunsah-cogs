@@ -102,7 +102,7 @@ class Maplexp(commands.Cog):
     async def _embed(self, title, color, name, level, exp, top_exp, avg_exp, p_date) -> discord.Embed:
         '''
         '''
-        return discord.Embed(
+        e = discord.Embed(
             description = title,
             color = color
         )
@@ -111,6 +111,8 @@ class Maplexp(commands.Cog):
         e.add_field(name="經驗值", value=f'{exp:,} ({round((exp/top_exp)*100, 2):.2f}%)', inline=False)
         e.add_field(name="經驗成長日平均", value=f'{round(daily_velocity):,}', inline=False)
         e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(p_date).strftime('%Y/%m/%d'))
+
+        return e
 
     async def _get_user_embed(self, user, title) -> discord.Embed:
         '''Process Embeds
