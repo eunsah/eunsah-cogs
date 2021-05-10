@@ -198,9 +198,14 @@ class Maplexp(commands.Cog):
                     return
 
                 else:
-                    user_mention = argv[0] # then this is discord.user
-                    user = await self.bot.get_or_fetch_user(int(user_mention.strip('<>!@')))
-                    await self._show_exp(ctx, user)
+                    try:
+                        user_mention = argv[0] # then this is discord.user
+                        user = await self.bot.get_or_fetch_user(int(user_mention.strip('<>!@')))
+                        await self._show_exp(ctx, user)
+                        return
+                    except ValueError: # if argv is not in list nor a user
+                        ctx.send('User not found!!')
+                        return
 
         elif choice in [2, 3]:
             if choice == 2:
