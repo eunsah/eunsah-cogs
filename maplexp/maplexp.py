@@ -103,7 +103,7 @@ class Maplexp(commands.Cog):
         await self.config.user(user).exp.set(int(exp))
         await self.config.user(user).raw.set(int(raw))
 
-    def _net_levelexp(self, net_val:int) -> tuple(int, int, int):
+    def _net_levelexp(self, net_val:int) -> tuple:
         ''' Converts net to level, exp, req
         parameters : net_exp 
         return : level, exp, xp_req 
