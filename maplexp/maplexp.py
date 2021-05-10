@@ -388,24 +388,24 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands.bot_has_permissions(add_reactions=True)
-    @commands_mapleset.command(name='removemydata')
-    async def _delete_self_data(self, ctx):
-        '''
-        '''
-        verify = await ctx.send('')
-        start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
-        pred = ReactionPredicate.yes_or_no(verify, ctx.author)
-        try:
-            await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
-            except asyncio.TimeoutError:
-                await self._clear_react(verify)
-                await self._remove_after_seconds(verify, 5)
-                return
-            if not pred.result:
-                await verify.delete()
-                await self._remove_after_seconds(ctx.message, 3)
-                return
-            await verify.delete()
+    # @commands.bot_has_permissions(add_reactions=True)
+    # @commands_mapleset.command(name='removemydata')
+    # async def _delete_self_data(self, ctx):
+    #     '''
+    #     '''
+    #     verify = await ctx.send('')
+    #     start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
+    #     pred = ReactionPredicate.yes_or_no(verify, ctx.author)
+    #     try:
+    #         await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
+    #     except asyncio.TimeoutError:
+    #         await self._clear_react(verify)
+    #         await self._remove_after_seconds(verify, 5)
+    #         return
+    #     if not pred.result:
+    #         await verify.delete()
+    #         await self._remove_after_seconds(ctx.message, 3)
+    #         return
+    #     await verify.delete()
 
             
