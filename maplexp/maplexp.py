@@ -101,6 +101,7 @@ class Maplexp(commands.Cog):
 
     async def _embed(self, title, color, name, level, exp, top_exp, avg_exp, p_date) -> discord.Embed:
         '''
+        embed
         '''
         e = discord.Embed(
             description = title,
@@ -137,6 +138,8 @@ class Maplexp(commands.Cog):
             avg_exp=daily_velocity,
             p_date=previous_date
         )
+
+
 
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
@@ -192,10 +195,12 @@ class Maplexp(commands.Cog):
             else: # 1
                 char_list = await self.config.user(ctx.author).char_list() 
                 if argv[0] in char_list: # if parameter in char list, return their character
-                    pass
+                    return
 
-
-                name = argv[0] # this is either char name or discord.user
+                else:
+                    user_mention = argv[0] # then this is discord.user
+                    user = await self.bot.get_or_fetch_user(int(user_mention.strip('<>!@')))
+                    await self._show_exp(ctx, user)
 
         elif choice in [2, 3]:
             if choice == 2:
