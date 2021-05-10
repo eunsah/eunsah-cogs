@@ -125,7 +125,7 @@ class Maplexp(commands.Cog):
         if top_exp == 0:
             top_exp = 1
 
-        return self._embed(
+        return await self._embed(
             title=title,
             color=user.color,
             name=name,
