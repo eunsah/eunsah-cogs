@@ -14,25 +14,27 @@ log = logging.getLogger('red.eunsahcogs.maplexp')
 MAX_LEVEL = 275
 MESSAGE_REMOVE_DELAY = 30
 folder = 'leveling'
-level_json = 'exp_'+str(MAX_LEVEL)+'.json'
+level_json = 'exp_' + str(MAX_LEVEL) + '.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 AUTH_UID = 164900704526401545
 
 class Maplexp(commands.Cog):
+#
     '''Maplexp 紀錄楓之谷經驗值'''
+#
     def __init__(self, bot):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.levelchart = json.load(j)
         self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=True)
         default_user = {
-            'name':'角色',
+            'name' : '角色',
             'level' : 1,
             'exp' : 0,
             'raw' : 0,
             'previous_date' : datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')),
             'daily_velocity' : 0.0,
-            'char_select' : {}
+            'char_list' : {}
         }
         self.config.register_user(**default_user)
 
@@ -125,7 +127,7 @@ class Maplexp(commands.Cog):
         await asyncio.sleep(second)
         await message.delete()
 
-    @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'])
+    @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'], hidden=True)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def _show_exp(self, ctx, user: discord.User = None):
         '''顯示角色資訊 (mapleinfo || minfo || xpinfo)
@@ -149,16 +151,42 @@ class Maplexp(commands.Cog):
     @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
     async def _update_exp(self, ctx, *argv):
+    #
         '''用於更新經驗值
         使用方式：[p]maplexp [等級] [經驗值]
         - 經驗值可以為百分比(12.42%)或是整數(34593402)
         - 可以用[p]help Maplexp 查看更多
         '''
-        if len(argv) != 2:
+    #
+        if len(argv) not in range(4):
             # argv check
             await ctx.send_help()
             return
 
+        choice = len(argv)
+        ''' Function depends on argv count within 0~3
+        0 -> show default
+        1 -> show character
+        2 -> update default
+        3 -> update character
+        '''
+
+        if choice in [0, 1]:
+            if choice == 0:
+                await self._show_exp(ctx, ctx.author)
+            else: # 1
+                await ctx.send(type(argv[0]))
+                await ctx.send(argv[0])
+        elif choice in [2, 3]:
+            if choice == 2:
+                pass
+            else: # 3
+                pass
+        else:
+            await ctx.send('Something went wrong')
+            await ctx.send_help()
+            return
+            
         level = argv[0]
         raw = await self.config.user(ctx.author).raw()
         previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
@@ -187,7 +215,6 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         msg = await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-        # await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
@@ -349,6 +376,7 @@ class Maplexp(commands.Cog):
             await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
         except asyncio.TimeoutError:
             await self._clear_react(verify)
+            await self._remove_after_seconds(verify, 5)
             return
         if not pred.result:
             await verify.delete()
@@ -359,3 +387,25 @@ class Maplexp(commands.Cog):
         await self.config.clear_all_users()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
+    @commands.bot_has_permissions(add_reactions=True)
+    @commands_mapleset.command(name='removemydata')
+    async def _delete_self_data(self, ctx):
+        '''
+        '''
+        verify = await ctx.send('')
+        start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
+        pred = ReactionPredicate.yes_or_no(verify, ctx.author)
+        try:
+            await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
+            except asyncio.TimeoutError:
+                await self._clear_react(verify)
+                await self._remove_after_seconds(verify, 5)
+                return
+            if not pred.result:
+                await verify.delete()
+                await self._remove_after_seconds(ctx.message, 3)
+                return
+            await verify.delete()
+
+            
