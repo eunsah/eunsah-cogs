@@ -177,6 +177,11 @@ class Maplexp(commands.Cog):
             else: # 1
                 await ctx.send(type(argv[0]))
                 await ctx.send(argv[0])
+
+                user = discord.user(argv[0])
+
+                await ctx.send(type(argv[0]))
+                await ctx.send(argv[0])
         elif choice in [2, 3]:
             if choice == 2:
                 pass
