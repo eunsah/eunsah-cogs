@@ -190,6 +190,7 @@ class Maplexp(commands.Cog):
             else: # 1
                 char_list = await self.config.user(ctx.author).char_list() 
                 if argv[0] in char_list: # if parameter in char list, return their character
+                    pass
 
 
                 name = argv[0] # this is either char name or discord.user
