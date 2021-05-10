@@ -159,8 +159,8 @@ class Maplexp(commands.Cog):
         ptr_to_d = await self.config.user(user).ptr_d()
         usr_dict = await self.config.user(user).usr_d()
 
-        await ctx.send(ptr_to_d)
-        await ctx.send(usr_dict)
+        await ctx.send(type(ptr_to_d))
+        await ctx.send(type(usr_dict))
 
         # date = await self.config.user(user).previous_date()
         # new_data = bool(date == datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
