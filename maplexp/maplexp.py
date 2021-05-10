@@ -156,7 +156,7 @@ class Maplexp(commands.Cog):
         if user is None:
             user = ctx.author
 
-        default = await self.config.user(user).default() 
+        default = await self.config.user(user).default
 
         # date = await self.config.user(user).previous_date()
         # new_data = bool(date == datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
