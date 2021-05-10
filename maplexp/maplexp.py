@@ -109,7 +109,7 @@ class Maplexp(commands.Cog):
         e.add_field(name="名稱", value=name, inline=True)
         e.add_field(name="等級", value=level, inline=True)
         e.add_field(name="經驗值", value=f'{exp:,} ({round((exp/top_exp)*100, 2):.2f}%)', inline=False)
-        e.add_field(name="經驗成長日平均", value=f'{round(daily_velocity):,}', inline=False)
+        e.add_field(name="經驗成長日平均", value=f'{round(avg_exp):,}', inline=False)
         e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(p_date).strftime('%Y/%m/%d'))
 
         return e
