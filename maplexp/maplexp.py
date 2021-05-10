@@ -19,22 +19,25 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 AUTH_UID = 164900704526401545
 
 class Maplexp(commands.Cog):
-#
-    '''Maplexp 紀錄楓之谷經驗值'''
-#
+    '''
+        Maplexp 紀錄楓之谷經驗值
+    '''
     def __init__(self, bot):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.levelchart = json.load(j)
         self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=True)
-        default_user = {
+        self.default_profile = {
             'name' : '角色',
-            'level' : 1,
-            'exp' : 0,
             'raw' : 0,
             'previous_date' : datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')),
-            'daily_velocity' : 0.0,
-            'char_list' : {}
+            'daily_velocity' : 0.0
+        }
+        default_user = {
+            'default' : '0',
+            'char_list': {
+                '0' : **self.default_profile
+            }
         }
         self.config.register_user(**default_user)
 
@@ -139,8 +142,6 @@ class Maplexp(commands.Cog):
             p_date=previous_date
         )
 
-
-
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
         await message.delete()
@@ -148,34 +149,35 @@ class Maplexp(commands.Cog):
     @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'], hidden=True)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def _show_exp(self, ctx, user: discord.User = None):
-        '''顯示角色資訊 (mapleinfo || minfo || xpinfo)
-        使用方式：[p]mapleinfo {@使用者}
+        '''
+            顯示角色資訊 (mapleinfo || minfo || xpinfo)
+            使用方式：[p]mapleinfo {@使用者}
         '''
         if user is None:
             user = ctx.author
 
-        date = await self.config.user(user).previous_date()
-        new_data = bool(date == datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
-        if new_data:
-            reminder = await ctx.send(r'你的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
-            await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-            await self._remove_after_seconds(reminder, 60)
-            return
+        default = await self.config.user(user).default() 
 
-        msg = await ctx.send(embed=await self._get_user_embed(user=user, title = str(user.display_name)+'的玩家資料'))
-        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+        # date = await self.config.user(user).previous_date()
+        # new_data = bool(date == datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
+        # if new_data:
+        #     reminder = await ctx.send(r'你的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
+        #     await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+        #     await self._remove_after_seconds(reminder, 60)
+        #     return
+
+        # msg = await ctx.send(embed=await self._get_user_embed(user=user, title = str(user.display_name)+'的玩家資料'))
+        # await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         # await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
     @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
     async def _update_exp(self, ctx, *argv):
-    #
         '''用於更新經驗值
         使用方式：[p]maplexp [等級] [經驗值]
         - 經驗值可以為百分比(12.42%)或是整數(34593402)
         - 可以用[p]help Maplexp 查看更多
         '''
-    #
         if len(argv) not in range(4):
             # argv check
             await ctx.send_help()
@@ -184,8 +186,8 @@ class Maplexp(commands.Cog):
         choice = len(argv)
         ''' Function depends on argv count within 0~3
         0 -> show default
-        1 -> show character
-        2 -> update default
+        1 -> show my character, show others' default
+        2 -> update default, show others' character
         3 -> update character
         '''
 
@@ -209,42 +211,47 @@ class Maplexp(commands.Cog):
 
         elif choice in [2, 3]:
             if choice == 2:
-                pass
+
+                if str(argv[0]).isdigit(): # if in 2 args, first is digit, then assuming user is updating default character
+
+                    level = argv[0]
+                    raw = await self.config.user(ctx.author).raw()
+                    previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
+                    name = await self.config.user(ctx.author).name()
+                    if name == '角色':
+                        await self.config.user(ctx.author).name.set(ctx.author.display_name)
+
+                    await self._levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
+
+                    await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
+
+                    daily_velocity = await self.config.user(ctx.author).daily_velocity()
+                    raw_diff = await self.config.user(ctx.author).raw() - raw
+                    raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
+
+                    if previous_date_datetime != datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')):
+                        date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
+                        avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
+                        await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
+                    else:
+                        avg_exp = 0
+                else: # else 
+
             else: # 3
                 pass
         else:
             await ctx.send('Something went wrong')
             await ctx.send_help()
             return
-            
-        level = argv[0]
-        raw = await self.config.user(ctx.author).raw()
-        previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
-        name = await self.config.user(ctx.author).name()
-        if name == '角色':
-            await self.config.user(ctx.author).name.set(ctx.author.display_name)
-
-        await self._levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
-
-        await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
-
-        daily_velocity = await self.config.user(ctx.author).daily_velocity()
-        raw_diff = await self.config.user(ctx.author).raw() - raw
-        raw_diff_percentage = round((raw_diff / self.levelchart[str(level)])*100, 2)
-
-        if previous_date_datetime != datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')):
-            date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
-            avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
-            await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
-        else:
-            avg_exp = 0
-
+        
         e = await self._get_user_embed(user=ctx.author, title='更新'+str(ctx.author.display_name)+'的經驗值')
         e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
         await ctx.tick()
         msg = await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+        return
+
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
@@ -417,25 +424,3 @@ class Maplexp(commands.Cog):
         await self.config.clear_all_users()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-
-    # @commands.bot_has_permissions(add_reactions=True)
-    # @commands_mapleset.command(name='removemydata')
-    # async def _delete_self_data(self, ctx):
-    #     '''
-    #     '''
-    #     verify = await ctx.send('')
-    #     start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
-    #     pred = ReactionPredicate.yes_or_no(verify, ctx.author)
-    #     try:
-    #         await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
-    #     except asyncio.TimeoutError:
-    #         await self._clear_react(verify)
-    #         await self._remove_after_seconds(verify, 5)
-    #         return
-    #     if not pred.result:
-    #         await verify.delete()
-    #         await self._remove_after_seconds(ctx.message, 3)
-    #         return
-    #     await verify.delete()
-
-            
