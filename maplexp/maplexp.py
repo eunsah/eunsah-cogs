@@ -178,7 +178,7 @@ class Maplexp(commands.Cog):
                 await ctx.send(type(argv[0]))
                 await ctx.send(argv[0])
 
-                user = discord.user(argv[0])
+                user = self.red_get_data_for_user(argv[0])
 
                 await ctx.send(type(argv[0]))
                 await ctx.send(argv[0])
