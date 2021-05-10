@@ -104,7 +104,7 @@ class Maplexp(commands.Cog):
         '''
         return discord.Embed(
             description = title,
-            color = user.color
+            color = color
         )
         e.add_field(name="名稱", value=name, inline=True)
         e.add_field(name="等級", value=level, inline=True)
