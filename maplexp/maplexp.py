@@ -34,7 +34,7 @@ class Maplexp(commands.Cog):
             'daily_velocity' : 0.0
         }
         default_user = {
-            'default' : '0',
+            'key' : '0',
             'char_list': {
                 '0' : {**self.default_profile}
             }
@@ -156,7 +156,7 @@ class Maplexp(commands.Cog):
         if user is None:
             user = ctx.author
 
-        default_var = await self.config.user(user).default()
+        key_var = await self.config.user(user).key()
 
         # date = await self.config.user(user).previous_date()
         # new_data = bool(date == datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
