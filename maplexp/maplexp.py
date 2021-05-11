@@ -388,7 +388,7 @@ class Maplexp(commands.Cog):
             else:
                 p = user.display_name
 
-            empty = await ctx.send(p+r'的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
+            empty = await ctx.send(p+r'的資料列表一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
 
             await self._remove_after_seconds(empty, MESSAGE_REMOVE_DELAY)
             return
