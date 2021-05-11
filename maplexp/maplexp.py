@@ -335,6 +335,33 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
+    @commands_maple.command(name='delete')
+    async def maple_delete(self, ctx, char: str, user: discord.User = None):
+        '''
+            設定等級及經驗值
+            使用方式：[p]maple delete {角色名稱} {@使用者}
+            - 指定重置使用者需要管理員權限
+        '''
+        if user is None:
+            user = ctx.author
+        elif user == ctx.author:
+            pass
+        else:
+            ok = await self._ctx_permissions(ctx)
+            if not ok:
+                return
+
+        async with self.config.user(user).usr_d as ud:
+            try:
+                del ud[char]
+            except KeyError:
+                await self._char_not_found_error(ctx, char)
+                return
+
+        await ctx.tick()
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
+
     @commands_maple.command(name='list')
     async def maple_list(self, ctx, user: discord.User = None):
         '''
@@ -348,7 +375,7 @@ class Maplexp(commands.Cog):
         u_date = str()
         async with self.config.user(user).usr_d() as ud:
             for item in ud:
-                date = datetime.datetime.fromtimestamp(ud[item]['date']).strftime('%Y年%m月%d日')
+                date = datetime.datetime.fromtimestamp(ud[item]['date']).strftime('%Y/%m/%d')
                 level, exp = self._net_levelexp(ud[item]['net_exp'])
                 req = self.level_chart[str(level)]
                 exp = round(exp/req) if req != 0 else 0.0
