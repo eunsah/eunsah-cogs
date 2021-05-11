@@ -35,7 +35,7 @@ class Maplexp(commands.Cog):
         }
         default_user = {
             'ptr_d' : '',
-            'usr_a': ''
+            'usr_d': {}
         }
         self.config.register_user(**default_user)
 
@@ -509,12 +509,12 @@ class Maplexp(commands.Cog):
             return
         await verify.delete()
 
-        await self.config.user(ctx.author).clear()
+        await self.config.clear()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
 
     @commands_mapleset.command(name='i')
     async def mapleset_info(self, ctx):
-        data = await self.config.user(ctx.author)
+        data = await self.config.user(ctx.author)()
         await ctx.send(data)
