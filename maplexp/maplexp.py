@@ -354,6 +354,7 @@ class Maplexp(commands.Cog):
         async with self.config.user(user).usr_d() as ud:
             try:
                 del ud[char]
+                ud.pop(char)
             except KeyError:
                 await self._char_not_found_error(ctx, char)
                 return
