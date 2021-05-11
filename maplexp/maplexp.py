@@ -471,7 +471,7 @@ class Maplexp(commands.Cog):
             char = self.config.user(user).ptr_d()
 
         async with self.config.user(user).usr_d() as ud:
-            ud[char]['net_exp'] = self._levelexp_net(level=level, exp=exp)
+            ud[char]['net_exp'] = self._levelexp_net(level=int(level), exp=int(exp))
 
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
