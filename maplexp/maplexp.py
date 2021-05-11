@@ -183,7 +183,7 @@ class Maplexp(commands.Cog):
             # if argvs in 1 or 2
             if '<@!' in argv[0] and len(argv[0].strip('<>@!')) == 18:
                 # check if first argv is a mention
-                user = await self.bot.get_or_fetch_user(int(user_mention.strip('<>!@')))
+                user = await self.bot.get_or_fetch_user(int(argv[0].strip('<>!@')))
 
                 if arg_size == 1:
                     # show mentioned default character
