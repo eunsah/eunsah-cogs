@@ -96,7 +96,7 @@ class Maplexp(commands.Cog):
         await asyncio.sleep(second)
         await message.delete()
 
-    async def _char_not_found_error(self, ctx):
+    async def _char_not_found_error(self, ctx, name:str):
         err = await ctx.send('character not found!')
         await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
         return
@@ -137,10 +137,12 @@ class Maplexp(commands.Cog):
             char = await self.config.user(user).ptr_d() # str
         usr_dict = await self.config.user(user).usr_d() # dict
 
+        tar_d = None
         try:
             tar_d = usr_dict[char]
         except KeyError:
-            await self._char_not_found_error(ctx)
+            await self._char_not_found_error(ctx, char)
+            return
 
         date = tar_d['date']
         no_data = bool(date == self.base_time)
@@ -179,11 +181,6 @@ class Maplexp(commands.Cog):
             await self.config.user(ctx.author).ptr_d.set(ctx.author.display_name)
             char = ctx.author.display_name
 
-        try:
-            tar_d = usr_dict[char]
-        except KeyError:
-            await self._char_not_found_error(ctx)
-
         if not (level.isdigit() and int(level) in range(MAX_LEVEL)): 
             err = ctx.send('err in level')
             await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
@@ -207,19 +204,24 @@ class Maplexp(commands.Cog):
 
         async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
-            net = self._levelexp_net(level, exp)
-            exp_growth = net - udc[char]['net_exp']
-            udc[char]['net_exp'] = net # update net
-            old_date = udc[char]['date']
-            if old_date != self.base_time:
-                date_timedelta = datetime.datetime.now() - datetime.datetime.fromtimestamp(old_date)
-                new_avg = round(exp_growth/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
-                udc[char]['avg_exp'] = round(((udc[char]['avg_exp']+new_avg)/2), 2)
-            
-            udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
+            try:
+                net = self._levelexp_net(level, exp)
+                exp_growth = net - udc[char]['net_exp']
+                udc[char]['net_exp'] = net # update net
+                old_date = udc[char]['date']
+                if old_date != self.base_time:
+                    date_timedelta = datetime.datetime.now() - datetime.datetime.fromtimestamp(old_date)
+                    new_avg = round(exp_growth/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
+                    udc[char]['avg_exp'] = round(((udc[char]['avg_exp']+new_avg)/2), 2)
 
-        exp_growth_perc = round((exp_growth/req)*100, 2) if req != 0 else 0.0
+                udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
+            except KeyError:
+                await self._char_not_found_error(ctx, char)
+                return
+
+
         usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
+        exp_growth_perc = round((exp_growth/req)*100, 2) if req != 0 else 0.0
 
         e = self._dict_to_embed(
             title = char+'的資料更新',
