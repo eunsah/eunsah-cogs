@@ -184,6 +184,7 @@ class Maplexp(commands.Cog):
                 del ud['角色']
                 ud[ctx.author.display_name] = self.default_profile
             await self.config.user(ctx.author).ptr_d.set(ctx.author.display_name)
+            char = ctx.author.display_name
 
         try:
             tar_d = usr_dict[char]
@@ -209,18 +210,18 @@ class Maplexp(commands.Cog):
 
         exp_growth = 0
 
-        async with self.config.user(ctx.author).usr_d() as ud:
+        async with self.config.user(ctx.author).usr_d() as udc[char]:
             # update dict net_exp, avg_exp, date
             net = self._levelexp_net(level, exp)
-            exp_growth = net - ud['net_exp']
-            ud['net_exp'] = net # update net
-            old_date = ud['date']
+            exp_growth = net - udc[char]['net_exp']
+            udc[char]['net_exp'] = net # update net
+            old_date = udc[char]['date']
             if old_date != self.base_time:
                 date_timedelta = datetime.datetime.now() - datetime.datetime.fromtimestamp(old_date)
                 new_avg = round(exp_growth/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
-                ud['avg_exp'] = round(((avg_exp+new_avg)/2), 2)
+                udc[char]['avg_exp'] = round(((avg_exp+new_avg)/2), 2)
             
-            ud['date'] = datetime.datetime.timestamp(datetime.datetime.now())
+            udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
 
         e = self._dict_to_embed(
             title = char+'的資料更新',
