@@ -370,7 +370,9 @@ class Maplexp(commands.Cog):
         u_name = str()
         u_level = str()
         u_date = str()
+        u_size = 0
         async with self.config.user(user).usr_d() as ud:
+            u_size = len(ud)
             for item in ud:
                 date = datetime.datetime.fromtimestamp(ud[item]['date']).strftime('%Y/%m/%d')
                 level, exp = self._net_levelexp(ud[item]['net_exp'])
@@ -380,6 +382,16 @@ class Maplexp(commands.Cog):
                 u_level += f'{level}({exp:.2f}%)\n'
                 u_date += str(date)+'\n'
 
+        if u_size is 0:
+            if ctx.author == user:
+                p = '你'
+            else:
+                p = user.display_name
+
+            empty = await ctx.send(p+r'的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
+
+            await self._remove_after_seconds(empty, MESSAGE_REMOVE_DELAY)
+            return
 
         e = discord.Embed(
             description = user.display_name+'的角色列表',
