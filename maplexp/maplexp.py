@@ -148,11 +148,6 @@ class Maplexp(commands.Cog):
         # await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         # await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
-    def _exp_showinfo(self, ctx: commands.Context, user: discord.User=None, usr_c: str=None):
-        '''
-        '''
-        pass
-
     def _exp_updateinfo(self, ctx: commands.Context, usr_d: dict, usr_c: str, net_exp: int):
         '''
         '''
@@ -182,7 +177,7 @@ class Maplexp(commands.Cog):
 
         if arg_size == 0:
             # if no argvs, show self default character
-            self._exp_showinfo(ctx)
+            self._show_exp(ctx)
 
         elif arg_size in range(1, 3):
             # if argvs in 1 or 2
@@ -190,16 +185,16 @@ class Maplexp(commands.Cog):
                 # check if first argv is a mention
                 if arg_size == 1:
                     # show mentioned default character
-                    self._exp_showinfo(ctx, user=argv[0])
+                    self._show_exp(ctx, user=argv[0])
 
                 else:
                     # args size: 2, show mentioned key character
-                    self._exp_showinfo(ctx, user=argv[0], usr_c=argv[1])
+                    self._show_exp(ctx, user=argv[0], usr_c=argv[1])
             else:
                 # if no mentions in argvs
                 if arg_size == 1:
                     #　show char
-                    self._exp_showinfo(ctx, user=ctx.author, usr_c=argv[0])
+                    self._show_exp(ctx, user=ctx.author, usr_c=argv[0])
         
 
         # if arg_size in [0, 1]:
