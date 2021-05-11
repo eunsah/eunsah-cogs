@@ -115,7 +115,7 @@ class Maplexp(commands.Cog):
 
     @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'], hidden=True)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
-    async def _show_exp(self, ctx, user: discord.User = None):
+    async def _show_exp(self, ctx, user: discord.User = None, char: str = None):
         '''
             顯示角色資訊 (mapleinfo || minfo || xpinfo)
             使用方式：[p]mapleinfo {@使用者}
@@ -123,10 +123,12 @@ class Maplexp(commands.Cog):
         if user is None:
             user = ctx.author
 
-        ptr_to_d = await self.config.user(user).ptr_d() # str
+        if char is None:
+            char = await self.config.user(user).ptr_d() # str
+
         usr_dict = await self.config.user(user).usr_d() # dict
 
-        tar_d = usr_dict[ptr_to_d]
+        tar_d = usr_dict[char]
 
         date = tar_d['previous_date']
         no_data = bool(date == self.base_time)
