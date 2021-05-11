@@ -34,8 +34,8 @@ class Maplexp(commands.Cog):
             'date' : self.base_time
         }
         default_user = {
-            'ptr_d' : '',
-            'usr_d': ''
+            'ptr_d' : ''#,
+            #'usr_d': ''
         }
         self.config.register_user(**default_user)
 
