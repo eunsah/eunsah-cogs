@@ -203,18 +203,24 @@ class Maplexp(commands.Cog):
 
         exp_growth = 0
 
-        async with self.config.user(ctx.author).usr_d() as udc:
-            # update dict net_exp, avg_exp, date
-            net = self._levelexp_net(level, exp)
-            exp_growth = net - udc[char]['net_exp']
-            udc[char]['net_exp'] = net # update net
-            old_date = udc[char]['date']
-            if old_date != self.base_time:
-                date_timedelta = datetime.datetime.now() - datetime.datetime.fromtimestamp(old_date)
-                new_avg = round(exp_growth/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
-                udc[char]['avg_exp'] = round(((udc[char]['avg_exp']+new_avg)/2), 2)
+        # async with self.config.user(ctx.author).usr_d() as udc:
+        #     # update dict net_exp, avg_exp, date
+        #     net = self._levelexp_net(level, exp)
+        #     exp_growth = net - udc[char]['net_exp']
+        #     udc[char]['net_exp'] = net # update net
+        #     old_date = udc[char]['date']
+        #     if old_date != self.base_time:
+        #         date_timedelta = datetime.datetime.now() - datetime.datetime.fromtimestamp(old_date)
+        #         new_avg = round(exp_growth/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
+        #         udc[char]['avg_exp'] = round(((udc[char]['avg_exp']+new_avg)/2), 2)
             
-            udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
+        #     udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
+
+
+        net = self._levelexp_net(level, exp)
+        exp_growth = net - await self.config.user(ctx.author).usr_d[char].net_exp()
+
+
 
         e = await self._dict_to_embed(
             title = char+'的資料更新',
