@@ -382,7 +382,7 @@ class Maplexp(commands.Cog):
                 u_level += f'{level}({exp:.2f}%)\n'
                 u_date += str(date)+'\n'
 
-        if u_size is 0:
+        if u_size == 0:
             if ctx.author == user:
                 p = '你'
             else:
@@ -528,7 +528,7 @@ class Maplexp(commands.Cog):
 
     @commands_mapleset.command(name='i')
     @checks.is_owner()
-    async def mapleset_info(self, ctx, user: dicord.User = None):
+    async def mapleset_info(self, ctx, user: discord.User = None):
         if user is None:
             user = ctx.author
         data = await self.config.user(user)()
