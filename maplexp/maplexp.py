@@ -512,3 +512,9 @@ class Maplexp(commands.Cog):
         await self.config.user(ctx.author).clear()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
+
+    @commands_mapleset.command(name='i')
+    async def mapleset_info(self, ctx):
+        data = await self.config.user(ctx.author)
+        await ctx.send(data)
