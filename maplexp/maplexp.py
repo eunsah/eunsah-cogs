@@ -144,6 +144,7 @@ class Maplexp(commands.Cog):
 
         await ctx.send(char)
         await ctx.send(tar_d)
+        await ctx.send(usr_dict)
 
         ###
 
