@@ -138,7 +138,7 @@ class Maplexp(commands.Cog):
             else:
                 p = user.display_name
 
-            reminder = await ctx.send(p+r'的資料一片空白ʕ´•ᴥ•\`ʔ'+r'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
+            reminder = await ctx.send(p+r'的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
             await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
             await self._remove_after_seconds(reminder, 60)
             return
