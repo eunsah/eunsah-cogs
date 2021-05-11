@@ -36,7 +36,6 @@ class Maplexp(commands.Cog):
         default_user = {
             'ptr_d' : '角色',
             'usr_d': {
-                '角色' : {**self.default_profile}
             }
         }
         self.config.register_user(**default_user)
