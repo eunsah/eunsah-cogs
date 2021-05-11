@@ -96,7 +96,7 @@ class Maplexp(commands.Cog):
         await asyncio.sleep(second)
         await message.delete()
 
-    async def _char_not_found_error(self):
+    async def _char_not_found_error(self, ctx):
         err = await ctx.send('character not found!')
         await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
         return
@@ -140,7 +140,7 @@ class Maplexp(commands.Cog):
         try:
             tar_d = usr_dict[char]
         except KeyError:
-            await self._char_not_found_error()
+            await self._char_not_found_error(ctx)
 
         date = tar_d['date']
         no_data = bool(date == self.base_time)
@@ -182,7 +182,7 @@ class Maplexp(commands.Cog):
         try:
             tar_d = usr_dict[char]
         except KeyError:
-            await self._char_not_found_error()
+            await self._char_not_found_error(ctx)
 
         if not (level.isdigit() and int(level) in range(MAX_LEVEL)): 
             err = ctx.send('err in level')
