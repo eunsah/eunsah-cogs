@@ -345,6 +345,9 @@ class Maplexp(commands.Cog):
             ud[char] = self.default_profile
             ud[char]['net_exp'] = self._levelexp_net(level=level, exp=exp)
             ud[char]['date'] = datetime.datetime.timestamp(datetime.datetime.strptime(date, '%Y/%m/%d'))
+            
+        if await self.config.user(user).ptr_d() == '':
+            await self.config.user(user).ptr_d.set(char)
 
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
