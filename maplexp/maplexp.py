@@ -210,7 +210,7 @@ class Maplexp(commands.Cog):
 
         exp_growth = 0
 
-        async with self.config.user(ctx.author).usr_d() as udc[char]:
+        async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
             net = self._levelexp_net(level, exp)
             exp_growth = net - udc[char]['net_exp']
