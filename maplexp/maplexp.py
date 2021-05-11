@@ -29,7 +29,6 @@ class Maplexp(commands.Cog):
         self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=True)
         self.base_time = datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d'))
         self.default_profile = {
-            'char_name' : '角色',
             'net_exp' : 0,
             'previous_date' : self.base_time,
             'avg_exp' : 0.0
@@ -97,7 +96,12 @@ class Maplexp(commands.Cog):
         await asyncio.sleep(second)
         await message.delete()
 
-    def _dict_to_embed(self, title:str, data_d:dict, usr_c:discord.User.color) -> discord.Embed:
+    def _char_not_found_error(self):
+        err = await ctx.send('character not found!')
+        await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
+        return
+
+    def _dict_to_embed(self, title:str, name:str, data_d:dict, usr_c:discord.User.color) -> discord.Embed:
         '''
         parameters : title, data_d, usr_c
         return : discord.Embed
@@ -109,7 +113,7 @@ class Maplexp(commands.Cog):
             description = title,
             color = usr_c
         )
-        e.add_field(name='名稱', value=data_d['name'], inline=True)
+        e.add_field(name='名稱', value=name, inline=True)
         e.add_field(name='等級', value=level, inline=True)
         e.add_field(name='經驗值', value=f'{exp:,} ({round((exp/self.level_chart[str(level)])*100, 2):.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
@@ -129,17 +133,12 @@ class Maplexp(commands.Cog):
 
         if char is None:
             char = await self.config.user(user).ptr_d() # str
-
         usr_dict = await self.config.user(user).usr_d() # dict
 
         try:
-            await ctx.send(char)
-            await ctx.send(usr_dict)
             tar_d = usr_dict[char]
         except KeyError:
-            err = await ctx.send('character not found!')
-            await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
-            return
+            self._char_not_found_error()
 
         date = tar_d['previous_date']
         no_data = bool(date == self.base_time)
@@ -154,15 +153,61 @@ class Maplexp(commands.Cog):
             await self._remove_after_seconds(reminder, 60)
             return
 
-        e = self._dict_to_embed(title=str(user.display_name)+'的玩家資料', data_d=tar_d, usr_c=user.color)
+        e = self._dict_to_embed(
+            title = str(user.display_name)+'的玩家資料', 
+            name = char, 
+            data_d = tar_d, 
+            usr_c = user.color
+            )
         embed = await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         # await self._remove_after_seconds(embed, MESSAGE_REMOVE_DELAY)
 
-    def _exp_updateinfo(self, ctx: commands.Context, usr_d: dict, usr_c: str, net_exp: int):
+    def _update(self, ctx:commands.Context, level:str, exp:str, char:str = None):
         '''
         '''
-        pass
+        if char is None:
+            char = await self.config.user(ctx.author).ptr_d() # str     
+        usr_dict = await self.config.user(ctx.author).usr_d() # dict
+
+        if char == '角色':
+            async with self.config.user(ctx.author).usr_d() as ud:
+                del ud['角色']
+                ud[ctx.author.display_name] = self.default_profile
+            await self.config.user(ctx.author).ptr_d.set(ctx.author.display_name)
+
+        try:
+            tar_d = usr_dict[char]
+        except KeyError:
+            self._char_not_found_error()
+
+        if not (level.isdigit() and int(level) in range(MAX_LEVEL)): 
+            err = ctx.send('err in level')
+            await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
+            return
+
+        try:
+            if '.' in exp:
+                per = float(exp.strip('%'))/100
+                req = self.level_chart[level]
+                exp = per*req
+            level = int(level)
+            exp = int(exp)
+        except ValueError:
+            help_msg = ctx.send_help()
+            await self._remove_after_seconds(help_msg, MESSAGE_REMOVE_DELAY)
+            return
+
+
+        e = self._dict_to_embed(
+            title = char+'的資料更新',
+            name = char,
+            data_d = tar_d,
+            usr_c = ctx.author.color
+        )
+
+        
+
 
     @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
@@ -199,7 +244,6 @@ class Maplexp(commands.Cog):
                 if arg_size == 1:
                     # show mentioned default character
                     await self._show_exp(ctx, user=user)
-
                 else:
                     # args size: 2, show mentioned key character
                     await self._show_exp(ctx, user=user, char=argv[1])
@@ -208,66 +252,12 @@ class Maplexp(commands.Cog):
                 if arg_size == 1:
                     #　show char
                     await self._show_exp(ctx, user=ctx.author, char=argv[0])
-        
-
-        # if arg_size in [0, 1]:
-        #     if arg_size == 0:
-        #         await self._show_exp(ctx, ctx.author)
-        #     else: # 1
-        #         char_list = await self.config.user(ctx.author).char_list() 
-        #         if argv[0] in char_list: # if parameter in char list, return their character
-        #             return
-
-        #         else:
-        #             try:
-        #                 user_mention = argv[0] # then this is discord.user
-        #                 user = await self.bot.get_or_fetch_user(int(user_mention.strip('<>!@')))
-        #                 await self._show_exp(ctx, user)
-        #                 return
-        #             except ValueError: # if argv is not in list nor a user
-        #                 await ctx.send('User not found!!')
-        #                 return
-
-        # elif arg_size in [2, 3]:
-        #     if arg_size == 2:
-
-        #         if str(argv[0]).isdigit(): # if in 2 args, first is digit, then assuming user is updating default character
-
-        #             level = argv[0]
-        #             raw = await self.config.user(ctx.author).raw()
-        #             previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
-        #             name = await self.config.user(ctx.author).name()
-        #             if name == '角色':
-        #                 await self.config.user(ctx.author).name.set(ctx.author.display_name)
-
-        #             await self._levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
-
-        #             await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
-
-        #             daily_velocity = await self.config.user(ctx.author).daily_velocity()
-        #             raw_diff = await self.config.user(ctx.author).raw() - raw
-        #             raw_diff_percentage = round((raw_diff / self.level_chart[str(level)])*100, 2)
-
-        #             if previous_date_datetime != datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')):
-        #                 date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
-        #                 avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
-        #                 await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
-        #             else:
-        #                 avg_exp = 0
-        #         else: # else
-        #             pass 
-        # else:
-        #     await ctx.send('Something went wrong')
-        #     await ctx.send_help()
-        #     return
-        
-        # e = await self._get_user_embed(user=ctx.author, title='更新'+str(ctx.author.display_name)+'的經驗值')
-        # e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
-        # e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
-        # await ctx.tick()
-        # msg = await ctx.send(embed=e)
-        # await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-        # return
+                else:
+                    # user update default
+                    self._update(ctx, level=argv[0], exp=argv[1])
+        else:
+            # length == 3, user update character
+            self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
