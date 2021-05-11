@@ -30,8 +30,8 @@ class Maplexp(commands.Cog):
         self.base_time = datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d'))
         self.default_profile = {
             'net_exp' : 0,
-            'date' : self.base_time,
-            'avg_exp' : 0.0
+            'avg_exp' : 0.0,
+            'date' : self.base_time
         }
         default_user = {
             'ptr_d' : '角色',
@@ -40,6 +40,59 @@ class Maplexp(commands.Cog):
             }
         }
         self.config.register_user(**default_user)
+
+    def _dict_to_embed(self, title: str, name: str, data_d: dict, usr_c: discord.User.color) -> discord.Embed:
+        '''
+        parameters : title, data_d, usr_c
+        return : discord.Embed
+        '''
+        level, exp = self._net_levelexp(data_d['net_exp'])
+        avg_exp = data_d['avg_exp']
+        req = self.level_chart[str(level)]
+        exp_perc = round((exp/req)*100, 2) if req != 0 else 0.0
+
+        e = discord.Embed(
+            description = title,
+            color = usr_c
+        )
+        e.add_field(name='名稱', value=name, inline=True)
+        e.add_field(name='等級', value=level, inline=True)
+        e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
+        e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
+        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
+
+        return e
+
+    def _net_levelexp(self, net_val: int) -> tuple:
+        ''' Converts net to level, exp, req
+        parameters : net_exp 
+        return : level, exp, xp_req 
+        '''
+        for key in self.level_chart:
+            xp_req = self.level_chart[key]
+            if xp_req >= net_val:
+                return int(key), net_val
+            net_val -= xp_req
+
+    def _levelexp_net(self, level: int, exp: int) -> int:
+        ''' Converts level, exp to net
+        parameters : level, exp
+        return : net_exp
+        '''
+        net = 0
+        for key in self.level_chart:
+            if int(key) == level:
+                return net + exp
+            net += self.level_chart[key]
+    
+    async def _remove_after_seconds(self, message, second):
+        await asyncio.sleep(second)
+        await message.delete()
+
+    async def _char_not_found_error(self, ctx, name: str):
+        err = await ctx.send('character not found!')
+        await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
+        return
 
     async def _ctx_permissions(self, ctx, admin=True) -> bool:
         ''' Verifies if user is in admin group '''
@@ -70,104 +123,7 @@ class Maplexp(commands.Cog):
 
         return have_perm
 
-    def _net_levelexp(self, net_val:int) -> tuple:
-        ''' Converts net to level, exp, req
-        parameters : net_exp 
-        return : level, exp, xp_req 
-        '''
-        for key in self.level_chart:
-            xp_req = self.level_chart[key]
-            if xp_req >= net_val:
-                return int(key), net_val
-            net_val -= xp_req
-
-    def _levelexp_net(self, level:int, exp:int) -> int:
-        ''' Converts level, exp to net
-        parameters : level, exp
-        return : net_exp
-        '''
-        net = 0
-        for key in self.level_chart:
-            if int(key) == level:
-                return net + exp
-            net += self.level_chart[key]
-    
-    async def _remove_after_seconds(self, message, second):
-        await asyncio.sleep(second)
-        await message.delete()
-
-    async def _char_not_found_error(self, ctx, name:str):
-        err = await ctx.send('character not found!')
-        await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
-        return
-
-    def _dict_to_embed(self, title:str, name:str, data_d:dict, usr_c:discord.User.color) -> discord.Embed:
-        '''
-        parameters : title, data_d, usr_c
-        return : discord.Embed
-        '''
-        level, exp = self._net_levelexp(data_d['net_exp'])
-        avg_exp = data_d['avg_exp']
-        req = self.level_chart[str(level)]
-        exp_perc = round((exp/req)*100, 2) if req != 0 else 0.0
-
-        e = discord.Embed(
-            description = title,
-            color = usr_c
-        )
-        e.add_field(name='名稱', value=name, inline=True)
-        e.add_field(name='等級', value=level, inline=True)
-        e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
-        e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
-        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
-
-        return e
-
-    @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'], hidden=True)
-    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
-    async def _show_exp(self, ctx, user: discord.User = None, char: str = None):
-        '''
-            顯示角色資訊 (mapleinfo || minfo || xpinfo)
-            使用方式：[p]mapleinfo {@使用者}
-        '''
-        if user is None:
-            user = ctx.author
-
-        if char is None:
-            char = await self.config.user(user).ptr_d() # str
-        usr_dict = await self.config.user(user).usr_d() # dict
-
-        tar_d = None
-        try:
-            tar_d = usr_dict[char]
-        except KeyError:
-            await self._char_not_found_error(ctx, char)
-            return
-
-        date = tar_d['date']
-        no_data = bool(date == self.base_time)
-        if no_data:
-            if ctx.author == user:
-                p = '你'
-            else:
-                p = user.display_name
-
-            reminder = await ctx.send(p+r'的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
-            await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-            await self._remove_after_seconds(reminder, 60)
-            return
-
-        e = self._dict_to_embed(
-            title = str(user.display_name)+'的玩家資料', 
-            name = char, 
-            data_d = tar_d, 
-            usr_c = user.color
-            )
-        embed = await ctx.send(embed=e)
-        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-        # await self._remove_after_seconds(embed, MESSAGE_REMOVE_DELAY)
-
-    async def _update(self, ctx:commands.Context, level:str, exp:str, char:str = None):
+    async def _update(self, ctx: commands.Context, level: str, exp: str, char: str = None):
         '''
         '''
         if char is None:
@@ -219,7 +175,6 @@ class Maplexp(commands.Cog):
                 await self._char_not_found_error(ctx, char)
                 return
 
-
         usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
         exp_growth_perc = round((exp_growth/req)*100, 2) if req != 0 else 0.0
 
@@ -240,10 +195,15 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def _exp(self, ctx, *argv):
         '''
-            用於更新經驗值
+            [p]更新經驗值
             使用方式：[p]maplexp [等級] [經驗值]
             - 經驗值可以為百分比(12.42%)或是整數(34593402)
-            - 可以用[p]help Maplexp 查看更多
+
+            其他使用:
+                    [p]maplexp - 顯示
+                    [p]maplexp -
+                    [p]maplexp -
+                    [p]maplexp -
         '''
         if len(argv) not in range(4):
             # argv check
@@ -270,19 +230,19 @@ class Maplexp(commands.Cog):
 
                 if arg_size == 1:
                     # show mentioned default character
-                    await self._show_exp(ctx, user=user)
+                    await self._show_exp(ctx, char=None, user=user)
                     return
 
                 else:
                     # args size: 2, show mentioned key character
-                    await self._show_exp(ctx, user=user, char=argv[1])
+                    await self._show_exp(ctx, char=argv[1], user=user)
                     return
 
             else:
                 # if no mentions in argvs
                 if arg_size == 1:
                     #　show char
-                    await self._show_exp(ctx, user=ctx.author, char=argv[0])
+                    await self._show_exp(ctx, char=argv[0], user=ctx.author)
                     return
 
                 else:
@@ -294,38 +254,69 @@ class Maplexp(commands.Cog):
             await self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
             return
 
-
-
-
-
-
-    @commands.bot_has_permissions(add_reactions=True)
-    @commands.group(name='mapleset', aliases=['mset', 'xpset'])
-    async def commands_mapleset(self, ctx):
-        '''Maplexp的相關各種設定
+    @commands.group(name='maple', aliases=['m'])
+    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
+    async def commands_maple(self, ctx):
+        '''
+            Maplexp info
         '''
         pass
 
-    @commands_mapleset.command(name='init', hidden=True)
-    async def mapleset_init(self, ctx, name='角色', level=0, exp=0, date=datetime.datetime.now().strftime('%Y/%m/%d'), user: discord.User = None):
-        '''完全設定使用者資料
-        使用方式：[p]mapleset init [角色名稱] [等級] [經驗值] [日期] {@使用者}
-        - 日期格式為：%Y/%m/%d (例：1996/11/30)
+    @commands_maple.command(name='info')
+    async def _show_exp(self, ctx, char: str = None, user: discord.User = None):
+        '''
+            顯示角色資訊 (mapleinfo || minfo || xpinfo)
+            使用方式：[p]mapleinfo {@使用者}
         '''
         if user is None:
             user = ctx.author
-        await self._levelexp_verification(user, level=level, exp=exp)
-        await self.config.user(user).name.set(name)
-        date = datetime.datetime.strptime(date, '%Y/%m/%d')
-        await self.config.user(user).date.set(datetime.datetime.timestamp(date))
-        await ctx.tick()
-        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_mapleset.command(name='name', aliases=['ign', 'id'])
-    async def mapleset_name(self, ctx, name, user: discord.User = None):
-        '''設定角色名稱
-        使用方式：[p]mapleset name [角色名稱] {@使用者}
-        - 指定重置使用者需要管理員權限
+        if char is None:
+            char = await self.config.user(user).ptr_d() # str
+        usr_dict = await self.config.user(user).usr_d() # dict
+
+        tar_d = None
+        try:
+            tar_d = usr_dict[char]
+        except KeyError:
+            await self._char_not_found_error(ctx, char)
+            return
+
+        date = tar_d['date']
+        no_data = bool(date == self.base_time)
+        if no_data:
+            if ctx.author == user:
+                p = '你'
+            else:
+                p = user.display_name
+
+            reminder = await ctx.send(p+r'的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
+            await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+            await self._remove_after_seconds(reminder, 60)
+            return
+
+        e = self._dict_to_embed(
+            title = str(user.display_name)+'的玩家資料',
+            name = char,
+            data_d = tar_d,
+            usr_c = user.color
+            )
+        embed = await ctx.send(embed=e)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+        # await self._remove_after_seconds(embed, MESSAGE_REMOVE_DELAY)
+
+    @commands_maple.command(name='create')
+    async def maple_create(
+        self, ctx:commands.Context,
+        char:str = '角色',
+        level:int = 0, exp:int = 0,
+        date = datetime.datetime.now().strftime('%Y/%m/%d'),
+        user: discord.User = None):
+        '''
+            新增角色資料
+            使用方式：[p]mapleset init [角色名稱] [等級] [經驗值] [日期] {@使用者}
+            - 日期格式為：%Y/%m/%d (例：1996/11/30)
+            - 設定使用者需要管理員權限
         '''
         if user is None:
             user = ctx.author
@@ -336,15 +327,81 @@ class Maplexp(commands.Cog):
             if not ok:
                 return
 
-        await self.config.user(ctx.author).name.set(name)
+        async with self.config.user(user).usr_d() as ud:
+            ud[char] = self.default_profile
+            ud[char]['net_exp'] = self._levelexp_net(level=level, exp=exp)
+            ud[char]['date'] = date
+
+        await ctx.tick()
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
+    @commands_maple.command(name='list')
+    async def maple_list(self, ctx, user: discord.User = None):
+        '''
+        '''
+        if user is None:
+            user = ctx.author
+        u_name = str()
+        u_level = str()
+        u_date = str()
+        async with self.config.user(user).usr_d() as ud:
+            for item in ud:
+                date = datetime.datetime.fromtimestamp(ud[item]['date']).strftime('%Y/%m/%d')
+                level, exp = self._net_levelexp(ud[item]['net_exp'])
+                req = self.level_chart[str(level)]
+                exp = round(exp/req) if req != 0 else 0.0
+                u_name.append(str(item)+'\n')
+                u_level.append(f'{level}({exp:.2f}%)\n')
+                u_date.append(str(date)+'\n')
+
+
+        e = discord.Embed(
+            description = user.display_name+'的角色列表',
+            color = user.color
+        )
+        e.add_field(name='角色名稱', value=u_name, inline=True)
+        e.add_field(name='等級', value=u_level, inline=True)
+        e.add_field(name='最後更新時間', value=u_date, inline=True)
+
+        await ctx.send(embed=e)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
+    @commands.group(name='mapleset', aliases=['mset', 'xpset'])
+    @commands.bot_has_permissions(add_reactions=True)
+    async def commands_mapleset(self, ctx):
+        '''
+            Maplexp的相關各種設定
+        '''
+        pass
+
+    @commands_mapleset.command(name='name', aliases=['ign', 'id'])
+    async def mapleset_name(self, ctx, o_id, n_id, user: discord.User = None):
+        '''
+            設定角色名稱
+            使用方式：[p]mapleset name [舊角色名稱] [新角色名稱] {@使用者}
+            - 指定重置使用者需要管理員權限
+        '''
+        if user is None:
+            user = ctx.author
+        elif user == ctx.author:
+            pass
+        else:
+            ok = await self._ctx_permissions(ctx)
+            if not ok:
+                return
+
+        async with self.config.user(user).usr_d() as ud:
+            ud[n_id] = ud.pop(o_id)
+
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands_mapleset.command(name='levelexp')
-    async def mapleset_setlevelexp(self, ctx, level, exp, user: discord.User = None):
-        '''設定等級及經驗值
-        使用方式：[p]mapleset levelexp [level] [exp] {@使用者}
-        - 指定重置使用者需要管理員權限
+    async def mapleset_setlevelexp(self, ctx, level, exp, char: str = None, user: discord.User = None):
+        '''
+            設定等級及經驗值
+            使用方式：[p]mapleset levelexp [level] [exp] {角色名稱} {@使用者}
+            - 指定重置使用者需要管理員權限
         '''
         if user is None:
             user = ctx.author
@@ -354,16 +411,21 @@ class Maplexp(commands.Cog):
             ok = await self._ctx_permissions(ctx)
             if not ok:
                 return
+        if char is None:
+            char = self.config.user(user).ptr_d()
 
-        await self._levelexp_verification(ctx.author, level=level, exp=value)
+        async with self.config.user(user).usr_d() as ud:
+            ud[char]['net_exp'] = self._levelexp_net(level=level, exp=exp)
+
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands_mapleset.command(name='reset')
-    async def mapleset_clear_velocity(self, ctx, user: discord.User = None):
-        '''重置日平均
-        使用方式：[p]mapleset reset {@使用者}
-        - 指定重置使用者需要管理員權限
+    async def mapleset_clear_velocity(self, ctx, char: str = None, user: discord.User = None):
+        '''
+            重置日平均
+            使用方式：[p]mapleset reset {@使用者}
+            - 指定重置使用者需要管理員權限
         '''
         if user is None:
             user = ctx.author
@@ -373,6 +435,8 @@ class Maplexp(commands.Cog):
             ok = await self._ctx_permissions(ctx)
             if not ok:
                 return
+        if char is None:
+            char = self.config.user(user).ptr_d()
 
         verify = await ctx.send('確定要重置日平均嗎？')
         start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
@@ -388,57 +452,9 @@ class Maplexp(commands.Cog):
             return
         await verify.delete()
 
-        await self.config.user(user).date.set(datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
-        await self.config.user(user).daily_velocity.set(0.0)
-        await ctx.tick()
-        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-
-    @commands.admin_or_permissions(administrator=True)
-    @commands_mapleset.command(name='level')
-    async def mapleset_level_admin(self, ctx, value, user: discord.User = None):
-        '''設定角色等級 (管理員限定)
-        使用方式：[p]mapleset level [等級] {@使用者}
-        '''
-        if user is None:
-            user = ctx.author
-        await self._levelexp_verification(user, level=value)
-        await ctx.tick()
-        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-
-    @commands.admin_or_permissions(administrator=True)
-    @commands_mapleset.command(name='exp')
-    async def mapleset_exp_admin(self, ctx, value, user: discord.User = None):
-        '''設定角色經驗值 (管理員限定)
-        使用方式：[p]mapleset exp [經驗值] {@使用者}
-        '''
-        if user is None:
-            user = ctx.author
-        await self._levelexp_verification(user, exp=value)
-        await ctx.tick()
-        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-
-    @commands.admin_or_permissions(administrator=True)
-    @commands_mapleset.command(name='date')
-    async def mapleset_date_admin(self, ctx, value, user: discord.User = None):
-        '''設定更新日期 (管理員限定)
-        使用方式：[p]mapleset date [日期] {@使用者}
-        - 日期格式為：%Y/%m/%d (例：1996/11/30)
-        '''
-        if user is None:
-            user = ctx.author
-        await self.config.user(user).date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
-        await ctx.tick()
-        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-
-    @checks.is_owner()
-    @commands_mapleset.command(name='velocity')
-    async def mapleset_velocity(self, ctx, value, user: discord.User = None):
-        '''設定角色日平均 (擁有者限定)
-        使用方式：[p]mapleset velocity [速率] {@使用者}
-        '''
-        if user is None:
-            user = ctx.author
-        await self.config.user(user).daily_velocity.set(int(value))
+        async with self.config.user(user).usr_d() as ud:
+            ud[char]['avg_exp'] = 0.0
+            ud[char]['date'] = self.base_time
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
