@@ -234,7 +234,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         return
 
-    @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
+    @commands.command(name='maplexp', aliases=['exp', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
     async def _exp(self, ctx, *argv):
         '''
@@ -269,20 +269,33 @@ class Maplexp(commands.Cog):
                 if arg_size == 1:
                     # show mentioned default character
                     await self._show_exp(ctx, user=user)
+                    return
+
                 else:
                     # args size: 2, show mentioned key character
                     await self._show_exp(ctx, user=user, char=argv[1])
+                    return
+
             else:
                 # if no mentions in argvs
                 if arg_size == 1:
                     #　show char
                     await self._show_exp(ctx, user=ctx.author, char=argv[0])
+                    return
+
                 else:
                     # user update default
                     await self._update(ctx, level=argv[0], exp=argv[1])
+                    return
         else:
             # length == 3, user update character
             await self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
+            return
+
+
+
+
+
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
