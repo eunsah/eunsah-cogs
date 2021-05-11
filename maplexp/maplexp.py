@@ -273,13 +273,6 @@ class Maplexp(commands.Cog):
             char = await self.config.user(user).ptr_d() # str
         usr_dict = await self.config.user(user).usr_d() # dict
 
-        tar_d = None
-        try:
-            tar_d = usr_dict[char]
-        except KeyError:
-            await self._char_not_found_error(ctx, char)
-            return
-
         if char == '':
             if ctx.author == user:
                 p = '你'
@@ -289,6 +282,13 @@ class Maplexp(commands.Cog):
             reminder = await ctx.send(p+r'的資料一片空白ʕ´•ᴥ•\`ʔ'+'\n可以使用`>xp [等級] [經驗值]`來新增資料！')
             await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
             await self._remove_after_seconds(reminder, 60)
+            return
+
+        tar_d = None
+        try:
+            tar_d = usr_dict[char]
+        except KeyError:
+            await self._char_not_found_error(ctx, char)
             return
 
         date = tar_d['date']
