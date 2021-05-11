@@ -101,7 +101,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
         return
 
-    def _dict_to_embed(self, title:str, name:str, data_d:dict, usr_c:discord.User.color) -> discord.Embed:
+    async def _dict_to_embed(self, title:str, name:str, data_d:dict, usr_c:discord.User.color) -> discord.Embed:
         '''
         parameters : title, data_d, usr_c
         return : discord.Embed
@@ -155,7 +155,7 @@ class Maplexp(commands.Cog):
             await self._remove_after_seconds(reminder, 60)
             return
 
-        e = self._dict_to_embed(
+        e = await self._dict_to_embed(
             title = str(user.display_name)+'的玩家資料', 
             name = char, 
             data_d = tar_d, 
@@ -216,7 +216,7 @@ class Maplexp(commands.Cog):
             
             udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
 
-        e = self._dict_to_embed(
+        e = await self._dict_to_embed(
             title = char+'的資料更新',
             name = char,
             data_d = tar_d,
