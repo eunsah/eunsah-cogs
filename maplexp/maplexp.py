@@ -101,7 +101,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
         return
 
-    async def _dict_to_embed(self, title:str, name:str, data_d:dict, usr_c:discord.User.color) -> discord.Embed:
+    def _dict_to_embed(self, title:str, name:str, data_d:dict, usr_c:discord.User.color) -> discord.Embed:
         '''
         parameters : title, data_d, usr_c
         return : discord.Embed
@@ -155,7 +155,7 @@ class Maplexp(commands.Cog):
             await self._remove_after_seconds(reminder, 60)
             return
 
-        e = await self._dict_to_embed(
+        e = self._dict_to_embed(
             title = str(user.display_name)+'的玩家資料', 
             name = char, 
             data_d = tar_d, 
@@ -189,6 +189,7 @@ class Maplexp(commands.Cog):
             await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
             return            
 
+        req = 0
         try:
             if '.' in exp:
                 per = float(exp.strip('%'))/100
@@ -202,6 +203,7 @@ class Maplexp(commands.Cog):
             return
 
         exp_growth = 0
+        new_avg = 0.0
 
         async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
@@ -216,17 +218,21 @@ class Maplexp(commands.Cog):
             
             udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
 
+        exp_growth_perc = round((exp_growth/req)*100, 2) if req != 0 else 0.0
         usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
 
-        e = await self._dict_to_embed(
+        e = self._dict_to_embed(
             title = char+'的資料更新',
             name = char,
             data_d = usr_dict[char],
             usr_c = ctx.author.color
         )
-
-        await ctx.send(embed=e)
+        e.add_field(name="經驗成長日平均 (更新)", value=f'{new_avg:,}', inline=True)
+        e.add_field(name="總經驗成長幅", value=f'{exp_growth:,} ({exp_growth_perc:,.2f}%)', inline=True)
+        await ctx.send(embed=e) 
+        await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+        return
 
     @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
