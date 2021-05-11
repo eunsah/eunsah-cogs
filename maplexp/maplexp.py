@@ -265,7 +265,7 @@ class Maplexp(commands.Cog):
     @commands_maple.command(name='info')
     async def _show_exp(self, ctx, char: str = None, user: discord.User = None):
         '''
-            顯示角色資訊 (mapleinfo || minfo || xpinfo)
+            顯示角色資訊 (mapleinfo | minfo | xpinfo)
             使用方式：[p]mapleinfo {@使用者}
         '''
         if user is None:
@@ -350,9 +350,9 @@ class Maplexp(commands.Cog):
                 level, exp = self._net_levelexp(ud[item]['net_exp'])
                 req = self.level_chart[str(level)]
                 exp = round(exp/req) if req != 0 else 0.0
-                u_name.append(str(item)+'\n')
-                u_level.append(f'{level}({exp:.2f}%)\n')
-                u_date.append(str(date)+'\n')
+                u_name += str(item)+'\n'
+                u_level += f'{level}({exp:.2f}%)\n'
+                u_date += str(date)+'\n'
 
 
         e = discord.Embed(
