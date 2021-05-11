@@ -306,7 +306,7 @@ class Maplexp(commands.Cog):
     async def maple_create(
         self, ctx:commands.Context,
         char:str,
-        level:int = 0, exp:int = 0,
+        level:int = 0, exp:str = '0',
         date = datetime.datetime.now().strftime('%Y/%m/%d'),
         user: discord.User = None):
         '''
@@ -323,11 +323,21 @@ class Maplexp(commands.Cog):
             ok = await self._ctx_permissions(ctx)
             if not ok:
                 return
+            
+        try:
+            if '.' in exp:
+                per = float(exp.strip('%'))/100
+                req = self.level_chart[level]
+                exp = per*req
+            exp = int(exp)
+        except ValueError:
+            await ctx.send('Error exp conversion')
+            return
 
         async with self.config.user(user).usr_d() as ud:
             ud[char] = self.default_profile
             ud[char]['net_exp'] = self._levelexp_net(level=level, exp=exp)
-            ud[char]['date'] = date
+            ud[char]['date'] = datetime.datetime.strptime(date, '%Y/%m/%d')
 
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
