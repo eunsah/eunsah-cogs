@@ -30,7 +30,7 @@ class Maplexp(commands.Cog):
         self.base_time = datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d'))
         self.default_profile = {
             'net_exp' : 0,
-            'previous_date' : self.base_time,
+            'date' : self.base_time,
             'avg_exp' : 0.0
         }
         default_user = {
@@ -117,7 +117,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='等級', value=level, inline=True)
         e.add_field(name='經驗值', value=f'{exp:,} ({round((exp/self.level_chart[str(level)])*100, 2):.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
-        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(data_d['previous_date']).strftime('%Y/%m/%d'))
+        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
 
         return e
 
@@ -140,7 +140,7 @@ class Maplexp(commands.Cog):
         except KeyError:
             await self._char_not_found_error()
 
-        date = tar_d['previous_date']
+        date = tar_d['date']
         no_data = bool(date == self.base_time)
         if no_data:
             if ctx.author == user:
@@ -184,7 +184,7 @@ class Maplexp(commands.Cog):
         if not (level.isdigit() and int(level) in range(MAX_LEVEL)): 
             err = ctx.send('err in level')
             await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
-            return
+            return            
 
         try:
             if '.' in exp:
@@ -198,6 +198,20 @@ class Maplexp(commands.Cog):
             await self._remove_after_seconds(help_msg, MESSAGE_REMOVE_DELAY)
             return
 
+        exp_growth = 0
+
+        async with self.config.user(ctx.author).usr_d() as ud:
+            # update dict net_exp, avg_exp, date
+            net = self._levelexp_net(level, exp)
+            exp_growth = net - ud['net_exp']
+            ud['net_exp'] = net # update net
+            old_date = ud['date']
+            if old_date != self.base_time:
+                date_timedelta = datetime.datetime.now() - datetime.datetime.fromtimestamp(old_date)
+                new_avg = round(exp_growth/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
+                ud['avg_exp'] = round(((avg_exp+new_avg)/2), 2)
+            
+            ud['date'] = datetime.datetime.timestamp(datetime.datetime.now())
 
         e = self._dict_to_embed(
             title = char+'的資料更新',
@@ -276,8 +290,8 @@ class Maplexp(commands.Cog):
             user = ctx.author
         await self._levelexp_verification(user, level=level, exp=exp)
         await self.config.user(user).name.set(name)
-        previous_date = datetime.datetime.strptime(date, '%Y/%m/%d')
-        await self.config.user(user).previous_date.set(datetime.datetime.timestamp(previous_date))
+        date = datetime.datetime.strptime(date, '%Y/%m/%d')
+        await self.config.user(user).date.set(datetime.datetime.timestamp(date))
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
@@ -348,7 +362,7 @@ class Maplexp(commands.Cog):
             return
         await verify.delete()
 
-        await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
+        await self.config.user(user).date.set(datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')))
         await self.config.user(user).daily_velocity.set(0.0)
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
@@ -386,7 +400,7 @@ class Maplexp(commands.Cog):
         '''
         if user is None:
             user = ctx.author
-        await self.config.user(user).previous_date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
+        await self.config.user(user).date.set(datetime.datetime.timestamp(datetime.datetime.strptime(value, '%Y/%m/%d')))
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
