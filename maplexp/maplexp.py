@@ -218,7 +218,7 @@ class Maplexp(commands.Cog):
 
 
         net = self._levelexp_net(level, exp)
-        exp_growth = net - await self.config.user(ctx.author).usr_d[char].net_exp()
+        exp_growth = net - await self.config.user(ctx.author).usr_d(char).net_exp()
 
 
 
