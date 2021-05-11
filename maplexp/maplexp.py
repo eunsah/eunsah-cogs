@@ -189,12 +189,12 @@ class Maplexp(commands.Cog):
 
                 else:
                     # args size: 2, show mentioned key character
-                    await self._show_exp(ctx, user=argv[0], usr_c=argv[1])
+                    await self._show_exp(ctx, user=argv[0], char=argv[1])
             else:
                 # if no mentions in argvs
                 if arg_size == 1:
                     #　show char
-                    await self._show_exp(ctx, user=ctx.author, usr_c=argv[0])
+                    await self._show_exp(ctx, user=ctx.author, char=argv[0])
         
 
         # if arg_size in [0, 1]:
