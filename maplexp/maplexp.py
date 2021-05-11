@@ -216,12 +216,12 @@ class Maplexp(commands.Cog):
             
             udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
 
-        tar_d = usr_dict[char]
+        usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
 
         e = await self._dict_to_embed(
             title = char+'的資料更新',
             name = char,
-            data_d = tar_d,
+            data_d = usr_dict[char],
             usr_c = ctx.author.color
         )
 
