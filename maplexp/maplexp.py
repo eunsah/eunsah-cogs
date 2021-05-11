@@ -509,7 +509,7 @@ class Maplexp(commands.Cog):
             return
         await verify.delete()
 
-        await self.config.clear()
+        await self.config.clear_all()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
