@@ -35,7 +35,7 @@ class Maplexp(commands.Cog):
             'avg_exp' : 0.0
         }
         default_user = {
-            'ptr_d' : '0',
+            'ptr_d' : '角色',
             'usr_d': {
                 '0' : {**self.default_profile}
             }
@@ -84,10 +84,14 @@ class Maplexp(commands.Cog):
 
     def _levelexp_net(self, level:int, exp:int) -> int:
         ''' Converts level, exp to net
-
+        parameters : level, exp
+        return : net_exp
         '''
-        pass
-
+        net = 0
+        for key in self.level_chart:
+            if int(key) == level:
+                return net + exp
+            net += self.level_chart[key]
     
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
@@ -128,7 +132,12 @@ class Maplexp(commands.Cog):
 
         usr_dict = await self.config.user(user).usr_d() # dict
 
-        tar_d = usr_dict[char]
+        try:
+            tar_d = usr_dict[char]
+        except KeyError:
+            err = await ctx.send('character not found!')
+            await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
+            return
 
         date = tar_d['previous_date']
         no_data = bool(date == self.base_time)
@@ -144,9 +153,9 @@ class Maplexp(commands.Cog):
             return
 
         e = self._dict_to_embed(title=str(user.display_name)+'的玩家資料', data_d=tar_d, usr_c=user.color)
-        msg = await ctx.send(embed=e)
-        # await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-        # await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
+        embed = await ctx.send(embed=e)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+        # await self._remove_after_seconds(embed, MESSAGE_REMOVE_DELAY)
 
     def _exp_updateinfo(self, ctx: commands.Context, usr_d: dict, usr_c: str, net_exp: int):
         '''
