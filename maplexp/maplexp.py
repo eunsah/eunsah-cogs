@@ -26,7 +26,7 @@ class Maplexp(commands.Cog):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.level_chart = json.load(j)
-        self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=True)
+        self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=False)
         self.base_time = datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d'))
         self.default_profile = {
             'net_exp' : 0,
@@ -35,7 +35,7 @@ class Maplexp(commands.Cog):
         }
         default_user = {
             'ptr_d' : '',
-            'usr_d': {}
+            'usr_d': ''
         }
         self.config.register_user(**default_user)
 
