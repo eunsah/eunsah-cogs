@@ -108,6 +108,8 @@ class Maplexp(commands.Cog):
         '''
         level, exp = self._net_levelexp(data_d['net_exp'])
         avg_exp = data_d['avg_exp']
+        req = self.level_chart[str(level)]
+        exp_perc = round((exp/req)*100, 2) if req != 0 else 0.0
 
         e = discord.Embed(
             description = title,
@@ -115,7 +117,7 @@ class Maplexp(commands.Cog):
         )
         e.add_field(name='名稱', value=name, inline=True)
         e.add_field(name='等級', value=level, inline=True)
-        e.add_field(name='經驗值', value=f'{exp:,} ({round((exp/self.level_chart[str(level)])*100, 2):.2f}%)', inline=False)
+        e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
         e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
 
