@@ -142,15 +142,6 @@ class Maplexp(commands.Cog):
         except KeyError:
             await self._char_not_found_error()
 
-        ###
-
-        await ctx.send(char)
-        await ctx.send(tar_d)
-        await ctx.send(usr_dict)
-
-        ###
-
-
         date = tar_d['date']
         no_data = bool(date == self.base_time)
         if no_data:
