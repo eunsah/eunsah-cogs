@@ -46,8 +46,8 @@ class Maplexp(commands.Cog):
         ''' Verifies if user is in admin group '''
         have_perm = int(ctx.author.id) == AUTH_UID or ctx.author.guild_permissions.administrator if admin else int(ctx.author.id) == AUTH_UID
         if not have_perm:
-            if numpy.random.choice(10) == 5:
-                prefix = numpy.random.choice([
+            if numpy.random.arg_size(10) == 5:
+                prefix = numpy.random.arg_size([
                     '可以啊，只是',
                     '笑死，',
                     '哭啊？',
@@ -71,38 +71,6 @@ class Maplexp(commands.Cog):
 
         return have_perm
 
-    async def _levelexp_verification(self, user, level = None, exp = None) -> None:
-        '''Verify level, exp and sets level, exp, raw
-        parameters : user, level, exp
-        '''
-        if level is None:
-            level = await self.config.user(user).level()
-        if exp is None:
-            exp = await self.config.user(user).exp()
-        try:
-            level = int(level)
-            if level < 0 or level > MAX_LEVEL:
-                # level verify
-                raise ValueError
-            level_exp = self.level_chart[str(level)]
-            if '.' in str(exp):
-                exp = float(exp)
-                exp = round(level_exp*(exp/100))
-            else:
-                exp = int(exp)
-        except ValueError:
-            return
-
-        raw = 0
-        for key in self.level_chart:
-            raw += self.level_chart[key]
-            if int(key) == level:
-                break
-        raw += exp
-        await self.config.user(user).level.set(int(level))
-        await self.config.user(user).exp.set(int(exp))
-        await self.config.user(user).raw.set(int(raw))
-
     def _net_levelexp(self, net_val:int) -> tuple:
         ''' Converts net to level, exp, req
         parameters : net_exp 
@@ -111,50 +79,16 @@ class Maplexp(commands.Cog):
         for key in self.level_chart:
             xp_req = self.level_chart[key]
             if xp_req >= net_val:
-                return int(key), net_val, int(xp_req)
+                return int(key), net_val
             net_val -= xp_req
-        
 
-    async def _embed(self, title, color, name, level, exp, top_exp, avg_exp, p_date) -> discord.Embed:
+    def _levelexp_net(self, level:int, exp:int) -> int:
+        ''' Converts level, exp to net
+
         '''
-        embed
-        '''
-        e = discord.Embed(
-            description = title,
-            color = color
-        )
-        e.add_field(name="名稱", value=name, inline=True)
-        e.add_field(name="等級", value=level, inline=True)
-        e.add_field(name="經驗值", value=f'{exp:,} ({round((exp/top_exp)*100, 2):.2f}%)', inline=False)
-        e.add_field(name="經驗成長日平均", value=f'{round(avg_exp):,}', inline=False)
-        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(p_date).strftime('%Y/%m/%d'))
+        pass
 
-        return e
-
-    async def _get_user_embed(self, user, title) -> discord.Embed:
-        '''Process Embeds
-        '''
-        name = await self.config.user(user).name()
-        level = await self.config.user(user).level()
-        exp = await self.config.user(user).exp()
-        previous_date = await self.config.user(user).previous_date()
-        daily_velocity = await self.config.user(user).daily_velocity()
-
-        top_exp = self.level_chart[str(level)]
-        if top_exp == 0:
-            top_exp = 1
-
-        return await self._embed(
-            title=title,
-            color=user.color,
-            name=name,
-            level=level,
-            exp=exp,
-            top_exp=top_exp,
-            avg_exp=daily_velocity,
-            p_date=previous_date
-        )
-
+    
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
         await message.delete()
@@ -164,7 +98,7 @@ class Maplexp(commands.Cog):
         parameters : title, data_d, usr_c
         return : discord.Embed
         '''
-        level, exp, req_exp = self._net_levelexp(data_d['net_exp'])
+        level, exp = self._net_levelexp(data_d['net_exp'])
         avg_exp = data_d['avg_exp']
 
         e = discord.Embed(
@@ -173,12 +107,11 @@ class Maplexp(commands.Cog):
         )
         e.add_field(name='名稱', value=data_d['name'], inline=True)
         e.add_field(name='等級', value=level, inline=True)
-        e.add_field(name='經驗值', value=f'{exp:,} ({round((exp/req_exp)*100, 2):.2f}%)', inline=False)
+        e.add_field(name='經驗值', value=f'{exp:,} ({round((exp/self.level_chart[str(level)])*100, 2):.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
         e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(data_d['previous_date']).strftime('%Y/%m/%d'))
 
         return e
-
 
     @commands.command(name='mapleinfo', aliases=['minfo', 'xpinfo'], hidden=True)
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
@@ -208,85 +141,118 @@ class Maplexp(commands.Cog):
         # await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         # await self._remove_after_seconds(msg, MESSAGE_REMOVE_DELAY)
 
+    def _exp_showinfo(self, ctx: commands.Context, user: discord.User=None, usr_c: str=None):
+        '''
+        '''
+        pass
+
+    def _exp_updateinfo(self, ctx: commands.Context, usr_d: dict, usr_c: str, net_exp: int):
+        '''
+        '''
+        pass
+
     @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
-    async def _update_exp(self, ctx, *argv):
-        '''用於更新經驗值
-        使用方式：[p]maplexp [等級] [經驗值]
-        - 經驗值可以為百分比(12.42%)或是整數(34593402)
-        - 可以用[p]help Maplexp 查看更多
+    async def _exp(self, ctx, *argv):
+        '''
+            用於更新經驗值
+            使用方式：[p]maplexp [等級] [經驗值]
+            - 經驗值可以為百分比(12.42%)或是整數(34593402)
+            - 可以用[p]help Maplexp 查看更多
         '''
         if len(argv) not in range(4):
             # argv check
             await ctx.send_help()
             return
 
-        choice = len(argv)
-        ''' Function depends on argv count within 0~3
+        arg_size = len(argv)
+        ''' Function depends on argv len within 0~3
         0 -> show default
         1 -> show my character, show others' default
         2 -> update default, show others' character
         3 -> update character
         '''
 
-        if choice in [0, 1]:
-            if choice == 0:
-                await self._show_exp(ctx, ctx.author)
-            else: # 1
-                char_list = await self.config.user(ctx.author).char_list() 
-                if argv[0] in char_list: # if parameter in char list, return their character
-                    return
+        if arg_size == 0:
+            # if no argvs, show self default character
+            self._exp_showinfo(ctx)
+
+        elif arg_size in range(1, 3):
+            # if argvs in 1 or 2
+            if '<>@!' in argv[0] and len(argv[0].strip('<>@!')) == 18:
+                # check if first argv is a mention
+                if arg_size == 1:
+                    # show mentioned default character
+                    self._exp_showinfo(ctx, user=argv[0])
 
                 else:
-                    try:
-                        user_mention = argv[0] # then this is discord.user
-                        user = await self.bot.get_or_fetch_user(int(user_mention.strip('<>!@')))
-                        await self._show_exp(ctx, user)
-                        return
-                    except ValueError: # if argv is not in list nor a user
-                        await ctx.send('User not found!!')
-                        return
-
-        elif choice in [2, 3]:
-            if choice == 2:
-
-                if str(argv[0]).isdigit(): # if in 2 args, first is digit, then assuming user is updating default character
-
-                    level = argv[0]
-                    raw = await self.config.user(ctx.author).raw()
-                    previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
-                    name = await self.config.user(ctx.author).name()
-                    if name == '角色':
-                        await self.config.user(ctx.author).name.set(ctx.author.display_name)
-
-                    await self._levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
-
-                    await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
-
-                    daily_velocity = await self.config.user(ctx.author).daily_velocity()
-                    raw_diff = await self.config.user(ctx.author).raw() - raw
-                    raw_diff_percentage = round((raw_diff / self.level_chart[str(level)])*100, 2)
-
-                    if previous_date_datetime != datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')):
-                        date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
-                        avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
-                        await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
-                    else:
-                        avg_exp = 0
-                else: # else
-                    pass 
-        else:
-            await ctx.send('Something went wrong')
-            await ctx.send_help()
-            return
+                    # args size: 2, show mentioned key character
+                    self._exp_showinfo(ctx, user=argv[0], usr_c=argv[1])
+            else:
+                # if no mentions in argvs
+                if arg_size == 1:
+                    #　show char
+                    self._exp_showinfo(ctx, user=ctx.author, usr_c=argv[0])
         
-        e = await self._get_user_embed(user=ctx.author, title='更新'+str(ctx.author.display_name)+'的經驗值')
-        e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
-        e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
-        await ctx.tick()
-        msg = await ctx.send(embed=e)
-        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-        return
+
+        # if arg_size in [0, 1]:
+        #     if arg_size == 0:
+        #         await self._show_exp(ctx, ctx.author)
+        #     else: # 1
+        #         char_list = await self.config.user(ctx.author).char_list() 
+        #         if argv[0] in char_list: # if parameter in char list, return their character
+        #             return
+
+        #         else:
+        #             try:
+        #                 user_mention = argv[0] # then this is discord.user
+        #                 user = await self.bot.get_or_fetch_user(int(user_mention.strip('<>!@')))
+        #                 await self._show_exp(ctx, user)
+        #                 return
+        #             except ValueError: # if argv is not in list nor a user
+        #                 await ctx.send('User not found!!')
+        #                 return
+
+        # elif arg_size in [2, 3]:
+        #     if arg_size == 2:
+
+        #         if str(argv[0]).isdigit(): # if in 2 args, first is digit, then assuming user is updating default character
+
+        #             level = argv[0]
+        #             raw = await self.config.user(ctx.author).raw()
+        #             previous_date_datetime = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date())
+        #             name = await self.config.user(ctx.author).name()
+        #             if name == '角色':
+        #                 await self.config.user(ctx.author).name.set(ctx.author.display_name)
+
+        #             await self._levelexp_verification(ctx.author, level=argv[0], exp=argv[1].strip('%'))
+
+        #             await self.config.user(ctx.author).previous_date.set(datetime.datetime.timestamp(datetime.datetime.now()))
+
+        #             daily_velocity = await self.config.user(ctx.author).daily_velocity()
+        #             raw_diff = await self.config.user(ctx.author).raw() - raw
+        #             raw_diff_percentage = round((raw_diff / self.level_chart[str(level)])*100, 2)
+
+        #             if previous_date_datetime != datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d')):
+        #                 date_diff_timedelta = datetime.datetime.fromtimestamp(await self.config.user(ctx.author).previous_date()) - previous_date_datetime
+        #                 avg_exp = round(raw_diff/(date_diff_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
+        #                 await self.config.user(ctx.author).daily_velocity.set(round(((avg_exp+daily_velocity)/2), 2))
+        #             else:
+        #                 avg_exp = 0
+        #         else: # else
+        #             pass 
+        # else:
+        #     await ctx.send('Something went wrong')
+        #     await ctx.send_help()
+        #     return
+        
+        # e = await self._get_user_embed(user=ctx.author, title='更新'+str(ctx.author.display_name)+'的經驗值')
+        # e.add_field(name="經驗成長日平均 (更新)", value=f'{avg_exp:,}', inline=True)
+        # e.add_field(name="總經驗成長幅", value=f'{raw_diff:,} ({raw_diff_percentage:,.2f}%)', inline=True)
+        # await ctx.tick()
+        # msg = await ctx.send(embed=e)
+        # await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+        # return
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
