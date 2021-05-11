@@ -20,7 +20,7 @@ AUTH_UID = 164900704526401545
 
 class Maplexp(commands.Cog):
     '''
-        Maplexp 紀錄楓之谷經驗值
+        Maplexp 紀錄楓之谷等級&經驗值
     '''
     def __init__(self, bot):
         self.bot = bot
@@ -255,7 +255,7 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def commands_maple(self, ctx):
         '''
-            Maplexp 資料
+            楓之谷等級經驗資料
         '''
         pass
 
@@ -408,7 +408,7 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def commands_mapleset(self, ctx):
         '''
-            Maplexp 設定
+            楓之谷等級&經驗值設定
         '''
         pass
 
@@ -499,8 +499,9 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     @commands_mapleset.command(name='cleardata', hidden=True)
     async def _mapleset_clear_all_userdata(self, ctx):
-        '''移除所有使用者資料 (擁有者限定)
-        使用方式：[p]mapleset cleardata
+        '''
+            移除所有使用者資料 (擁有者限定)
+            使用方式：[p]mapleset cleardata
         '''
         ok = await self._ctx_permissions(ctx, admin=False)
         if not ok:
@@ -526,6 +527,9 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands_mapleset.command(name='i')
-    async def mapleset_info(self, ctx):
-        data = await self.config.user(ctx.author)()
+    @checks.is_owner()
+    async def mapleset_info(self, ctx, user: dicord.User = None):
+        if user is None:
+            user = ctx.author
+        data = await self.config.user(user)()
         await ctx.send(data)
