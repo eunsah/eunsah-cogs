@@ -397,9 +397,9 @@ class Maplexp(commands.Cog):
                 date = datetime.datetime.fromtimestamp(ud[item]['date']).strftime('%Y/%m/%d')
                 level, exp = self._net_levelexp(ud[item]['net_exp'])
                 req = self.level_chart[str(level)]
-                exp = round(exp/req) if req != 0 else 0.0
+                # exp = round(exp/req) if req != 0 else 0.0
                 u_name += str(item)+'\n'
-                u_level += f'{level}({exp:.2f}%)\n'
+                u_level += f'{level}({exp:.2f}/{req}%)\n'
                 u_date += str(date)+'\n'
 
         if u_size == 0:
