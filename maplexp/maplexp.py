@@ -133,6 +133,8 @@ class Maplexp(commands.Cog):
         usr_dict = await self.config.user(user).usr_d() # dict
 
         try:
+            await ctx.send(char)
+            await ctx.send(usr_dict)
             tar_d = usr_dict[char]
         except KeyError:
             err = await ctx.send('character not found!')
