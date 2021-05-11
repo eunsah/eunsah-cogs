@@ -195,7 +195,7 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def _exp(self, ctx, *argv):
         '''
-            [p]更新經驗值
+            更新經驗值
             使用方式：[p]maplexp [等級] [經驗值]
             - 經驗值可以為百分比(12.42%)或是整數(34593402)
 
@@ -258,7 +258,7 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def commands_maple(self, ctx):
         '''
-            Maplexp info
+            Maplexp 資料
         '''
         pass
 
@@ -370,7 +370,7 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def commands_mapleset(self, ctx):
         '''
-            Maplexp的相關各種設定
+            Maplexp 設定
         '''
         pass
 
