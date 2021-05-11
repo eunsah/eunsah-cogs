@@ -314,7 +314,7 @@ class Maplexp(commands.Cog):
         user: discord.User = None):
         '''
             新增角色資料
-            使用方式：[p]mapleset init [角色名稱] [等級] [經驗值] [日期] {@使用者}
+            使用方式：[p]mapleset create [角色名稱] [等級] [經驗值] [日期] {@使用者}
             - 日期格式為：%Y/%m/%d (例：1996/11/30)
             - 設定使用者需要管理員權限
         '''
@@ -338,6 +338,8 @@ class Maplexp(commands.Cog):
     @commands_maple.command(name='list')
     async def maple_list(self, ctx, user: discord.User = None):
         '''
+            顯示角色列表
+            使用方式：[p]mapleset list {@使用者}
         '''
         if user is None:
             user = ctx.author
@@ -346,7 +348,7 @@ class Maplexp(commands.Cog):
         u_date = str()
         async with self.config.user(user).usr_d() as ud:
             for item in ud:
-                date = datetime.datetime.fromtimestamp(ud[item]['date']).strftime('%Y/%m/%d')
+                date = datetime.datetime.fromtimestamp(ud[item]['date']).strftime('%Y年%m月%d日')
                 level, exp = self._net_levelexp(ud[item]['net_exp'])
                 req = self.level_chart[str(level)]
                 exp = round(exp/req) if req != 0 else 0.0
