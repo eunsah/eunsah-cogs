@@ -306,7 +306,7 @@ class Maplexp(commands.Cog):
     @commands_maple.command(name='create')
     async def maple_create(
         self, ctx:commands.Context,
-        char:str = '角色',
+        char:str,
         level:int = 0, exp:int = 0,
         date = datetime.datetime.now().strftime('%Y/%m/%d'),
         user: discord.User = None):
@@ -510,6 +510,6 @@ class Maplexp(commands.Cog):
             return
         await verify.delete()
 
-        await self.config.clear_all()
+        await self.config.user(ctx.author).clear_all_users()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
