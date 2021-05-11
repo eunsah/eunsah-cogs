@@ -34,7 +34,7 @@ class Maplexp(commands.Cog):
             'date' : self.base_time
         }
         default_user = {
-            'ptr_d' : '角色',
+            'ptr_d' : '',
             'usr_d': {
             }
         }
@@ -129,9 +129,8 @@ class Maplexp(commands.Cog):
             char = await self.config.user(ctx.author).ptr_d() # str     
         usr_dict = await self.config.user(ctx.author).usr_d() # dict
 
-        if char == '角色':
+        if char == '':
             async with self.config.user(ctx.author).usr_d() as ud:
-                del ud['角色']
                 ud[ctx.author.display_name] = self.default_profile
             await self.config.user(ctx.author).ptr_d.set(ctx.author.display_name)
             char = ctx.author.display_name
@@ -281,9 +280,7 @@ class Maplexp(commands.Cog):
             await self._char_not_found_error(ctx, char)
             return
 
-        date = tar_d['date']
-        no_data = bool(date == self.base_time)
-        if no_data:
+        if char == '':
             if ctx.author == user:
                 p = '你'
             else:
@@ -293,6 +290,8 @@ class Maplexp(commands.Cog):
             await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
             await self._remove_after_seconds(reminder, 60)
             return
+
+        date = tar_d['date']
 
         e = self._dict_to_embed(
             title = str(user.display_name)+'的玩家資料',
@@ -356,11 +355,11 @@ class Maplexp(commands.Cog):
                 ud.pop(char)
             except KeyError:
                 await self._char_not_found_error(ctx, char)
+                await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
                 return
 
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-
 
     @commands_maple.command(name='list')
     async def maple_list(self, ctx, user: discord.User = None):
