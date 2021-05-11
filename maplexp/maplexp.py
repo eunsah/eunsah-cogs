@@ -181,7 +181,7 @@ class Maplexp(commands.Cog):
 
         elif arg_size in range(1, 3):
             # if argvs in 1 or 2
-            if '<>@!' in argv[0] and len(argv[0].strip('<>@!')) == 18:
+            if '<@!' in argv[0] and len(argv[0].strip('<>@!')) == 18:
                 # check if first argv is a mention
                 if arg_size == 1:
                     # show mentioned default character
