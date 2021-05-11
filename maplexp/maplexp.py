@@ -96,7 +96,7 @@ class Maplexp(commands.Cog):
         await asyncio.sleep(second)
         await message.delete()
 
-    def _char_not_found_error(self):
+    async def _char_not_found_error(self):
         err = await ctx.send('character not found!')
         await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
         return
@@ -138,7 +138,7 @@ class Maplexp(commands.Cog):
         try:
             tar_d = usr_dict[char]
         except KeyError:
-            self._char_not_found_error()
+            await self._char_not_found_error()
 
         date = tar_d['previous_date']
         no_data = bool(date == self.base_time)
@@ -163,7 +163,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         # await self._remove_after_seconds(embed, MESSAGE_REMOVE_DELAY)
 
-    def _update(self, ctx:commands.Context, level:str, exp:str, char:str = None):
+    async def _update(self, ctx:commands.Context, level:str, exp:str, char:str = None):
         '''
         '''
         if char is None:
@@ -179,7 +179,7 @@ class Maplexp(commands.Cog):
         try:
             tar_d = usr_dict[char]
         except KeyError:
-            self._char_not_found_error()
+            await self._char_not_found_error()
 
         if not (level.isdigit() and int(level) in range(MAX_LEVEL)): 
             err = ctx.send('err in level')
@@ -254,10 +254,10 @@ class Maplexp(commands.Cog):
                     await self._show_exp(ctx, user=ctx.author, char=argv[0])
                 else:
                     # user update default
-                    self._update(ctx, level=argv[0], exp=argv[1])
+                    await self._update(ctx, level=argv[0], exp=argv[1])
         else:
             # length == 3, user update character
-            self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
+            await self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
