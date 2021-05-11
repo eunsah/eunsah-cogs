@@ -35,7 +35,7 @@ class Maplexp(commands.Cog):
         }
         default_user = {
             'ptr_d' : '',
-            'usr_d': ''
+            'usr_a': ''
         }
         self.config.register_user(**default_user)
 
