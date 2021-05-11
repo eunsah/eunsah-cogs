@@ -232,8 +232,8 @@ class Maplexp(commands.Cog):
             usr_c = ctx.author.color
         )
 
-        
-
+        await ctx.send(embed=e)
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.command(name='maplexp', aliases=['exp', 'e', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
