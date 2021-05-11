@@ -85,7 +85,7 @@ class Maplexp(commands.Cog):
     
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
-        await message.delete()
+        # await message.delete()
 
     async def _char_not_found_error(self, ctx, name: str):
         err = await ctx.send('character not found!')
@@ -113,11 +113,9 @@ class Maplexp(commands.Cog):
             else:
                 prefix = ''
             msg = await ctx.send(prefix+r'你沒有權限ʕ´•ᴥ•`ʔ')
-            try:
-                await self._remove_after_seconds(ctx.message, 3)
-                await self._remove_after_seconds(msg, 20)
-            except:
-                pass
+            await self._remove_after_seconds(ctx.message, 3)
+            await self._remove_after_seconds(msg, 20)
+
 
         return have_perm
 
