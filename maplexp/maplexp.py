@@ -141,7 +141,7 @@ class Maplexp(commands.Cog):
 
         return have_perm
 
-    async def _user_check(self, ctx, user) -> discord.User:
+    asyncawait  def _user_check(self, ctx, user) -> discord.User:
         ''' Macro for user check'''
         if user is None:
             return ctx.author
@@ -342,7 +342,7 @@ class Maplexp(commands.Cog):
         #     ok = await self._ctx_permissions(ctx)
         #     if not ok:
         #         return
-        user = self._user_check(ctx, user)
+        user = await self._user_check(ctx, user)
         if user is False:
             return
             
@@ -373,7 +373,7 @@ class Maplexp(commands.Cog):
         #     ok = await self._ctx_permissions(ctx)
         #     if not ok:
         #         return
-        user = self._user_check(ctx, user)
+        user = await self._user_check(ctx, user)
         if user is False:
             return
 
@@ -449,7 +449,7 @@ class Maplexp(commands.Cog):
             使用方式：[p]mapleset default [角色名稱]
             - 請確認自己擁有此角色
         '''
-        user = self._user_check(ctx, user)
+        user = await self._user_check(ctx, user)
         if user is False:
             return
 
@@ -476,7 +476,7 @@ class Maplexp(commands.Cog):
         #     ok = await self._ctx_permissions(ctx)
         #     if not ok:
         #         return
-        user = self._user_check(ctx, user)
+        user = await self._user_check(ctx, user)
         if user is False:
             return
 
@@ -509,7 +509,7 @@ class Maplexp(commands.Cog):
         #     ok = await self._ctx_permissions(ctx)
         #     if not ok:
         #         return
-        user = self._user_check(ctx, user)
+        user = await self._user_check(ctx, user)
         if user is False:
             return
         if char is None:
@@ -538,7 +538,7 @@ class Maplexp(commands.Cog):
         #     ok = await self._ctx_permissions(ctx)
         #     if not ok:
         #         return
-        user = self._user_check(ctx, user)
+        user = await self._user_check(ctx, user)
         if user is False:
             return
         if char is None:
