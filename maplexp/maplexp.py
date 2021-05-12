@@ -72,7 +72,7 @@ class Maplexp(commands.Cog):
         return : level, exp, xp_req 
         '''
         for key in range(MAX_LEVEL+1):
-            xp_req = self.level_chart[key]
+            xp_req = self.level_chart[str(key)]
             if xp_req >= net_val:
                 return int(key), net_val
             net_val -= xp_req
@@ -103,7 +103,7 @@ class Maplexp(commands.Cog):
         for key in range(MAX_LEVEL+1):
             if int(key) == level:
                 return net + exp
-            net += self.level_chart[key]
+            net += self.level_chart[str(key)]
 
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
