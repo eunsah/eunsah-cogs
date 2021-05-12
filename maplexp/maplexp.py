@@ -381,6 +381,13 @@ class Maplexp(commands.Cog):
                 await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
                 return
 
+        ud = await self.config.user(user).usr_d()
+        if len(ud.keys()) == 0:
+            next_key = ''
+        else:
+            next_key = list(ud.keys())[0]
+        await self.config.user(user).prt_d.set(next_key)
+
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
