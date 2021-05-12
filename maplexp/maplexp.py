@@ -657,7 +657,13 @@ class Maplexp(commands.Cog):
             await ctx.send(data)
         else:
             users_d = await self.config.all_users()
-            await ctx.send(users_d.keys())
+            id_list = list()
+            for usr_id in list(users_d.keys()):
+                user = await self.bot.get_or_fetch_user(usr_id)
+                id_list.append(user.display_name)
+
+            await ctx.send(id_list)
+
 
     @commands.command(name='fuckmylife')
     @checks.is_owner()
