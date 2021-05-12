@@ -104,7 +104,7 @@ class Maplexp(commands.Cog):
         net = 0
         for key in range(MAX_LEVEL+1):
             if int(key) == level:
-                return net + exp
+                return net + int(exp)
             net += self.level_chart[str(key)]
 
     async def _remove_after_seconds(self, message, second):
