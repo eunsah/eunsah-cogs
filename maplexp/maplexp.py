@@ -71,7 +71,7 @@ class Maplexp(commands.Cog):
         parameters : net_exp 
         return : level, exp, xp_req 
         '''
-        for key in range(MAX_LEVEL+1)):
+        for key in range(MAX_LEVEL+1):
             xp_req = self.level_chart[key]
             if xp_req >= net_val:
                 return int(key), net_val
@@ -100,7 +100,7 @@ class Maplexp(commands.Cog):
             self._error_out_of_range(ctx, verr)
 
         net = 0
-        for key in range(MAX_LEVEL+1)):
+        for key in range(MAX_LEVEL+1):
             if int(key) == level:
                 return net + exp
             net += self.level_chart[key]
