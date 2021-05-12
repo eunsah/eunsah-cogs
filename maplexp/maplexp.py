@@ -68,8 +68,8 @@ class Maplexp(commands.Cog):
 
     def _net_levelexp(self, net_val: int) -> tuple:
         ''' Converts net to level, exp, req
-        parameters : net_exp 
-        return : level, exp, xp_req 
+        parameters : net_exp
+        return : level, exp, xp_req
         '''
         for key in range(MAX_LEVEL+1):
             xp_req = self.level_chart[str(key)]
@@ -172,7 +172,7 @@ class Maplexp(commands.Cog):
         '''
         '''
         if char is None:
-            char = await self.config.user(ctx.author).ptr_d() # str     
+            char = await self.config.user(ctx.author).ptr_d() # str
         usr_dict = await self.config.user(ctx.author).usr_d() # dict
 
         if char == '':
@@ -247,7 +247,7 @@ class Maplexp(commands.Cog):
         )
         e.add_field(name="經驗成長日平均 (更新)", value=f'{new_avg:,}', inline=True)
         e.add_field(name="總經驗成長幅", value=f'{exp_growth:,} ({growth_perc:,.2f}%)', inline=True)
-        await ctx.send(embed=e) 
+        await ctx.send(embed=e)
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
         return
@@ -383,7 +383,7 @@ class Maplexp(commands.Cog):
         user = await self._user_check(ctx, user)
         if user is False:
             return
-            
+
         net = await self._levelexp_net(ctx, level=level, exp=exp)
         if net is False:
             return
@@ -392,7 +392,7 @@ class Maplexp(commands.Cog):
             ud[char] = self.default_profile
             ud[char]['net_exp'] = net
             ud[char]['date'] = datetime.timestamp(datetime.strptime(date, '%Y/%m/%d'))
-            
+
         if await self.config.user(user).ptr_d() == '':
             await self.config.user(user).ptr_d.set(char)
 
@@ -618,7 +618,7 @@ class Maplexp(commands.Cog):
 
     @commands.bot_has_permissions(add_reactions=True)
     @commands_mapleset.command(name='clearalldata', hidden=True)
-    async def _mapleset_clear_my_userdata(self, ctx):
+    async def _mapleset_clear_all_userdata(self, ctx):
         '''
             移除所有使用者資料 (擁有者限定)
             使用方式：[p]mapleset clearalldata
@@ -663,7 +663,6 @@ class Maplexp(commands.Cog):
                 id_list.append(user.name)
 
             await ctx.send(id_list)
-
 
     @commands.command(name='fuckmylife')
     @checks.is_owner()
