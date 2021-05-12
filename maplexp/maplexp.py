@@ -90,15 +90,16 @@ class Maplexp(commands.Cog):
             req = self.level_chart[level]
             if '.' in exp:
                 exp = float(exp.strip('%'))
-                if exp > 100.0:
+                if exp > 100.1:
                     raise ValueError('經驗值')
                 exp = round((exp*req)/100)
             else:
-                if int(exp) >= req:
+                if int(exp) > req:
                     raise ValueError('經驗值')
             # exp = int(exp)
         except ValueError as verr:
             await self._error_out_of_range(ctx, verr)
+            return
 
         level = int(level)
         exp = int(exp)
