@@ -218,14 +218,14 @@ class Maplexp(commands.Cog):
         elif level > old_level:
             growth_perc += (old_req-old_exp)/old_req if old_req != 0 else 0
             growth_perc += (exp)/req if req != 0 else 0
-            growth_perc += (level - old_level)
+            growth_perc += (level - old_level) - 1
             growth_perc = round(growth_perc*100, 2)
 
         elif level < old_level:
             growth_perc += (old_exp)/old_req if old_req != 0 else 0
             growth_perc += (req-exp)/req if req != 0 else 0
-            growth_perc += (old_level - level)
-            growth_perc = round(growth_perc*100, 2)
+            growth_perc += (old_level - level) - 1
+            growth_perc = -(round(growth_perc*100, 2))
 
         else:
             await ctx.send('Unknown error L222. check logs')
