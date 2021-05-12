@@ -1,6 +1,6 @@
 import os
 import asyncio
-import datetime
+from datetime import datetime
 import logging
 import discord
 import json
@@ -27,7 +27,7 @@ class Maplexp(commands.Cog):
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.level_chart = json.load(j)
         self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=False)
-        self.base_time = datetime.datetime.timestamp(datetime.datetime.strptime('1900/01/01','%Y/%m/%d'))
+        self.base_time = datetime.timestamp(datetime.strptime('1900/01/01','%Y/%m/%d'))
         self.default_profile = {
             'net_exp' : 0,
             'avg_exp' : 0.0,
@@ -57,7 +57,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='等級', value=level, inline=True)
         e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
-        e.set_footer(text='更新日期: ' + datetime.datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
+        e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
 
         return e
 
@@ -72,11 +72,28 @@ class Maplexp(commands.Cog):
                 return int(key), net_val
             net_val -= xp_req
 
-    def _levelexp_net(self, level: int, exp: int) -> int:
+    def _levelexp_net(self, level: str, exp: str) -> int:
         ''' Converts level, exp to net
         parameters : level, exp
         return : net_exp
         '''
+        try:
+            if not (level.isdigit() and int(level) in range(MAX_LEVEL)):
+                raise ValueError('等級')
+            req = self.level_chart[level]
+            level = int(level)
+            if '.' in exp:
+                exp = float(exp.strip('%'))
+                if exp > 100.0:
+                    raise ValueError('經驗值')
+                exp = round((exp*req)/100)
+            else:
+                if exp >= req:
+                    raise ValueError('經驗值')
+            exp = int(exp)
+        except ValueError as verr:
+            self._error_out_of_range(ctx, verr)
+
         net = 0
         for key in self.level_chart:
             if int(key) == level:
@@ -87,8 +104,13 @@ class Maplexp(commands.Cog):
         await asyncio.sleep(second)
         # await message.delete()
 
-    async def _char_not_found_error(self, ctx, name: str):
-        err = await ctx.send('character not found!')
+    async def _error_char_not_found(self, ctx, name: str):
+        err = await ctx.send('查無角色名稱資料!')
+        await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
+        return
+
+    async def _error_out_of_range(self, ctx, item: str):
+        err = await ctx.send(f'{item}參數不在許可範圍!')
         await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
         return
 
@@ -132,42 +154,25 @@ class Maplexp(commands.Cog):
             await self.config.user(ctx.author).ptr_d.set(ctx.author.display_name)
             char = ctx.author.display_name
 
-        if not (level.isdigit() and int(level) in range(MAX_LEVEL)): 
-            err = ctx.send('err in level')
-            await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
-            return            
-
-        req = 0
-        try:
-            if '.' in exp:
-                per = float(exp.strip('%'))/100
-                req = self.level_chart[level]
-                exp = per*req
-            level = int(level)
-            exp = int(exp)
-        except ValueError:
-            help_msg = ctx.send_help()
-            await self._remove_after_seconds(help_msg, MESSAGE_REMOVE_DELAY)
-            return
-
+        req = self.level_chart[level]
         exp_growth = 0
         new_avg = 0.0
+        net = self._levelexp_net(level, exp)
 
         async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
             try:
-                net = self._levelexp_net(level, exp)
                 exp_growth = net - udc[char]['net_exp']
                 udc[char]['net_exp'] = net # update net
                 old_date = udc[char]['date']
                 if old_date != self.base_time:
-                    date_timedelta = datetime.datetime.now() - datetime.datetime.fromtimestamp(old_date)
+                    date_timedelta = datetime.now() - datetime.fromtimestamp(old_date)
                     new_avg = round(exp_growth/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
                     udc[char]['avg_exp'] = round(((udc[char]['avg_exp']+new_avg)/2), 2)
 
-                udc[char]['date'] = datetime.datetime.timestamp(datetime.datetime.now())
+                udc[char]['date'] = datetime.timestamp(datetime.now())
             except KeyError:
-                await self._char_not_found_error(ctx, char)
+                await self._error_char_not_found(ctx, char)
                 return
 
         usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
@@ -285,7 +290,7 @@ class Maplexp(commands.Cog):
         try:
             tar_d = usr_dict[char]
         except KeyError:
-            await self._char_not_found_error(ctx, char)
+            await self._error_char_not_found(ctx, char)
             return
 
         date = tar_d['date']
@@ -298,14 +303,14 @@ class Maplexp(commands.Cog):
             )
         embed = await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
-        # await self._remove_after_seconds(embed, MESSAGE_REMOVE_DELAY)
+        await self._remove_after_seconds(embed, MESSAGE_REMOVE_DELAY)
 
     @commands_maple.command(name='create')
     async def maple_create(
-        self, ctx:commands.Context,
-        char:str,
-        level:str = '0', exp:str = '0',
-        date = datetime.datetime.now().strftime('%Y/%m/%d'),
+        self, ctx: commands.Context,
+        char: str,
+        level: str, exp: str,
+        date = datetime.now().strftime('%Y/%m/%d'),
         user: discord.User = None):
         '''
             新增角色資料
@@ -322,27 +327,12 @@ class Maplexp(commands.Cog):
             if not ok:
                 return
             
-        if not (level.isdigit() and int(level) in range(MAX_LEVEL)): 
-            err = ctx.send('err in level')
-            await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
-            return            
-
-        try:
-            if '.' in exp:
-                per = float(exp.strip('%'))/100
-                req = self.level_chart[level]
-                exp = per*req
-            level = int(level)
-            exp = int(exp)
-        except ValueError:
-            help_msg = ctx.send_help()
-            await self._remove_after_seconds(help_msg, MESSAGE_REMOVE_DELAY)
-            return
+        net = self._levelexp_net(level=level, exp=exp)
 
         async with self.config.user(user).usr_d() as ud:
             ud[char] = self.default_profile
-            ud[char]['net_exp'] = self._levelexp_net(level=level, exp=exp)
-            ud[char]['date'] = datetime.datetime.timestamp(datetime.datetime.strptime(date, '%Y/%m/%d'))
+            ud[char]['net_exp'] = net
+            ud[char]['date'] = datetime.timestamp(datetime.strptime(date, '%Y/%m/%d'))
             
         if await self.config.user(user).ptr_d() == '':
             await self.config.user(user).ptr_d.set(char)
@@ -370,7 +360,7 @@ class Maplexp(commands.Cog):
             try:
                 del ud[char]
             except KeyError:
-                await self._char_not_found_error(ctx, char)
+                await self._error_char_not_found(ctx, char)
                 await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
                 return
 
@@ -392,7 +382,7 @@ class Maplexp(commands.Cog):
         async with self.config.user(user).usr_d() as ud:
             u_size = len(ud)
             for item in ud:
-                date = datetime.datetime.fromtimestamp(ud[item]['date']).strftime('%Y/%m/%d')
+                date = datetime.fromtimestamp(ud[item]['date']).strftime('%Y/%m/%d')
                 level, exp = self._net_levelexp(ud[item]['net_exp'])
                 req = self.level_chart[str(level)]
                 exp = (exp/req)*100 if req != 0 else 0.0
@@ -453,7 +443,12 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands_mapleset.command(name='levelexp')
-    async def mapleset_setlevelexp(self, ctx, level, exp, char: str = None, user: discord.User = None):
+    async def mapleset_setlevelexp(
+        self, ctx: commands.Context,
+        level: str, exp: str,
+        char: str = None,
+        user: discord.User = None
+        ):
         '''
             設定等級及經驗值
             使用方式：[p]mapleset levelexp [level] [exp] {角色名稱} {@使用者}
@@ -470,8 +465,11 @@ class Maplexp(commands.Cog):
         if char is None:
             char = self.config.user(user).ptr_d()
 
+
+        net = self._levelexp_net(level=level, exp=exp)
+
         async with self.config.user(user).usr_d() as ud:
-            ud[char]['net_exp'] = self._levelexp_net(level=int(level), exp=int(exp))
+            ud[char]['net_exp'] = net
 
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
