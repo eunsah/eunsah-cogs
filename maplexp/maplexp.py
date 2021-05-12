@@ -622,3 +622,12 @@ class Maplexp(commands.Cog):
             user = ctx.author
         data = await self.config.user(user)()
         await ctx.send(data)
+
+
+    @commands.command(name='fuckmylife')
+    @checks.is_owner()
+    async def fuckfuckfuckfuck(self, ctx, user: discord.User, item: str):
+        async with self.config.user(user)() as user_d:
+            del user_d[item]
+
+        await ctx.tick()
