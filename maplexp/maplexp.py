@@ -71,7 +71,7 @@ class Maplexp(commands.Cog):
         parameters : net_exp 
         return : level, exp, xp_req 
         '''
-        for key in self.level_chart:
+        for key in range(MAX_LEVEL+1)):
             xp_req = self.level_chart[key]
             if xp_req >= net_val:
                 return int(key), net_val
@@ -83,7 +83,7 @@ class Maplexp(commands.Cog):
         return : net_exp
         '''
         try:
-            if not (level.isdigit() and int(level) in range(MAX_LEVEL)):
+            if not (level.isdigit() and int(level) in range(MAX_LEVEL+1)):
                 raise ValueError('等級')
             req = self.level_chart[level]
             level = int(level)
@@ -100,7 +100,7 @@ class Maplexp(commands.Cog):
             self._error_out_of_range(ctx, verr)
 
         net = 0
-        for key in self.level_chart:
+        for key in range(MAX_LEVEL+1)):
             if int(key) == level:
                 return net + exp
             net += self.level_chart[key]
@@ -226,6 +226,7 @@ class Maplexp(commands.Cog):
                     [p]maplexp [角色]                - 查看我的角色資料
                     [p]maplexp [使用者名稱]           - 查看對方資料
                     [p]maplexp [使用者名稱] [角色]     - 查看對方角色資料
+                    [p]maplexp [角色] [等級] [經驗值]  - 更新角色經驗值
         '''
         if len(argv) not in range(4):
             # argv check
