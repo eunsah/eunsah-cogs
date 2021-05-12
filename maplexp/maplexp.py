@@ -73,7 +73,7 @@ class Maplexp(commands.Cog):
         '''
         for key in range(MAX_LEVEL+1):
             xp_req = self.level_chart[str(key)]
-            if xp_req = net_val:
+            if xp_req == net_val:
                 return key, 0
             if xp_req > net_val:
                 return key, net_val
@@ -104,7 +104,7 @@ class Maplexp(commands.Cog):
         net = 0
         for key in range(MAX_LEVEL+1):
             if int(key) == level:
-                return net + int(exp)
+                return net + exp
             net += self.level_chart[str(key)]
 
     async def _remove_after_seconds(self, message, second):
