@@ -255,7 +255,7 @@ class Maplexp(commands.Cog):
 
         if arg_size == 0:
             # if no argvs, show self default character
-            await self._show_exp(ctx)
+            await self._show_info(ctx)
 
         elif arg_size in range(1, 3):
             # if argvs in 1 or 2
@@ -265,19 +265,19 @@ class Maplexp(commands.Cog):
 
                 if arg_size == 1:
                     # show mentioned default character
-                    await self._show_exp(ctx, char=None, user=user)
+                    await self._show_info(ctx, char=None, user=user)
                     return
 
                 else:
                     # args size: 2, show mentioned key character
-                    await self._show_exp(ctx, char=argv[1], user=user)
+                    await self._show_info(ctx, char=argv[1], user=user)
                     return
 
             else:
                 # if no mentions in argvs
                 if arg_size == 1:
                     #　show char
-                    await self._show_exp(ctx, char=argv[0], user=ctx.author)
+                    await self._show_info(ctx, char=argv[0], user=ctx.author)
                     return
 
                 else:
@@ -299,9 +299,9 @@ class Maplexp(commands.Cog):
         pass
 
     @commands_maple.command(name='info')
-    async def _show_exp(self, ctx, char: str = None, user: discord.User = None):
+    async def _show_info(self, ctx, char: str = None, user: discord.User = None):
         '''
-            顯示角色資訊 (mapleinfo | minfo | xpinfo)
+            顯示角色資訊
             使用方式：[p]mapleinfo
         '''
         if user is None:
