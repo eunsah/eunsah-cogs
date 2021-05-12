@@ -526,7 +526,7 @@ class Maplexp(commands.Cog):
         if user is False:
             return
         if char is None:
-            char = self.config.user(user).ptr_d()
+            char = await self.config.user(user).ptr_d()
 
 
         net = self._levelexp_net(level=level, exp=exp)
@@ -560,7 +560,7 @@ class Maplexp(commands.Cog):
         if user is False:
             return
         if char is None:
-            char = self.config.user(user).ptr_d()
+            char = await self.config.user(user).ptr_d()
 
         verify = await ctx.send('確定要重置日平均嗎？')
         start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
