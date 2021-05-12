@@ -377,7 +377,7 @@ class Maplexp(commands.Cog):
         user: discord.User = None):
         '''
             新增角色資料
-            使用方式：[p]mapleset create <角色名稱> <等級> <經驗值> [日期]
+            使用方式：[p]mapleset create <角色名稱> <等級> <經驗值> [創角日期]
             - 日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
         user = await self._user_check(ctx, user)
@@ -619,6 +619,7 @@ class Maplexp(commands.Cog):
         await self.config.user(ctx.author).clear()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
 
     @commands.command(name='mapleinfo')
     @checks.is_owner()
