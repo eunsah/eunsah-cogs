@@ -660,7 +660,7 @@ class Maplexp(commands.Cog):
             id_list = list()
             for usr_id in list(users_d.keys()):
                 # user = await self.bot.get_or_fetch_user(usr_id)
-                user = discord.User(usr_id)
+                user = discord.get_user(usr_id)
                 id_list.append(user.name)
 
             await ctx.send(id_list)
