@@ -591,11 +591,37 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
-    @commands_mapleset.command(name='cleardata', hidden=True)
-    async def _mapleset_clear_all_userdata(self, ctx):
+    @commands_mapleset.command(name='clearmydata')
+    async def _mapleset_clear_my_userdata(self, ctx):
+        '''
+            移除你的使用者資料
+            使用方式：[p]mapleset clearmydata
+        '''
+        verify = await ctx.send('確定要移除所有使用者資料嗎？')
+        start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
+        pred = ReactionPredicate.yes_or_no(verify, ctx.author)
+        try:
+            await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
+        except asyncio.TimeoutError:
+            await self._clear_react(verify)
+            await self._remove_after_seconds(verify, 5)
+            return
+        if not pred.result:
+            await verify.delete()
+            await self._remove_after_seconds(ctx.message, 3)
+            return
+        await verify.delete()
+
+        await self.config.user(ctx.author).clear()
+        await ctx.tick()
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
+    @commands.bot_has_permissions(add_reactions=True)
+    @commands_mapleset.command(name='clearalldata', hidden=True)
+    async def _mapleset_clear_my_userdata(self, ctx):
         '''
             移除所有使用者資料 (擁有者限定)
-            使用方式：[p]mapleset cleardata
+            使用方式：[p]mapleset clearalldata
         '''
         ok = await self._ctx_permissions(ctx, admin=False)
         if not ok:
@@ -616,21 +642,22 @@ class Maplexp(commands.Cog):
             return
         await verify.delete()
 
-        await self.config.user(ctx.author).clear()
+        await self.config.clear_all_users()
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-
-    @commands.command(name='mapleinfo')
+    @commands.command(name='maplend')
     @checks.is_owner()
-    async def maple_info(self, ctx, user: discord.User = None):
+    async def maple_backend(self, ctx, user: discord.User = None):
         '''
             管理員後端
         '''
-        if user is None:
-            user = ctx.author
-        data = await self.config.user(user)()
-        await ctx.send(data)
+        if user is not None:
+            data = await self.config.user(user)()
+            await ctx.send(data)
+        else:
+            users_d = await self.config.all_users()
+            await ctx.send(users_d.keys())
 
     @commands.command(name='fuckmylife')
     @checks.is_owner()
