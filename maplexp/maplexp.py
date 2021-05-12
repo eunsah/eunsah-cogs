@@ -39,7 +39,12 @@ class Maplexp(commands.Cog):
         }
         self.config.register_user(**default_user)
 
-    def _dict_to_embed(self, title: str, name: str, data_d: dict, usr_c: discord.User.color) -> discord.Embed:
+    def _dict_to_embed(
+        self,
+        title: str, name: str,
+        data_d: dict,
+        usr_c: discord.User.color
+        ) -> discord.Embed:
         '''
         parameters : title, data_d, usr_c
         return : discord.Embed
@@ -153,7 +158,12 @@ class Maplexp(commands.Cog):
                 return False
         return user
 
-    async def _update(self, ctx: commands.Context, level: str, exp: str, char: str = None):
+    async def _update(
+        self,
+        ctx: commands.Context,
+        level: str, exp: str,
+        char: str = None
+        ):
         '''
         '''
         if char is None:
@@ -355,7 +365,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_maple.command(name='delete')
+    @commands_maple.command(name='delete', aliases=['d', 'del'])
     async def maple_delete(self, ctx, char: str, user: discord.User = None):
         '''
             設定等級及經驗值
@@ -391,7 +401,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_maple.command(name='list')
+    @commands_maple.command(name='list', aliases=['l'])
     async def maple_list(self, ctx, user: discord.User = None):
         '''
             顯示角色列表
@@ -528,7 +538,12 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands_mapleset.command(name='reset')
-    async def mapleset_clear_velocity(self, ctx, char: str = None, user: discord.User = None):
+    async def mapleset_clear_velocity(
+        self,
+        ctx: commands.Context,
+        char: str = None,
+        user: discord.User = None
+        ):
         '''
             重置日平均
             使用方式：[p]mapleset reset
