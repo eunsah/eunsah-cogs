@@ -93,7 +93,7 @@ class Maplexp(commands.Cog):
                     raise ValueError('經驗值')
                 exp = round((exp*req)/100)
             else:
-                if exp >= req:
+                if int(exp) >= req:
                     raise ValueError('經驗值')
             exp = int(exp)
         except ValueError as verr:
@@ -622,7 +622,6 @@ class Maplexp(commands.Cog):
             user = ctx.author
         data = await self.config.user(user)()
         await ctx.send(data)
-
 
     @commands.command(name='fuckmylife')
     @checks.is_owner()
