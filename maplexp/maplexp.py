@@ -77,7 +77,7 @@ class Maplexp(commands.Cog):
                 return int(key), net_val
             net_val -= xp_req
 
-    def _levelexp_net(self, level: str, exp: str) -> int:
+    def _levelexp_net(self, ctx, level: str, exp: str) -> int:
         ''' Converts level, exp to net
         parameters : level, exp
         return : net_exp
@@ -179,7 +179,7 @@ class Maplexp(commands.Cog):
         req = self.level_chart[level]
         exp_growth = 0
         new_avg = 0.0
-        net = self._levelexp_net(level, exp)
+        net = self._levelexp_net(ctx, level, exp)
 
         async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
@@ -352,7 +352,7 @@ class Maplexp(commands.Cog):
         if user is False:
             return
             
-        net = self._levelexp_net(level=level, exp=exp)
+        net = self._levelexp_net(ctx, level=level, exp=exp)
 
         async with self.config.user(user).usr_d() as ud:
             ud[char] = self.default_profile
@@ -529,7 +529,7 @@ class Maplexp(commands.Cog):
             char = await self.config.user(user).ptr_d()
 
 
-        net = self._levelexp_net(level=level, exp=exp)
+        net = self._levelexp_net(ctx, level=level, exp=exp)
 
         async with self.config.user(user).usr_d() as ud:
             ud[char]['net_exp'] = net
