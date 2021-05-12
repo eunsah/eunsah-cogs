@@ -207,7 +207,7 @@ class Maplexp(commands.Cog):
 
         old_level, old_exp = self._net_levelexp(exp_growth)
         exp_growth = net - exp_growth
-        req = self.level_chart[old_level]
+        req = self.level_chart[str(old_level)]
 
         usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
         exp_growth_perc = round((exp_growth/req)*100, 2) if req != 0 else 0.0
