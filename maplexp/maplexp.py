@@ -396,7 +396,7 @@ class Maplexp(commands.Cog):
             next_key = ''
         else:
             next_key = list(ud.keys())[0]
-        await self.config.user(user).prt_d.set(next_key)
+        await self.config.user(user).ptr_d.set(next_key)
 
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
