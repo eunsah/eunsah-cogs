@@ -497,7 +497,7 @@ class Maplexp(commands.Cog):
             ud[n_id] = ud.pop(o_id)
 
         ptr = await self.config.user(user).ptr_d()
-        if o_id == ptr_d:
+        if o_id == ptr:
             await self.config.user(user).ptr_d.set(n_id)
 
         await ctx.tick()
