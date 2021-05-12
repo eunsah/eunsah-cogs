@@ -88,7 +88,7 @@ class Maplexp(commands.Cog):
             if not (level.isdigit() and int(level) in range(MAX_LEVEL+1)):
                 raise ValueError('等級')
             req = self.level_chart[level]
-            if '.' in exp:
+            if '.' in exp or '%' in exp:
                 exp = float(exp.strip('%'))
                 if exp > 100.1:
                     raise ValueError('經驗值')
@@ -343,7 +343,7 @@ class Maplexp(commands.Cog):
         user: discord.User = None):
         '''
             新增角色資料
-            使用方式：[p]mapleset create [角色名稱] [等級] [經驗值] [日期]
+            使用方式：[p]mapleset create [角色名稱] [等級] [經驗值] {日期}
             - 日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
         user = await self._user_check(ctx, user)
