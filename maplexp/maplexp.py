@@ -191,7 +191,7 @@ class Maplexp(commands.Cog):
         async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
             try:
-                exp_growth = udc[char]['net_exp']
+                old_net = udc[char]['net_exp']
                 # exp_growth = net - udc[char]['net_exp']
                 udc[char]['net_exp'] = net # update net
                 old_date = udc[char]['date']
@@ -205,12 +205,39 @@ class Maplexp(commands.Cog):
                 await self._error_char_not_found(ctx, char)
                 return
 
-        old_level, old_exp = self._net_levelexp(exp_growth)
-        exp_growth = net - exp_growth
-        req = self.level_chart[str(old_level)]
+        old_level, old_exp = self._net_levelexp(old_net)
+        level, exp = self._net_levelexp(net)
+        old_req = self.level_chart[str(old_level)]
+        req = self.level_chart[str(level)]
+
+        growth_perc = 0
+        if level == old_level:
+            growth = exp - old_exp
+            growth_perc = round((growth/req)*100, 2) if req != 0 else 0.0
+
+        elif level > old_level:
+            growth_perc += (old_req-old_exp)/old_req if old_req != 0 else 0
+            growth_perc += (exp)/req if req != 0 else 0
+            growth_perc += (level - old_level)
+            growth_perc = round(growth_perc*100, 2)
+
+        elif level < old_level:
+            growth_perc += (old_exp)/old_req if old_req != 0 else 0
+            growth_perc += (req-exp)/req if req != 0 else 0
+            growth_perc += (old_level - level)
+            growth_perc = round(growth_perc*100, 2)
+
+        else:
+            await ctx.send('Unknown error L222. check logs')
+            log.debug(f'level:{old_level}|{level}, exp:{old_exp}|{exp}, req:{old_req}|{req}')
+            return
+
+        exp_growth = net - old_net
+
+
+        # exp_growth_perc = round((exp_growth/req)*100, 2) if req != 0 else 0.0
 
         usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
-        exp_growth_perc = round((exp_growth/req)*100, 2) if req != 0 else 0.0
 
         e = self._dict_to_embed(
             title = ctx.author.display_name+'的角色資料更新',
@@ -219,7 +246,7 @@ class Maplexp(commands.Cog):
             usr_c = ctx.author.color
         )
         e.add_field(name="經驗成長日平均 (更新)", value=f'{new_avg:,}', inline=True)
-        e.add_field(name="總經驗成長幅", value=f'{exp_growth:,} ({exp_growth_perc:,.2f}%)', inline=True)
+        e.add_field(name="總經驗成長幅", value=f'{exp_growth:,} ({growth_perc:,.2f}%)', inline=True)
         await ctx.send(embed=e) 
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
@@ -230,15 +257,15 @@ class Maplexp(commands.Cog):
     async def _exp(self, ctx, *argv):
         '''
             更新經驗值
-            使用方式：[p]maplexp [等級] [經驗值]
+            使用方式：[p]maplexp <等級> <經驗值>
             - 經驗值可以為百分比(12.42%)或是整數(34593402)
 
             其他使用:
                     [p]maplexp                      - 顯示
-                    [p]maplexp [角色]                - 查看我的角色資料
-                    [p]maplexp [使用者名稱]           - 查看對方資料
-                    [p]maplexp [使用者名稱] [角色]     - 查看對方角色資料
-                    [p]maplexp [角色] [等級] [經驗值]  - 更新角色經驗值
+                    [p]maplexp <角色>                - 查看我的角色資料
+                    [p]maplexp <使用者名稱>           - 查看對方資料
+                    [p]maplexp <使用者名稱> <角色>     - 查看對方角色資料
+                    [p]maplexp <角色> <等級> <經驗值>  - 更新角色經驗值
         '''
         if len(argv) not in range(4):
             # argv check
@@ -350,7 +377,7 @@ class Maplexp(commands.Cog):
         user: discord.User = None):
         '''
             新增角色資料
-            使用方式：[p]mapleset create [角色名稱] [等級] [經驗值] {日期}
+            使用方式：[p]mapleset create <角色名稱> <等級> <經驗值> [日期]
             - 日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
         user = await self._user_check(ctx, user)
@@ -376,7 +403,7 @@ class Maplexp(commands.Cog):
     async def maple_delete(self, ctx, char: str, user: discord.User = None):
         '''
             刪除指定角色資料
-            使用方式：[p]maple delete [角色名稱]
+            使用方式：[p]maple delete <角色名稱>
         '''
         user = await self._user_check(ctx, user)
         if user is False:
@@ -404,7 +431,7 @@ class Maplexp(commands.Cog):
     async def maple_list(self, ctx, user: discord.User = None):
         '''
             顯示角色列表
-            使用方式：[p]mapleset list {@使用者}
+            使用方式：[p]mapleset list [@使用者]
         '''
         if user is None:
             user = ctx.author
@@ -458,7 +485,7 @@ class Maplexp(commands.Cog):
     async def mapleset_default(self, ctx, char: str, user: discord.User = None):
         '''
             設定預設角色
-            使用方式：[p]mapleset default [角色名稱]
+            使用方式：[p]mapleset default <角色名稱>
             - 請確認自己擁有此角色
         '''
         user = await self._user_check(ctx, user)
@@ -478,7 +505,7 @@ class Maplexp(commands.Cog):
     async def mapleset_name(self, ctx, o_id, n_id, user: discord.User = None):
         '''
             設定角色名稱
-            使用方式：[p]mapleset name [舊角色名稱] [新角色名稱]
+            使用方式：[p]mapleset name <舊角色名稱> <新角色名稱>
         '''
         user = await self._user_check(ctx, user)
         if user is False:
@@ -507,7 +534,7 @@ class Maplexp(commands.Cog):
         ):
         '''
             設定等級及經驗值
-            使用方式：[p]mapleset levelexp [level] [exp] [角色名稱]
+            使用方式：[p]mapleset levelexp <等級> <經驗值>
         '''
         user = await self._user_check(ctx, user)
         if user is False:
@@ -535,7 +562,7 @@ class Maplexp(commands.Cog):
         ):
         '''
             重置日平均
-            使用方式：[p]mapleset reset
+            使用方式：[p]mapleset reset <角色名稱>
         '''
         user = await self._user_check(ctx, user)
         if user is False:
