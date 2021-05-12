@@ -212,10 +212,10 @@ class Maplexp(commands.Cog):
             - 經驗值可以為百分比(12.42%)或是整數(34593402)
 
             其他使用:
-                    [p]maplexp - 顯示
-                    [p]maplexp -
-                    [p]maplexp -
-                    [p]maplexp -
+                    [p]maplexp                      - 顯示
+                    [p]maplexp [角色]                - 查看我的角色資料
+                    [p]maplexp [使用者名稱]           - 查看對方資料
+                    [p]maplexp [使用者名稱] [角色]     - 查看對方角色資料
         '''
         if len(argv) not in range(4):
             # argv check
@@ -229,9 +229,6 @@ class Maplexp(commands.Cog):
         2 -> update default, show others' character
         3 -> update character
         '''
-
-        await ctx.send(argv)
-        await ctx.send(arg_size)
 
         if arg_size == 0:
             # if no argvs, show self default character
@@ -332,7 +329,6 @@ class Maplexp(commands.Cog):
             新增角色資料
             使用方式：[p]mapleset create [角色名稱] [等級] [經驗值] [日期]
             - 日期格式為：%Y/%m/%d (例：1996/11/30)
-            - 設定使用者需要管理員權限
         '''
         # if user is None:
         #     user = ctx.author
@@ -594,9 +590,12 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_mapleset.command(name='i')
+    @commands.command(name='mapleinfo')
     @checks.is_owner()
-    async def mapleset_info(self, ctx, user: discord.User = None):
+    async def maple_info(self, ctx, user: discord.User = None):
+        '''
+            管理員後端
+        '''
         if user is None:
             user = ctx.author
         data = await self.config.user(user)()
