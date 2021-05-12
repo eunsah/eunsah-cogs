@@ -1,11 +1,11 @@
 import os
 import asyncio
-from datetime import datetime
 import logging
 import discord
 import json
 import time
 import numpy
+from datetime import datetime
 from redbot.core import commands, checks, Config
 from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import ReactionPredicate
@@ -375,7 +375,7 @@ class Maplexp(commands.Cog):
     @commands_maple.command(name='delete', aliases=['d', 'del'])
     async def maple_delete(self, ctx, char: str, user: discord.User = None):
         '''
-            設定等級及經驗值
+            刪除指定角色資料
             使用方式：[p]maple delete [角色名稱]
         '''
         user = await self._user_check(ctx, user)
