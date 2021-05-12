@@ -346,14 +346,6 @@ class Maplexp(commands.Cog):
             使用方式：[p]mapleset create [角色名稱] [等級] [經驗值] [日期]
             - 日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
-        # if user is None:
-        #     user = ctx.author
-        # elif user == ctx.author:
-        #     pass
-        # else:
-        #     ok = await self._ctx_permissions(ctx)
-        #     if not ok:
-        #         return
         user = await self._user_check(ctx, user)
         if user is False:
             return
@@ -377,14 +369,6 @@ class Maplexp(commands.Cog):
             設定等級及經驗值
             使用方式：[p]maple delete [角色名稱]
         '''
-        # if user is None:
-        #     user = ctx.author
-        # elif user == ctx.author:
-        #     pass
-        # else:
-        #     ok = await self._ctx_permissions(ctx)
-        #     if not ok:
-        #         return
         user = await self._user_check(ctx, user)
         if user is False:
             return
@@ -487,20 +471,16 @@ class Maplexp(commands.Cog):
             設定角色名稱
             使用方式：[p]mapleset name [舊角色名稱] [新角色名稱]
         '''
-        # if user is None:
-        #     user = ctx.author
-        # elif user == ctx.author:
-        #     pass
-        # else:
-        #     ok = await self._ctx_permissions(ctx)
-        #     if not ok:
-        #         return
         user = await self._user_check(ctx, user)
         if user is False:
             return
 
-        async with self.config.user(user).usr_d() as ud:
-            ud[n_id] = ud.pop(o_id)
+        try:
+            async with self.config.user(user).usr_d() as ud:
+                ud[n_id] = ud.pop(o_id)
+        except KeyError:
+            await ctx.send('找不到該角色名稱')
+            return
 
         ptr = await self.config.user(user).ptr_d()
         if o_id == ptr:
@@ -520,14 +500,6 @@ class Maplexp(commands.Cog):
             設定等級及經驗值
             使用方式：[p]mapleset levelexp [level] [exp] [角色名稱]
         '''
-        # if user is None:
-        #     user = ctx.author
-        # elif user == ctx.author:
-        #     pass
-        # else:
-        #     ok = await self._ctx_permissions(ctx)
-        #     if not ok:
-        #         return
         user = await self._user_check(ctx, user)
         if user is False:
             return
@@ -554,14 +526,6 @@ class Maplexp(commands.Cog):
             重置日平均
             使用方式：[p]mapleset reset
         '''
-        # if user is None:
-        #     user = ctx.author
-        # elif user == ctx.author:
-        #     pass
-        # else:
-        #     ok = await self._ctx_permissions(ctx)
-        #     if not ok:
-        #         return
         user = await self._user_check(ctx, user)
         if user is False:
             return
