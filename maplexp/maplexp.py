@@ -99,7 +99,7 @@ class Maplexp(commands.Cog):
             # exp = int(exp)
         except ValueError as verr:
             await self._error_out_of_range(ctx, verr)
-            return
+            return False
 
         level = int(level)
         exp = int(exp)
@@ -185,6 +185,8 @@ class Maplexp(commands.Cog):
         exp_growth = 0
         new_avg = 0.0
         net = await self._levelexp_net(ctx, level, exp)
+        if net is False:
+            return
 
         async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
@@ -351,6 +353,8 @@ class Maplexp(commands.Cog):
             return
             
         net = await self._levelexp_net(ctx, level=level, exp=exp)
+        if net is False:
+            return
 
         async with self.config.user(user).usr_d() as ud:
             ud[char] = self.default_profile
@@ -508,6 +512,8 @@ class Maplexp(commands.Cog):
 
 
         net = await self._levelexp_net(ctx, level=level, exp=exp)
+        if net is False:
+            return
 
         async with self.config.user(user).usr_d() as ud:
             ud[char]['net_exp'] = net
