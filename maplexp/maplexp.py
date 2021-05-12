@@ -659,9 +659,8 @@ class Maplexp(commands.Cog):
             users_d = await self.config.all_users()
             id_list = list()
             for usr_id in list(users_d.keys()):
-                # user = await self.bot.get_or_fetch_user(usr_id)
-                user = ctx.guild.get_member('<@'+str(usr_id)+'>')
-                id_list.append(user.name)
+                user = await self.bot.get_or_fetch_user(usr_id)
+                id_list.append(user)
 
             await ctx.send(id_list)
 
