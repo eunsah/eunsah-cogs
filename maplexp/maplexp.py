@@ -181,9 +181,9 @@ class Maplexp(commands.Cog):
             await self.config.user(ctx.author).ptr_d.set(ctx.author.display_name)
             char = ctx.author.display_name
 
-        req = self.level_chart[level]
         exp_growth = 0
         new_avg = 0.0
+        old_net = 0
         net = await self._levelexp_net(ctx, level, exp)
         if net is False:
             return
@@ -191,7 +191,8 @@ class Maplexp(commands.Cog):
         async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
             try:
-                exp_growth = net - udc[char]['net_exp']
+                exp_growth = udc[char]['net_exp']
+                # exp_growth = net - udc[char]['net_exp']
                 udc[char]['net_exp'] = net # update net
                 old_date = udc[char]['date']
                 if old_date != self.base_time:
@@ -204,11 +205,15 @@ class Maplexp(commands.Cog):
                 await self._error_char_not_found(ctx, char)
                 return
 
+        old_level, old_exp = self._net_levelexp(exp_growth)
+        exp_growth = net - exp_growth
+        req = self.level_chart[old_level]
+
         usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
         exp_growth_perc = round((exp_growth/req)*100, 2) if req != 0 else 0.0
 
         e = self._dict_to_embed(
-            title = char+'的資料更新',
+            title = ctx.author.display_name+'的角色資料更新',
             name = char,
             data_d = usr_dict[char],
             usr_c = ctx.author.color
