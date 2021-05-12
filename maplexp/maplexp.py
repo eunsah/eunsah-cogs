@@ -141,7 +141,7 @@ class Maplexp(commands.Cog):
 
         return have_perm
 
-    asyncawait  def _user_check(self, ctx, user) -> discord.User:
+    async def _user_check(self, ctx, user) -> discord.User:
         ''' Macro for user check'''
         if user is None:
             return ctx.author
