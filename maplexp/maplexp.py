@@ -99,7 +99,7 @@ class Maplexp(commands.Cog):
             if int(key) == level:
                 return net + exp
             net += self.level_chart[key]
-    
+
     async def _remove_after_seconds(self, message, second):
         await asyncio.sleep(second)
         # await message.delete()
@@ -140,6 +140,18 @@ class Maplexp(commands.Cog):
 
 
         return have_perm
+
+    async def _user_check(self, ctx, user) -> discord.User:
+        ''' Macro for user check'''
+        if user is None:
+            return ctx.author
+        elif user == ctx.author:
+            return user
+        else:
+            ok = await self._ctx_permissions(ctx)
+            if not ok:
+                return False
+        return user
 
     async def _update(self, ctx: commands.Context, level: str, exp: str, char: str = None):
         '''
@@ -218,6 +230,9 @@ class Maplexp(commands.Cog):
         3 -> update character
         '''
 
+        await ctx.send(argv)
+        await ctx.send(arg_size)
+
         if arg_size == 0:
             # if no argvs, show self default character
             await self._show_exp(ctx)
@@ -254,6 +269,7 @@ class Maplexp(commands.Cog):
             await self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
             return
 
+
     @commands.group(name='maple', aliases=['m'])
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
     async def commands_maple(self, ctx):
@@ -266,7 +282,7 @@ class Maplexp(commands.Cog):
     async def _show_exp(self, ctx, char: str = None, user: discord.User = None):
         '''
             顯示角色資訊 (mapleinfo | minfo | xpinfo)
-            使用方式：[p]mapleinfo {@使用者}
+            使用方式：[p]mapleinfo
         '''
         if user is None:
             user = ctx.author
@@ -314,18 +330,21 @@ class Maplexp(commands.Cog):
         user: discord.User = None):
         '''
             新增角色資料
-            使用方式：[p]mapleset create [角色名稱] [等級] [經驗值] [日期] {@使用者}
+            使用方式：[p]mapleset create [角色名稱] [等級] [經驗值] [日期]
             - 日期格式為：%Y/%m/%d (例：1996/11/30)
             - 設定使用者需要管理員權限
         '''
-        if user is None:
-            user = ctx.author
-        elif user == ctx.author:
-            pass
-        else:
-            ok = await self._ctx_permissions(ctx)
-            if not ok:
-                return
+        # if user is None:
+        #     user = ctx.author
+        # elif user == ctx.author:
+        #     pass
+        # else:
+        #     ok = await self._ctx_permissions(ctx)
+        #     if not ok:
+        #         return
+        user = self._user_check(ctx, user)
+        if user is False:
+            return
             
         net = self._levelexp_net(level=level, exp=exp)
 
@@ -344,17 +363,19 @@ class Maplexp(commands.Cog):
     async def maple_delete(self, ctx, char: str, user: discord.User = None):
         '''
             設定等級及經驗值
-            使用方式：[p]maple delete {角色名稱} {@使用者}
-            - 指定重置使用者需要管理員權限
+            使用方式：[p]maple delete [角色名稱]
         '''
-        if user is None:
-            user = ctx.author
-        elif user == ctx.author:
-            pass
-        else:
-            ok = await self._ctx_permissions(ctx)
-            if not ok:
-                return
+        # if user is None:
+        #     user = ctx.author
+        # elif user == ctx.author:
+        #     pass
+        # else:
+        #     ok = await self._ctx_permissions(ctx)
+        #     if not ok:
+        #         return
+        user = self._user_check(ctx, user)
+        if user is False:
+            return
 
         async with self.config.user(user).usr_d() as ud:
             try:
@@ -412,6 +433,7 @@ class Maplexp(commands.Cog):
         await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
+
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
     @commands.bot_has_permissions(add_reactions=True)
     async def commands_mapleset(self, ctx):
@@ -420,24 +442,50 @@ class Maplexp(commands.Cog):
         '''
         pass
 
+    @commands_mapleset.command(name='default', aliases=['d'])
+    async def mapleset_default(self, ctx, char: str, user: discord.User = None):
+        '''
+            設定預設角色
+            使用方式：[p]mapleset default [角色名稱]
+            - 請確認自己擁有此角色
+        '''
+        user = self._user_check(ctx, user)
+        if user is False:
+            return
+
+        ud = await self.config.user(user).usr_d()
+        if not char in ud.keys():
+            await ctx.send('查無角色名稱!')
+            return
+
+        await self.config.user(user).ptr_d.set(char)
+        await ctx.tick()
+        return
+
     @commands_mapleset.command(name='name', aliases=['ign', 'id'])
     async def mapleset_name(self, ctx, o_id, n_id, user: discord.User = None):
         '''
             設定角色名稱
-            使用方式：[p]mapleset name [舊角色名稱] [新角色名稱] {@使用者}
-            - 指定重置使用者需要管理員權限
+            使用方式：[p]mapleset name [舊角色名稱] [新角色名稱]
         '''
-        if user is None:
-            user = ctx.author
-        elif user == ctx.author:
-            pass
-        else:
-            ok = await self._ctx_permissions(ctx)
-            if not ok:
-                return
+        # if user is None:
+        #     user = ctx.author
+        # elif user == ctx.author:
+        #     pass
+        # else:
+        #     ok = await self._ctx_permissions(ctx)
+        #     if not ok:
+        #         return
+        user = self._user_check(ctx, user)
+        if user is False:
+            return
 
         async with self.config.user(user).usr_d() as ud:
             ud[n_id] = ud.pop(o_id)
+
+        ptr = await self.config.user(user).ptr_d()
+        if o_id == ptr_d:
+            await self.config.user(user).ptr_d.set(n_id)
 
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
@@ -451,17 +499,19 @@ class Maplexp(commands.Cog):
         ):
         '''
             設定等級及經驗值
-            使用方式：[p]mapleset levelexp [level] [exp] {角色名稱} {@使用者}
-            - 指定重置使用者需要管理員權限
+            使用方式：[p]mapleset levelexp [level] [exp] [角色名稱]
         '''
-        if user is None:
-            user = ctx.author
-        elif user == ctx.author:
-            pass
-        else:
-            ok = await self._ctx_permissions(ctx)
-            if not ok:
-                return
+        # if user is None:
+        #     user = ctx.author
+        # elif user == ctx.author:
+        #     pass
+        # else:
+        #     ok = await self._ctx_permissions(ctx)
+        #     if not ok:
+        #         return
+        user = self._user_check(ctx, user)
+        if user is False:
+            return
         if char is None:
             char = self.config.user(user).ptr_d()
 
@@ -478,17 +528,19 @@ class Maplexp(commands.Cog):
     async def mapleset_clear_velocity(self, ctx, char: str = None, user: discord.User = None):
         '''
             重置日平均
-            使用方式：[p]mapleset reset {@使用者}
-            - 指定重置使用者需要管理員權限
+            使用方式：[p]mapleset reset
         '''
-        if user is None:
-            user = ctx.author
-        elif user == ctx.author:
-            pass
-        else:
-            ok = await self._ctx_permissions(ctx)
-            if not ok:
-                return
+        # if user is None:
+        #     user = ctx.author
+        # elif user == ctx.author:
+        #     pass
+        # else:
+        #     ok = await self._ctx_permissions(ctx)
+        #     if not ok:
+        #         return
+        user = self._user_check(ctx, user)
+        if user is False:
+            return
         if char is None:
             char = self.config.user(user).ptr_d()
 
