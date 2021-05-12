@@ -98,7 +98,7 @@ class Maplexp(commands.Cog):
                     raise ValueError('經驗值')
             # exp = int(exp)
         except ValueError as verr:
-            self._error_out_of_range(ctx, verr)
+            await self._error_out_of_range(ctx, verr)
 
         level = int(level)
         exp = int(exp)
