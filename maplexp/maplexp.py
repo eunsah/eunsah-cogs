@@ -88,7 +88,6 @@ class Maplexp(commands.Cog):
             if not (level.isdigit() and int(level) in range(MAX_LEVEL+1)):
                 raise ValueError('等級')
             req = self.level_chart[level]
-            level = int(level)
             if '.' in exp:
                 exp = float(exp.strip('%'))
                 if exp > 100.0:
@@ -97,9 +96,12 @@ class Maplexp(commands.Cog):
             else:
                 if int(exp) >= req:
                     raise ValueError('經驗值')
-            exp = int(exp)
+            # exp = int(exp)
         except ValueError as verr:
             self._error_out_of_range(ctx, verr)
+
+        level = int(level)
+        exp = int(exp)
 
         net = 0
         for key in range(MAX_LEVEL+1):
