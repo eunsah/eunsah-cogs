@@ -597,7 +597,7 @@ class Maplexp(commands.Cog):
             移除你的使用者資料
             使用方式：[p]mapleset clearmydata
         '''
-        verify = await ctx.send('確定要移除所有使用者資料嗎？')
+        verify = await ctx.send('確定要移除你的使用者資料嗎？')
         start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
         pred = ReactionPredicate.yes_or_no(verify, ctx.author)
         try:
