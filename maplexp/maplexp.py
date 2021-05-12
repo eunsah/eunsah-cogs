@@ -73,8 +73,10 @@ class Maplexp(commands.Cog):
         '''
         for key in range(MAX_LEVEL+1):
             xp_req = self.level_chart[str(key)]
+            if xp_req = net_val:
+                return key, 0
             if xp_req > net_val:
-                return int(key), net_val
+                return key, net_val
             net_val -= xp_req
 
     def _levelexp_net(self, ctx, level: str, exp: str) -> int:
