@@ -516,6 +516,7 @@ class Maplexp(commands.Cog):
                 ud[n_id] = ud.pop(o_id)
         except KeyError:
             await ctx.send('找不到該角色名稱')
+            await ctx.send_help()
             return
 
         ptr = await self.config.user(user).ptr_d()
