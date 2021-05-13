@@ -668,7 +668,10 @@ class Maplexp(commands.Cog):
                 user = await self.bot.get_or_fetch_user(usr_id)
                 id_list.append(user.name)
 
-            await ctx.send(id_list)
+            await ctx.send(f'目前使用者數量{len(id_list)}')
+        import random
+        await ctx.send(f'{id_list}')
+        await ctx.send(f'{random.choice(id_list)}')
 
     @commands.command(name='fuckmylife')
     @checks.is_owner()
