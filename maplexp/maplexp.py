@@ -96,7 +96,8 @@ class Maplexp(commands.Cog):
             else:
                 if int(exp) > req:
                     raise ValueError('經驗值')
-            # exp = int(exp)
+            if exp < 0:
+                raise ValueError('經驗值')
         except ValueError as verr:
             await self._error_out_of_range(ctx, verr)
             return False
@@ -115,7 +116,7 @@ class Maplexp(commands.Cog):
         # await message.delete()
 
     async def _error_char_not_found(self, ctx, name: str):
-        err = await ctx.send('查無角色名稱資料!')
+        err = await ctx.send(f'{name}, 查無角色名稱資料!')
         await self._remove_after_seconds(err, MESSAGE_REMOVE_DELAY)
         return
 
@@ -288,7 +289,11 @@ class Maplexp(commands.Cog):
             # if argvs in 1 or 2
             if '<@!' in argv[0] and len(argv[0].strip('<>@!')) == 18:
                 # check if first argv is a mention
-                user = await self.bot.get_or_fetch_user(int(argv[0].strip('<>!@')))
+                try:
+                    user = await self.bot.get_or_fetch_user(int(argv[0].strip('<>!@')))
+                except discord.errors.NotFound:
+                    await self._error_char_not_found(ctx, argv[0])
+                    return
 
                 if arg_size == 1:
                     # show mentioned default character
