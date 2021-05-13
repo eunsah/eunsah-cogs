@@ -96,7 +96,7 @@ class Maplexp(commands.Cog):
             else:
                 if int(exp) > req:
                     raise ValueError('經驗值')
-            if exp < 0:
+            if int(exp) < 0:
                 raise ValueError('經驗值')
         except ValueError as verr:
             await self._error_out_of_range(ctx, verr)
@@ -675,7 +675,7 @@ class Maplexp(commands.Cog):
 
     @commands.command(name='fuckmylife')
     @checks.is_owner()
-    async def fuckfuckfuckfuck(self, ctx, user: discord.User, item: str):
+    async def fuckmesideways(self, ctx, user: discord.User, item: str):
         async with self.config.user(user)() as user_d:
             del user_d[item]
 
