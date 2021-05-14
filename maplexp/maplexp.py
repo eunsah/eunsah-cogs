@@ -703,7 +703,7 @@ class Maplexp(commands.Cog):
 
         await ctx.send(f'user : {user}')
         await ctx.send(f'char : {char}')
-        if levelxp not None:
+        if levelxp is not None:
             await ctx.send(f'level: {levelxp[0]}')
             await ctx.send(f'exp  : {levelxp[1]}')
         else:
