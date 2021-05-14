@@ -705,7 +705,9 @@ class Maplexp(commands.Cog):
         >xp char_name level     exp
         '''
 
-        await ctx.send(f'user :{user}\ntext :{text}')
+        var = text.split()
+
+        await ctx.send(f'user :{user}\ntextvar :{var}')
 
 
         # if any([user, arg0, ]):
