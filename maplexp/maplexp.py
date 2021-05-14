@@ -256,7 +256,11 @@ class Maplexp(commands.Cog):
 
     @commands.command(name='maplexp', aliases=['exp', 'xp'])
     @commands.bot_has_permissions(add_reactions=True)
-    async def _exp(self, ctx, *argv):
+    async def _exp(
+        self, ctx: commands.Context,
+        user: Optional[discord.User],
+        *, argv: Optional[str]
+        ):
         '''
             更新經驗值
             使用方式：[p]maplexp <等級> <經驗值>
