@@ -683,9 +683,9 @@ class Maplexp(commands.Cog):
         await ctx.tick()
 
 
-    @commands.command(name='testxp')
+    @commands.command(name='txp')
     @commands.bot_has_permissions(add_reactions=True)
-    async def testexp(self, ctx, user: Optional[discord.User], char: Optional[str], levelxp: Optional[Tuple[int, int]]):
+    async def txp(self, ctx, user: Optional[discord.User], char: Optional[str], *, levelxp: Optional[Tuple[int, int]]):
 
         ''' Function depends on argv len within 0~3
         0 -> show default
