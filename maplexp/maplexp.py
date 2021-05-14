@@ -690,6 +690,9 @@ class Maplexp(commands.Cog):
         user: Optional[discord.User],
         *, argv: Optional[str]
         ):
+        '''
+            help msg
+        '''
 
         ''' Function depends on argv len within 0~3
         0 -> show default
@@ -705,21 +708,42 @@ class Maplexp(commands.Cog):
         >xp           char_name level     exp
         '''
 
-        await ctx.send(f'user :{user}\ntextvar :{argv}')
+        # await ctx.send(f'user :{user}\ntextvar :{argv}')
 
-        # if user is not None:
-        #     if argv is None:
-        #         await self._show_info(ctx, char=None, user=user)
-        #         return
-        #     else:
-        #         await self._show_info(ctx, char=argv, user=user)
-        #         return
-        # else:
-        #     args = argv.split()
-        #     if len(args) == 0:
-        #         await self._show_info(ctx)
-        #     elif len(args) == 1:
-        #         await self._show_info(ctx, char=args[0], user)
+        if user is not None:
+            if argv is None:
+                await self._show_info(ctx, user=user)
+                return
+            else:
+                await self._show_info(ctx, char=argv, user=user)
+                return
+        else:
+            args = argv.split()
+            if len(args) == 0:
+                await self._show_info(ctx)
+                return
+            elif len(args) == 1:
+                char = args[0]
+                await self._show_info(ctx, char=char)
+                return
+            elif len(args) == 2:
+                level = args[0]
+                exp = args[1]
+                await self._update(ctx, level=level, exp=exp)
+                return
+            elif len(args) == 3:
+                char = args[0]
+                level = args[1]
+                exp = args[2]
+                await self._update(ctx, level=level, exp=exp, char=char)
+                return
+
+        # if not returned #
+        await ctx.send_help()
+        return
+
+
+
 
 
 
