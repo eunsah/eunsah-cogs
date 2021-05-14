@@ -6,7 +6,7 @@ import json
 import time
 import numpy
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Tuple
 from redbot.core import commands, checks, Config
 from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import ReactionPredicate
@@ -685,7 +685,7 @@ class Maplexp(commands.Cog):
 
     @commands.command(name='testxp')
     @commands.bot_has_permissions(add_reactions=True)
-    async def testexp(self, ctx, user: Optional[discord.User], *, *argv):
+    async def testexp(self, ctx, user: Optional[discord.User], char: Optional[str], levelxp: Optional[Tuple[int, int]]):
         if len(argv) not in range(4):
             # argv check
             await ctx.send_help()
@@ -697,7 +697,19 @@ class Maplexp(commands.Cog):
         1 -> show my character, show others' default
         2 -> update default, show others' character
         3 -> update character
+
+        >xp
+        >xp char_name
+        >xp user_name
+        >xp level     exp
+        >xp user_name char_name
+        >xp char_name level     exp
         '''
+
+        await ctx.send(f'user : {user}')
+        await ctx.send(f'char : {char}')
+        await ctx.send(f'level: {levelxp[0]}')
+        await ctx.send(f'exp  : {levelxp[1]}')
 
         # if arg_size == 0:
         #     # if no argvs, show self default character
