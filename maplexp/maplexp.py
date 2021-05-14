@@ -685,7 +685,7 @@ class Maplexp(commands.Cog):
 
     @commands.command(name='txp')
     @commands.bot_has_permissions(add_reactions=True)
-    async def txp(self, ctx, user: Optional[discord.User], char: Optional[str]="", *, text: Optional[str]=""):
+    async def txp(self, ctx, user: Optional[discord.User], char: Optional[str]="", *, text: Optional[int]=0):
 
         ''' Function depends on argv len within 0~3
         0 -> show default
