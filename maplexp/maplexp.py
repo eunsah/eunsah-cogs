@@ -717,10 +717,8 @@ class Maplexp(commands.Cog):
             else:
                 await self._show_info(ctx, char=argv, user=user)
                 return
-        elif args is None:
-            await self._show_info(ctx)
-            return
-        elif args is not None:
+
+        elif argv is not None:
             args = argv.split()
             if len(args) == 1:
                 char = args[0]
@@ -737,6 +735,10 @@ class Maplexp(commands.Cog):
                 exp = args[2]
                 await self._update(ctx, level=level, exp=exp, char=char)
                 return
+
+        elif argv is None and user is None:
+            await self._show_info(ctx)
+            return
 
         # if not returned #
         await ctx.send_help()
