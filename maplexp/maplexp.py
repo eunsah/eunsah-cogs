@@ -709,10 +709,11 @@ class Maplexp(commands.Cog):
         '''
 
         await ctx.send(f'user : {user}')
-        await ctx.send(f'char : {char}')
         await ctx.send(f'level: {level}')
         await ctx.send(f'exp  : {exp}')
-
+        await ctx.send(f'char : {char}')
+        await ctx.send(f'char level: {char_level}')
+        await ctx.send(f'char exp  : {char_exp}')
 
         # if arg_size == 0:
         #     # if no argvs, show self default character
