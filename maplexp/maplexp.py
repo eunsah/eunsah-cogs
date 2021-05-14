@@ -688,11 +688,7 @@ class Maplexp(commands.Cog):
     async def txp(
         self, ctx: commands.Context,
         user: Optional[discord.User],
-        level: Optional[int],
-        exp: Optional[float],
-        char: Optional[str],
-        char_level: Optional[int],
-        char_exp: Optional[float]):
+        *argv):
 
         ''' Function depends on argv len within 0~3
         0 -> show default
@@ -708,14 +704,7 @@ class Maplexp(commands.Cog):
         >xp char_name level     exp
         '''
 
-        await ctx.send(f'user : {user}')
-        await ctx.send(f'level: {level}')
-        await ctx.send(f'exp  : {exp}')
-        await ctx.send(f'char : {char}')
-        await ctx.send(f'char level: {char_level}')
-        await ctx.send(f'char exp  : {char_exp}')
-
-        # if arg_size == 0:
+        # if any([user, arg0, ]):
         #     # if no argvs, show self default character
         #     await self._show_info(ctx)
 
