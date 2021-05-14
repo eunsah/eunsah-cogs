@@ -686,10 +686,6 @@ class Maplexp(commands.Cog):
     @commands.command(name='testxp')
     @commands.bot_has_permissions(add_reactions=True)
     async def testexp(self, ctx, user: Optional[discord.User], char: Optional[str], levelxp: Optional[Tuple[int, int]]):
-        if len(argv) not in range(4):
-            # argv check
-            await ctx.send_help()
-            return
 
         ''' Function depends on argv len within 0~3
         0 -> show default
