@@ -713,6 +713,9 @@ class Maplexp(commands.Cog):
         >xp char_name level     exp
         '''
 
+        await ctx.send(f'user :{user}\nlevel :{level}\nexp :{exp}\nchar :{char}')
+
+
         # if any([user, arg0, ]):
         #     # if no argvs, show self default character
         #     await self._show_info(ctx)
