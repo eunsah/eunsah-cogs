@@ -1,17 +1,16 @@
 import os
 import asyncio
-import logging
+# import logging
 import discord
 import json
-import time
 import numpy
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import Optional
 from redbot.core import commands, checks, Config
 from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import ReactionPredicate
 
-log = logging.getLogger('red.eunsahcogs.maplexp')
+# log = logging.getLogger('red.eunsahcogs.maplexp')
 MAX_LEVEL = 275
 MESSAGE_REMOVE_DELAY = 30
 folder = 'leveling'
