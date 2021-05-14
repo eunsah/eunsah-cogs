@@ -717,12 +717,12 @@ class Maplexp(commands.Cog):
             else:
                 await self._show_info(ctx, char=argv, user=user)
                 return
-        else:
+        elif args is None:
+            await self._show_info(ctx)
+            return
+        elif args is not None:
             args = argv.split()
-            if len(args) == 0:
-                await self._show_info(ctx)
-                return
-            elif len(args) == 1:
+            if len(args) == 1:
                 char = args[0]
                 await self._show_info(ctx, char=char)
                 return
