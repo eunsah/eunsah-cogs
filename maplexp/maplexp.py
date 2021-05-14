@@ -705,7 +705,7 @@ class Maplexp(commands.Cog):
         >xp           char_name level     exp
         '''
 
-        await ctx.send(f'user :{user}\ntextvar :{var}')
+        await ctx.send(f'user :{user}\ntextvar :{argv}')
 
         # if user is not None:
         #     if argv is None:
