@@ -686,7 +686,7 @@ class Maplexp(commands.Cog):
     @commands.command(name='txp')
     @commands.bot_has_permissions(add_reactions=True)
     async def txp(
-        self, ctx: command.Context,
+        self, ctx: commands.Context,
         user: Optional[discord.User],
         level: Optional[int],
         exp: Optional[float],
