@@ -688,7 +688,7 @@ class Maplexp(commands.Cog):
     async def txp(
         self, ctx: commands.Context,
         user: Optional[discord.User],
-        *, text: str = ""
+        *, argv: Optional[str]
         ):
 
         ''' Function depends on argv len within 0~3
@@ -698,16 +698,29 @@ class Maplexp(commands.Cog):
         3 -> update character
 
         >xp
-        >xp char_name
-        >xp user_name
-        >xp level     exp
-        >xp user_name char_name
-        >xp char_name level     exp
+        >xp           char_name
+    >xp user_name
+        >xp           level     exp
+    >xp user_name char_name
+        >xp           char_name level     exp
         '''
 
-        var = text.split()
-
         await ctx.send(f'user :{user}\ntextvar :{var}')
+
+        # if user is not None:
+        #     if argv is None:
+        #         await self._show_info(ctx, char=None, user=user)
+        #         return
+        #     else:
+        #         await self._show_info(ctx, char=argv, user=user)
+        #         return
+        # else:
+        #     args = argv.split()
+        #     if len(args) == 0:
+        #         await self._show_info(ctx)
+        #     elif len(args) == 1:
+        #         await self._show_info(ctx, char=args[0], user)
+
 
 
         # if any([user, arg0, ]):
