@@ -19,6 +19,12 @@ level_json = 'exp_' + str(MAX_LEVEL) + '.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 AUTH_UID = 164900704526401545
 
+class exp_handler(float):
+    def __new__(self, val):
+        return float.__new__(val.strip('%'))
+    def __init__(self, val):
+        float.__init__(val.strip('%'))
+
 class Maplexp(commands.Cog):
     '''
         Maplexp 紀錄楓之谷等級&經驗值
@@ -688,7 +694,10 @@ class Maplexp(commands.Cog):
     async def txp(
         self, ctx: commands.Context,
         user: Optional[discord.User],
-        *argv):
+        level: Optional[int],
+        exp: Optional[exp_handler],
+        char: Optional[str]
+        ):
 
         ''' Function depends on argv len within 0~3
         0 -> show default
