@@ -703,8 +703,11 @@ class Maplexp(commands.Cog):
 
         await ctx.send(f'user : {user}')
         await ctx.send(f'char : {char}')
-        await ctx.send(f'level: {levelxp[0]}')
-        await ctx.send(f'exp  : {levelxp[1]}')
+        if levelxp not None:
+            await ctx.send(f'level: {levelxp[0]}')
+            await ctx.send(f'exp  : {levelxp[1]}')
+        else:
+            await ctx.send(f'levelxp is None')
 
         # if arg_size == 0:
         #     # if no argvs, show self default character
