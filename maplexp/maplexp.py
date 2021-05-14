@@ -274,12 +274,6 @@ class Maplexp(commands.Cog):
                     [p]maplexp <角色> <等級> <經驗值>  - 更新角色經驗值
         '''
 
-        ''' Function depends on argv len within 0~3
-        0 -> show default
-        1 -> show my character, show others' default
-        2 -> update default, show others' character
-        3 -> update character
-        '''
         if user is not None:
             if argv is None:
                 await self._show_info(ctx, user=user)
@@ -675,62 +669,5 @@ class Maplexp(commands.Cog):
         await ctx.tick()
 
 
-    @commands.command(name='txp')
-    @commands.bot_has_permissions(add_reactions=True)
-    async def txp(
-        self, ctx: commands.Context,
-        user: Optional[discord.User],
-        *, argv: Optional[str]
-        ):
-        '''
-            help msg
-        '''
 
-        ''' Function depends on argv len within 0~3
-        0 -> show default
-        1 -> show my character, show others' default
-        2 -> update default, show others' character
-        3 -> update character
-
-        >xp
-        >xp           char_name
-    >xp user_name
-        >xp           level     exp
-    >xp user_name char_name
-        >xp           char_name level     exp
-        '''
-
-
-        if user is not None:
-            if argv is None:
-                await self._show_info(ctx, user=user)
-                return
-            else:
-                await self._show_info(ctx, char=argv, user=user)
-                return
-
-        elif argv is not None:
-            args = argv.split()
-            if len(args) == 1:
-                char = args[0]
-                await self._show_info(ctx, char=char)
-                return
-            elif len(args) == 2:
-                level = args[0]
-                exp = args[1]
-                await self._update(ctx, level=level, exp=exp)
-                return
-            elif len(args) == 3:
-                char = args[0]
-                level = args[1]
-                exp = args[2]
-                await self._update(ctx, level=level, exp=exp, char=char)
-                return
-
-        elif argv is None and user is None:
-            await self._show_info(ctx)
-            return
-
-        # if not returned #
-        await ctx.send_help()
-        return
+# end of file
