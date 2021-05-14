@@ -691,7 +691,6 @@ class Maplexp(commands.Cog):
             await ctx.send_help()
             return
 
-        arg_size = len(argv)
         ''' Function depends on argv len within 0~3
         0 -> show default
         1 -> show my character, show others' default
