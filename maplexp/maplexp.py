@@ -269,58 +269,46 @@ class Maplexp(commands.Cog):
                     [p]maplexp <使用者名稱> <角色>     - 查看對方角色資料
                     [p]maplexp <角色> <等級> <經驗值>  - 更新角色經驗值
         '''
-        if len(argv) not in range(4):
-            # argv check
-            await ctx.send_help()
-            return
 
-        arg_size = len(argv)
         ''' Function depends on argv len within 0~3
         0 -> show default
         1 -> show my character, show others' default
         2 -> update default, show others' character
         3 -> update character
         '''
-
-        if arg_size == 0:
-            # if no argvs, show self default character
-            await self._show_info(ctx)
-
-        elif arg_size in range(1, 3):
-            # if argvs in 1 or 2
-            if '<@!' in argv[0] and len(argv[0].strip('<>@!')) == 18:
-                # check if first argv is a mention
-                try:
-                    user = await self.bot.get_or_fetch_user(int(argv[0].strip('<>!@')))
-                except discord.errors.NotFound:
-                    await self._error_char_not_found(ctx, argv[0])
-                    return
-
-                if arg_size == 1:
-                    # show mentioned default character
-                    await self._show_info(ctx, char=None, user=user)
-                    return
-
-                else:
-                    # args size: 2, show mentioned key character
-                    await self._show_info(ctx, char=argv[1], user=user)
-                    return
-
+        if user is not None:
+            if argv is None:
+                await self._show_info(ctx, user=user)
+                return
             else:
-                # if no mentions in argvs
-                if arg_size == 1:
-                    #　show char
-                    await self._show_info(ctx, char=argv[0], user=ctx.author)
-                    return
+                await self._show_info(ctx, char=argv, user=user)
+                return
 
-                else:
-                    # user update default
-                    await self._update(ctx, level=argv[0], exp=argv[1])
-                    return
-        else:
-            # length == 3, user update character
-            await self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
+        elif argv is not None:
+            args = argv.split()
+            if len(args) == 1:
+                char = args[0]
+                await self._show_info(ctx, char=char)
+                return
+            elif len(args) == 2:
+                level = args[0]
+                exp = args[1]
+                await self._update(ctx, level=level, exp=exp)
+                return
+            elif len(args) == 3:
+                char = args[0]
+                level = args[1]
+                exp = args[2]
+                await self._update(ctx, level=level, exp=exp, char=char)
+                return
+
+        elif argv is None and user is None:
+            await self._show_info(ctx)
             return
+
+        # if not returned #
+        await ctx.send_help()
+        return
 
 
     @commands.group(name='maple', aliases=['m'])
@@ -708,7 +696,6 @@ class Maplexp(commands.Cog):
         >xp           char_name level     exp
         '''
 
-        # await ctx.send(f'user :{user}\ntextvar :{argv}')
 
         if user is not None:
             if argv is None:
@@ -743,48 +730,3 @@ class Maplexp(commands.Cog):
         # if not returned #
         await ctx.send_help()
         return
-
-
-
-
-
-
-        # if any([user, arg0, ]):
-        #     # if no argvs, show self default character
-        #     await self._show_info(ctx)
-
-        # elif arg_size in range(1, 3):
-        #     # if argvs in 1 or 2
-        #     if '<@!' in argv[0] and len(argv[0].strip('<>@!')) == 18:
-        #         # check if first argv is a mention
-        #         try:
-        #             user = await self.bot.get_or_fetch_user(int(argv[0].strip('<>!@')))
-        #         except discord.errors.NotFound:
-        #             await self._error_char_not_found(ctx, argv[0])
-        #             return
-
-        #         if arg_size == 1:
-        #             # show mentioned default character
-        #             await self._show_info(ctx, char=None, user=user)
-        #             return
-
-        #         else:
-        #             # args size: 2, show mentioned key character
-        #             await self._show_info(ctx, char=argv[1], user=user)
-        #             return
-
-        #     else:
-        #         # if no mentions in argvs
-        #         if arg_size == 1:
-        #             #　show char
-        #             await self._show_info(ctx, char=argv[0], user=ctx.author)
-        #             return
-
-        #         else:
-        #             # user update default
-        #             await self._update(ctx, level=argv[0], exp=argv[1])
-        #             return
-        # else:
-        #     # length == 3, user update character
-        #     await self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
-        #     return
