@@ -6,6 +6,7 @@ import json
 import time
 import numpy
 from datetime import datetime
+from typing import Optional
 from redbot.core import commands, checks, Config
 from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import ReactionPredicate
@@ -680,3 +681,60 @@ class Maplexp(commands.Cog):
             del user_d[item]
 
         await ctx.tick()
+
+
+    @commands.command(name='testxp')
+    @commands.bot_has_permissions(add_reactions=True)
+    async def testexp(self, ctx, user: Optional[discord.User], *, *argv):
+        if len(argv) not in range(4):
+            # argv check
+            await ctx.send_help()
+            return
+
+        arg_size = len(argv)
+        ''' Function depends on argv len within 0~3
+        0 -> show default
+        1 -> show my character, show others' default
+        2 -> update default, show others' character
+        3 -> update character
+        '''
+
+        # if arg_size == 0:
+        #     # if no argvs, show self default character
+        #     await self._show_info(ctx)
+
+        # elif arg_size in range(1, 3):
+        #     # if argvs in 1 or 2
+        #     if '<@!' in argv[0] and len(argv[0].strip('<>@!')) == 18:
+        #         # check if first argv is a mention
+        #         try:
+        #             user = await self.bot.get_or_fetch_user(int(argv[0].strip('<>!@')))
+        #         except discord.errors.NotFound:
+        #             await self._error_char_not_found(ctx, argv[0])
+        #             return
+
+        #         if arg_size == 1:
+        #             # show mentioned default character
+        #             await self._show_info(ctx, char=None, user=user)
+        #             return
+
+        #         else:
+        #             # args size: 2, show mentioned key character
+        #             await self._show_info(ctx, char=argv[1], user=user)
+        #             return
+
+        #     else:
+        #         # if no mentions in argvs
+        #         if arg_size == 1:
+        #             #　show char
+        #             await self._show_info(ctx, char=argv[0], user=ctx.author)
+        #             return
+
+        #         else:
+        #             # user update default
+        #             await self._update(ctx, level=argv[0], exp=argv[1])
+        #             return
+        # else:
+        #     # length == 3, user update character
+        #     await self._update(ctx, level=argv[1], exp=argv[2], char=argv[0])
+        #     return
