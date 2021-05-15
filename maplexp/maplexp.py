@@ -198,7 +198,7 @@ class Maplexp(commands.Cog):
                 old_date = udc[char]['date']
                 if old_date != self.base_time:
                     date_timedelta = datetime.now() - datetime.fromtimestamp(old_date)
-                    new_avg = round(exp_growth/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
+                    new_avg = round((net - old_net)/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
                     udc[char]['avg_exp'] = round(((udc[char]['avg_exp']+new_avg)/2), 2)
 
                 udc[char]['date'] = datetime.timestamp(datetime.now())
