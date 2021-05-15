@@ -336,7 +336,7 @@ class Maplexp(commands.Cog):
         '''
         pass
 
-    @commands_maple.command(name='info')
+    @commands_maple.command(name='info', hidden=True)
     async def _show_info(self, ctx, char: str = None, user: discord.User = None):
         '''
             顯示角色資訊
@@ -700,7 +700,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
 
-    @commands.command(name='maplend')
+    @commands.command(name='maplend', hidden=True)
     @checks.is_owner()
     async def maple_backend(self, ctx, user: discord.User = None):
         '''
@@ -721,7 +721,7 @@ class Maplexp(commands.Cog):
         await ctx.send(f'使用者列表：{id_list}')
         await ctx.send(f'隨機抽：{random.choice(id_list)}')
 
-    @commands.command(name='fuckmylife')
+    @commands.command(name='fuckmylife', hidden=True)
     @checks.is_owner()
     async def fuckmesideways(self, ctx, user: discord.User, item: str):
         async with self.config.user(user)() as user_d:
