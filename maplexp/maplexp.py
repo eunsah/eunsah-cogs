@@ -483,8 +483,8 @@ class Maplexp(commands.Cog):
         await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_maple.command(name='setaim')
-    async def maple_set_aim_level(self, ctx, target_level: int = 0, char: str = ''):
+    @maple_set.command(name='aim')
+    async def mapleset_aim(self, ctx, target_level: int = 0, char: str = ''):
         '''
             設定目標等級 空白或是0可以移除
             [p]maple setaim <目標等級> [角色名稱]
@@ -518,16 +518,15 @@ class Maplexp(commands.Cog):
         else:
             await ctx.send(f'移除了{char}的目標等級')
 
-
-    @commands.group(name='mapleset', aliases=['mset', 'xpset'])
+    @commands_maple.group(name='set')
     @commands.bot_has_permissions(add_reactions=True)
-    async def commands_mapleset(self, ctx):
+    async def maple_set(self, ctx):
         '''
             楓之谷等級&經驗值設定
         '''
         pass
 
-    @commands_mapleset.command(name='default', aliases=['d'])
+    @maple_set.command(name='default', aliases=['d'])
     async def mapleset_default(self, ctx, char: str, user: discord.User = None):
         '''
             設定預設角色
@@ -547,7 +546,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         return
 
-    @commands_mapleset.command(name='name', aliases=['ign', 'id'])
+    @maple_set.command(name='name', aliases=['ign', 'id'])
     async def mapleset_name(self, ctx, o_id, n_id, user: discord.User = None):
         '''
             設定角色名稱
@@ -572,7 +571,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_mapleset.command(name='levelexp')
+    @maple_set.command(name='levelexp')
     async def mapleset_setlevelexp(
         self, ctx: commands.Context,
         level: str, exp: str,
@@ -600,7 +599,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_mapleset.command(name='reset')
+    @maple_set.command(name='reset')
     async def mapleset_clear_velocity(
         self,
         ctx: commands.Context,
@@ -638,7 +637,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
-    @commands_mapleset.command(name='clearmydata')
+    @maple_set.command(name='cleardata')
     async def _mapleset_clear_my_userdata(self, ctx):
         '''
             移除你的使用者資料
@@ -664,7 +663,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
-    @commands_mapleset.command(name='clearalldata', hidden=True)
+    @maple_set.command(name='clearalldata', hidden=True)
     async def _mapleset_clear_all_userdata(self, ctx):
         '''
             移除所有使用者資料 (擁有者限定)
