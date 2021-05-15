@@ -599,14 +599,14 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @commands_maple.group(name='clear')
-    async def maple_clear(self, ctx):
+    @commands_maple.group(name='reset')
+    async def maple_reset(self, ctx):
         '''
             清除或是重置資料
         '''
         pass
 
-    @maple_clear.command(name='average')
+    @maple_reset.command(name='average')
     async def maple_set_reset(
         self,
         ctx: commands.Context,
@@ -644,7 +644,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
-    @maple_clear.command(name='mydata')
+    @maple_reset.command(name='mydata')
     async def maple_set_clear_my_userdata(self, ctx):
         '''
             移除你的使用者資料
@@ -670,7 +670,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands.bot_has_permissions(add_reactions=True)
-    @maple_clear.command(name='alluserdata', hidden=True)
+    @maple_reset.command(name='alluserdata', hidden=True)
     async def maple_set_clear_all_userdata(self, ctx):
         '''
             移除所有使用者資料 (擁有者限定)
