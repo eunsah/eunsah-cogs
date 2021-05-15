@@ -527,7 +527,7 @@ class Maplexp(commands.Cog):
             await ctx.send(f'移除了{char}的目標等級')
 
     @maple_set.command(name='default', aliases=['d'])
-    async def mapleset_default(self, ctx, char: str, user: discord.User = None):
+    async def maple_set_default(self, ctx, char: str, user: discord.User = None):
         '''
             設定預設角色
             使用方式：[p]mapleset default <角色名稱>
@@ -547,7 +547,7 @@ class Maplexp(commands.Cog):
         return
 
     @maple_set.command(name='name', aliases=['ign', 'id'])
-    async def mapleset_name(self, ctx, o_id, n_id, user: discord.User = None):
+    async def maple_set_name(self, ctx, o_id, n_id, user: discord.User = None):
         '''
             設定角色名稱
             使用方式：[p]mapleset name <舊角色名稱> <新角色名稱>
@@ -572,7 +572,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @maple_set.command(name='levelexp')
-    async def mapleset_setlevelexp(
+    async def maple_set_setlevelexp(
         self, ctx: commands.Context,
         level: str, exp: str,
         char: str = None,
@@ -600,7 +600,7 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @maple_set.command(name='reset')
-    async def mapleset_clear_velocity(
+    async def maple_set_reset(
         self,
         ctx: commands.Context,
         char: str = None,
@@ -638,7 +638,7 @@ class Maplexp(commands.Cog):
 
     @commands.bot_has_permissions(add_reactions=True)
     @maple_set.command(name='cleardata')
-    async def _mapleset_clear_my_userdata(self, ctx):
+    async def maple_set_clear_my_userdata(self, ctx):
         '''
             移除你的使用者資料
             使用方式：[p]mapleset clearmydata
@@ -664,7 +664,7 @@ class Maplexp(commands.Cog):
 
     @commands.bot_has_permissions(add_reactions=True)
     @maple_set.command(name='clearalldata', hidden=True)
-    async def _mapleset_clear_all_userdata(self, ctx):
+    async def maple_set_clear_all_userdata(self, ctx):
         '''
             移除所有使用者資料 (擁有者限定)
             使用方式：[p]mapleset clearalldata
