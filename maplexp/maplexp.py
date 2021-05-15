@@ -56,7 +56,10 @@ class Maplexp(commands.Cog):
         avg_exp = data_d['avg_exp']
         req = self.level_chart[str(level)]
         exp_perc = round((exp/req)*100, 2) if req != 0 else 0.0
-        aim = data_d['aim']
+        try:
+            aim = data_d['aim']
+        except KeyError:
+            aim = False
 
         e = discord.Embed(
             description = title,
