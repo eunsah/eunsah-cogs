@@ -483,6 +483,14 @@ class Maplexp(commands.Cog):
         await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
+    @commands_maple.group(name='set')
+    @commands.bot_has_permissions(add_reactions=True)
+    async def maple_set(self, ctx):
+        '''
+            楓之谷等級&經驗值設定
+        '''
+        pass
+
     @maple_set.command(name='aim')
     async def mapleset_aim(self, ctx, target_level: int = 0, char: str = ''):
         '''
@@ -517,14 +525,6 @@ class Maplexp(commands.Cog):
             await ctx.send(f'設定{char}的目標等級為{target_level}等')
         else:
             await ctx.send(f'移除了{char}的目標等級')
-
-    @commands_maple.group(name='set')
-    @commands.bot_has_permissions(add_reactions=True)
-    async def maple_set(self, ctx):
-        '''
-            楓之谷等級&經驗值設定
-        '''
-        pass
 
     @maple_set.command(name='default', aliases=['d'])
     async def mapleset_default(self, ctx, char: str, user: discord.User = None):
