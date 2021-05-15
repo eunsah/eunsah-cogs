@@ -70,7 +70,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
         if aim:
-            e.add_field(name='目標達成度', value=f'{(net/aim)*100:.2f}%', inline=False)
+            e.add_field(name='等級目標達成度', value=f'{(net/aim)*100:.2f}%', inline=False)
         e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
 
         return e
