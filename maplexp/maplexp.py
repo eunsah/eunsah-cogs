@@ -26,12 +26,14 @@ class Maplexp(commands.Cog):
         self.bot = bot
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.level_chart = json.load(j)
+        self.total_net = sum(self.level_chart.values())
         self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=False)
         self.base_time = datetime.timestamp(datetime.strptime('1900/01/01','%Y/%m/%d'))
         self.default_profile = {
             'net_exp' : 0,
             'avg_exp' : 0.0,
-            'date' : self.base_time
+            'date' : self.base_time,
+            'aim' : False
         }
         default_user = {
             'ptr_d' : '',
@@ -49,10 +51,12 @@ class Maplexp(commands.Cog):
         parameters : title, data_d, usr_c
         return : discord.Embed
         '''
-        level, exp = self._net_levelexp(data_d['net_exp'])
+        net = data_d['net_exp']
+        level, exp = self._net_levelexp(net)
         avg_exp = data_d['avg_exp']
         req = self.level_chart[str(level)]
         exp_perc = round((exp/req)*100, 2) if req != 0 else 0.0
+        aim = data_d['aim']
 
         e = discord.Embed(
             description = title,
@@ -62,6 +66,8 @@ class Maplexp(commands.Cog):
         e.add_field(name='等級', value=level, inline=True)
         e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
+        if aim:
+            e.add_field(name='目標達成度', value=f'{(net/aim)*100:.2f}%', inline=False)
         e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
 
         return e
@@ -463,6 +469,32 @@ class Maplexp(commands.Cog):
         await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
+    @commands_maple.command(name='setaim')
+    async def maple_set_aim_level(self, ctx, target_level: int = 0, char: str = ""):
+        '''
+            設定目標等級 空白或是0可以移除
+            [p]maple setaim <目標等級> [角色名稱]
+        '''
+        if char is "":
+            char = await self.config.user(ctx.author).ptr_d()
+
+        if target_level not in range(0, MAX_LEVEL+1):
+            await self._error_out_of_range(ctx, '目標等級')
+            return
+
+        async with self.config.user(ctx.author).usr_d() as udc:
+            if target_level == 0:
+                target_level = False
+            else:
+                aim_net = 0
+                for k in self.level_chart:
+                    aim_net += self.level_chart[k]
+                    if int(k) == target_level:
+                        break
+
+                udc[char]['aim'] = aim_net
+
+        await ctx.tick()
 
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
     @commands.bot_has_permissions(add_reactions=True)
