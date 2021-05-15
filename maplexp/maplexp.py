@@ -281,7 +281,7 @@ class Maplexp(commands.Cog):
         *, argv: Optional[str]
         ):
         '''
-            更新經驗值
+            更新角色經驗值
             使用方式：[p]maplexp <等級> <經驗值>
             - 經驗值可以為百分比(12.42%)或是整數(34593402)
 
@@ -571,7 +571,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @maple_set.command(name='levelexp')
+    @maple_set.command(name='levelexp', hidden=True)
     async def maple_set_setlevelexp(
         self, ctx: commands.Context,
         level: str, exp: str,
