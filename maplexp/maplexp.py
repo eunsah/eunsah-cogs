@@ -215,7 +215,7 @@ class Maplexp(commands.Cog):
 
                 udc[char]['date'] = datetime.timestamp(datetime.now())
                 try:
-                    aim = data_d['aim']
+                    aim = udc[char]['aim']
                 except KeyError:
                     aim = False
             except KeyError:
