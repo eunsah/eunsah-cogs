@@ -17,6 +17,8 @@ folder = 'leveling'
 level_json = 'exp_' + str(MAX_LEVEL) + '.json'
 dir_path = os.path.dirname(os.path.realpath(__file__))
 AUTH_UID = 164900704526401545
+up_arrow = '↑'
+down_arrow = '↓'
 
 class Maplexp(commands.Cog):
     '''
@@ -70,7 +72,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
         if aim:
-            e.add_field(name='等級目標達成度', value=f'{(net/aim)*100:.2f}%', inline=False)
+            e.add_field(name='目標等級達成度', value=f'{(net/aim)*100:.2f}%', inline=False)
         e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
 
         return e
@@ -195,6 +197,7 @@ class Maplexp(commands.Cog):
         new_avg = 0.0
         old_net = 0
         net = await self._levelexp_net(ctx, level, exp)
+        aim = False
         if net is False:
             return
 
@@ -211,9 +214,14 @@ class Maplexp(commands.Cog):
                     udc[char]['avg_exp'] = round(((udc[char]['avg_exp']+new_avg)/2), 2)
 
                 udc[char]['date'] = datetime.timestamp(datetime.now())
+                try:
+                    aim = data_d['aim']
+                except KeyError:
+                    aim = False
             except KeyError:
                 await self._error_char_not_found(ctx, char)
                 return
+
 
         old_level, old_exp = self._net_levelexp(old_net)
         level, exp = self._net_levelexp(net)
@@ -253,7 +261,13 @@ class Maplexp(commands.Cog):
             usr_c = ctx.author.color
         )
         e.add_field(name="經驗成長日平均 (更新)", value=f'{new_avg:,}', inline=True)
-        e.add_field(name="總經驗成長幅", value=f'{exp_growth:,} ({growth_perc:,.2f}%)', inline=True)
+        val = growth_perc
+        symbol = up_arrow if val > 0 else down_arrow
+        e.add_field(name="總經驗成長幅", value=f'{exp_growth:,} ({symbol}{val:,.2f}%)', inline=True)
+        if aim:
+            val = exp_growth/aim
+            symbol = up_arrow if val > 0 else down_arrow
+            e.add_field(name='目標等級達成度變化', value=f'{symbol}{val*100:.2f}%', inline=False)
         await ctx.send(embed=e)
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
@@ -374,7 +388,7 @@ class Maplexp(commands.Cog):
         user: discord.User = None):
         '''
             新增角色資料
-            使用方式：[p]mapleset create <角色名稱> <等級> <經驗值> [創角日期]
+            使用方式：[p]maple create <角色名稱> <等級> <經驗值> [創角日期]
             - 日期格式為：%Y/%m/%d (例：1996/11/30)
         '''
         user = await self._user_check(ctx, user)
