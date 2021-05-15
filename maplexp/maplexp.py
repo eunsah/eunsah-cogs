@@ -27,7 +27,7 @@ class Maplexp(commands.Cog):
         with open(os.path.join(dir_path, folder, level_json)) as j:
             self.level_chart = json.load(j)
         self.total_net = sum(self.level_chart.values())
-        self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=False)
+        self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=True)
         self.base_time = datetime.timestamp(datetime.strptime('1900/01/01','%Y/%m/%d'))
         self.default_profile = {
             'net_exp' : 0,
