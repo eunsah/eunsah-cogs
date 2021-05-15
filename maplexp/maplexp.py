@@ -286,7 +286,7 @@ class Maplexp(commands.Cog):
             - 經驗值可以為百分比(12.42%)或是整數(34593402)
 
             其他使用:
-                    [p]maplexp                      - 顯示
+                    [p]maplexp                      - 顯示我的資訊
                     [p]maplexp <角色>                - 查看我的角色資料
                     [p]maplexp <使用者名稱>           - 查看對方資料
                     [p]maplexp <使用者名稱> <角色>     - 查看對方角色資料
@@ -487,7 +487,7 @@ class Maplexp(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True)
     async def maple_set(self, ctx):
         '''
-            楓之谷等級&經驗值設定
+            楓之谷資料相關設定
         '''
         pass
 
