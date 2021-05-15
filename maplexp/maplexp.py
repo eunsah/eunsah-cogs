@@ -498,6 +498,10 @@ class Maplexp(commands.Cog):
                 udc[char]['aim'] = aim_net
 
         await ctx.tick()
+        if target_level:
+            await ctx.send(f'設定{char}的目標等級為{target_level}等')
+        else:
+            await ctx.send(f'移除了{char}的目標等級')
 
     @commands.group(name='mapleset', aliases=['mset', 'xpset'])
     @commands.bot_has_permissions(add_reactions=True)
