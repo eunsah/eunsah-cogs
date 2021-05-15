@@ -491,9 +491,9 @@ class Maplexp(commands.Cog):
             else:
                 aim_net = 0
                 for k in self.level_chart:
-                    aim_net += self.level_chart[k]
                     if int(k) == target_level:
                         break
+                    aim_net += self.level_chart[k]
 
                 udc[char]['aim'] = aim_net
 
