@@ -495,7 +495,11 @@ class Maplexp(commands.Cog):
                         break
                     aim_net += self.level_chart[k]
 
-                udc[char]['aim'] = aim_net
+                try:
+                    udc[char]['aim'] = aim_net
+                except KeyError:
+                    await self._error_char_not_found(ctx, char)
+                    return
 
         await ctx.tick()
         if target_level:
