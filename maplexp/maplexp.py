@@ -470,12 +470,12 @@ class Maplexp(commands.Cog):
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
     @commands_maple.command(name='setaim')
-    async def maple_set_aim_level(self, ctx, target_level: int = 0, char: str = ""):
+    async def maple_set_aim_level(self, ctx, target_level: int = 0, char: str = ''):
         '''
             設定目標等級 空白或是0可以移除
             [p]maple setaim <目標等級> [角色名稱]
         '''
-        if char is "":
+        if char == '':
             char = await self.config.user(ctx.author).ptr_d()
 
         if target_level not in range(0, MAX_LEVEL+1):
