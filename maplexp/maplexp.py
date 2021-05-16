@@ -36,7 +36,8 @@ class Maplexp(commands.Cog):
             'net_exp' : 0,
             'avg_exp' : 0.0,
             'date' : self.base_time,
-            'aim' : False
+            'aim' : False,
+            'pfp' : False
         }
         default_user = {
             'ptr_d' : '',
@@ -87,6 +88,7 @@ class Maplexp(commands.Cog):
                 val = '未知'
 
             e.add_field(name='預計達成目標日期', value=f'{val}', inline=True)
+
         e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime(time_string_format))
 
         return e
@@ -718,7 +720,7 @@ class Maplexp(commands.Cog):
 
 
     @commands.command(name='maplend', hidden=True)
-    @checks.is_owner()
+    @checks.admin()
     async def maple_backend(self, ctx, user: discord.User = None):
         '''
             管理員後端
