@@ -86,7 +86,7 @@ class Maplexp(commands.Cog):
             else:
                 val = '未知'
 
-            e.add_field(name='預計達成目標日期', value=f'{val}', inline=False)
+            e.add_field(name='預計達成目標日期', value=f'{val}', inline=True)
         e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime(time_string_format))
 
         return e
