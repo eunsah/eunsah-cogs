@@ -73,7 +73,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
         if aim:
-            e.add_field(name='目標等級達成度', value=f'{(net/aim)*100:.2f}%', inline=False)
+            e.add_field(name='目標等級達成度', value=f'{(net/aim)*100:.2f}%', inline=True)
 
             diff = aim - net
             if avg_exp != 0:
@@ -82,11 +82,11 @@ class Maplexp(commands.Cog):
                     estimate_date = datetime.now() + timedelta(days=day_req)
                     val = estimate_date.strftime(time_string_format)
                 except OverflowError:
-                    val = '有生之年大概不可能了'
+                    val = '這個進度有生之年大概不可能'
             else:
                 val = '未知'
 
-            e.add_field(name='預計達成目標日期', value=f'{val}', inline=True)
+            e.add_field(name='預計達成目標日期', value=f'{val}', inline=False)
         e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime(time_string_format))
 
         return e
