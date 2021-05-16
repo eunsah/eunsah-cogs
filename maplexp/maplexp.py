@@ -19,7 +19,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 AUTH_UID = 164900704526401545
 up_arrow = '↑'
 down_arrow = '↓'
-time_string_format = time_string_format
+time_string_format = '%Y/%m/%d'
 
 class Maplexp(commands.Cog):
     '''
