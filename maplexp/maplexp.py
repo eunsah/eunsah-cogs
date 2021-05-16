@@ -76,7 +76,7 @@ class Maplexp(commands.Cog):
             e.add_field(name='目標等級達成度', value=f'{(net/aim)*100:.2f}%', inline=False)
 
             diff = aim - net
-            if new_avg != 0:
+            if avg_exp != 0:
                 day_req = round(diff/avg_exp+.5)
                 estimate_date = datetime.now() + timedelta(days=day_req)
                 val = estimate_date.strftime(time_string_format)
