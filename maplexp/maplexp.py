@@ -64,6 +64,10 @@ class Maplexp(commands.Cog):
             aim = data_d['aim']
         except KeyError:
             aim = False
+        try:
+            pfp = data_d['pfp']
+        except KeyError:
+            pfp = False
 
         e = discord.Embed(
             description = title,
@@ -88,6 +92,9 @@ class Maplexp(commands.Cog):
                 val = '未知'
 
             e.add_field(name='預計達成目標日期', value=f'{val}', inline=True)
+
+        if pfp:
+            e.set_thumbnail(url=pfp)
 
         e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime(time_string_format))
 
