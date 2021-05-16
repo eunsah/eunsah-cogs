@@ -633,6 +633,9 @@ class Maplexp(commands.Cog):
             設定角色圖
             使用方式：[p]maple set image <圖片連結> [角色名稱]
             注意! 圖片連結需要為.png .jpg或是其他圖片檔結尾
+
+            捏角色連結在：https://maples.im/
+            使用方式去問小佑
         '''
         if char is None:
             char = await self.config.user(ctx.author).ptr_d()
