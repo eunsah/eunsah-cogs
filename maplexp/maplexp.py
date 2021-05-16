@@ -82,7 +82,7 @@ class Maplexp(commands.Cog):
                     estimate_date = datetime.now() + timedelta(days=day_req)
                     val = estimate_date.strftime(time_string_format)
                 except OverflowError:
-                    val = '這個進度有生之年大概不可能'
+                    val = '有生之年不可能'
             else:
                 val = '未知'
 
