@@ -725,12 +725,12 @@ class Maplexp(commands.Cog):
         '''
             管理員後端
         '''
+        id_list = list()
         if user is not None:
             data = await self.config.user(user)()
             await ctx.send(data)
         else:
             users_d = await self.config.all_users()
-            id_list = list()
             for usr_id in list(users_d.keys()):
                 user = await self.bot.get_or_fetch_user(usr_id)
                 id_list.append('<@'+str(user.id)+'>')
