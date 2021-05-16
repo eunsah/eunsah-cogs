@@ -78,8 +78,11 @@ class Maplexp(commands.Cog):
             diff = aim - net
             if avg_exp != 0:
                 day_req = round(diff/avg_exp+.5)
-                estimate_date = datetime.now() + timedelta(days=day_req)
-                val = estimate_date.strftime(time_string_format)
+                try:
+                    estimate_date = datetime.now() + timedelta(days=day_req)
+                    val = estimate_date.strftime(time_string_format)
+                except OverflowError:
+                    val = '有生之年大概不可能了'
             else:
                 val = '未知'
 
