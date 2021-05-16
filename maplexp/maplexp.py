@@ -517,46 +517,11 @@ class Maplexp(commands.Cog):
         '''
         pass
 
-    @maple_set.command(name='aim')
-    async def maple_set_aim(self, ctx, target_level: int = 0, char: str = ''):
-        '''
-            設定目標等級 空白或是0可以移除
-            [p]maple setaim <目標等級> [角色名稱]
-        '''
-        if char == '':
-            char = await self.config.user(ctx.author).ptr_d()
-
-        if target_level not in range(0, MAX_LEVEL+1):
-            await self._error_out_of_range(ctx, '目標等級')
-            return
-
-        async with self.config.user(ctx.author).usr_d() as udc:
-            if target_level == 0:
-                target_level = False
-            else:
-                aim_net = 0
-                for k in self.level_chart:
-                    if int(k) == target_level:
-                        break
-                    aim_net += self.level_chart[k]
-
-                try:
-                    udc[char]['aim'] = aim_net
-                except KeyError:
-                    await self._error_char_not_found(ctx, char)
-                    return
-
-        await ctx.tick()
-        if target_level:
-            await ctx.send(f'設定{char}的目標等級為{target_level}等')
-        else:
-            await ctx.send(f'移除了{char}的目標等級')
-
     @maple_set.command(name='default', aliases=['d'])
     async def maple_set_default(self, ctx, char: str, user: discord.User = None):
         '''
             設定預設角色
-            使用方式：[p]mapleset default <角色名稱>
+            使用方式：[p]maple set default <角色名稱>
             - 請確認自己擁有此角色
         '''
         user = await self._user_check(ctx, user)
@@ -576,7 +541,7 @@ class Maplexp(commands.Cog):
     async def maple_set_name(self, ctx, o_id, n_id, user: discord.User = None):
         '''
             設定角色名稱
-            使用方式：[p]mapleset name <舊角色名稱> <新角色名稱>
+            使用方式：[p]maple set name <舊角色名稱> <新角色名稱>
         '''
         user = await self._user_check(ctx, user)
         if user is False:
@@ -625,6 +590,56 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
+    @maple_set.command(name='aim')
+    async def maple_set_aim(self, ctx, target_level: int = 0, char: Optional[str]):
+        '''
+            設定目標等級 空白或是0可以移除
+            [p]maple set aim <目標等級> [角色名稱]
+        '''
+        if char is None:
+            char = await self.config.user(ctx.author).ptr_d()
+
+        if target_level not in range(0, MAX_LEVEL+1):
+            await self._error_out_of_range(ctx, '目標等級')
+            return
+
+        async with self.config.user(ctx.author).usr_d() as udc:
+            if target_level == 0:
+                target_level = False
+            else:
+                aim_net = 0
+                for k in self.level_chart:
+                    if int(k) == target_level:
+                        break
+                    aim_net += self.level_chart[k]
+
+                try:
+                    udc[char]['aim'] = aim_net
+                except KeyError:
+                    await self._error_char_not_found(ctx, char)
+                    return
+
+        await ctx.tick()
+        if target_level:
+            await ctx.send(f'設定{char}的目標等級為{target_level}等')
+        else:
+            await ctx.send(f'移除了{char}的目標等級')
+
+    @maple_set.command(name='image')
+    async def maple_set_image(self, ctx, link :str, char: Optional[str]):
+        '''
+            設定角色圖
+            使用方式：[p]maple set image <圖片連結> [角色名稱]
+            注意! 圖片連結需要為.png .jpg或是其他圖片檔結尾
+        '''
+        if char is None:
+            char = await self.config.user(ctx.author).ptr_d()
+
+        async with self.config.user(ctx.author).usr_d() as udc:
+            udc[char]['pfp'] = link
+
+        await ctx.tick()
+
     @commands_maple.group(name='reset')
     async def maple_reset(self, ctx):
         '''
@@ -641,7 +656,7 @@ class Maplexp(commands.Cog):
         ):
         '''
             重置日平均
-            使用方式：[p]mapleset reset <角色名稱>
+            使用方式：[p]maple reset average <角色名稱>
         '''
         user = await self._user_check(ctx, user)
         if user is False:
@@ -674,7 +689,7 @@ class Maplexp(commands.Cog):
     async def maple_set_clear_my_userdata(self, ctx):
         '''
             移除你的使用者資料
-            使用方式：[p]mapleset clearmydata
+            使用方式：[p]maple reset mydata
         '''
         verify = await ctx.send('確定要移除你的使用者資料嗎？')
         start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
@@ -700,7 +715,7 @@ class Maplexp(commands.Cog):
     async def maple_set_clear_all_userdata(self, ctx):
         '''
             移除所有使用者資料 (擁有者限定)
-            使用方式：[p]mapleset clearalldata
+            使用方式：[p]maple reset alluserdata
         '''
         ok = await self._ctx_permissions(ctx, admin=False)
         if not ok:
