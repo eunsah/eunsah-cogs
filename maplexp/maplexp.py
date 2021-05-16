@@ -4,7 +4,7 @@ import asyncio
 import discord
 import json
 import numpy
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 from redbot.core import commands, checks, Config
 from redbot.core.utils.menus import start_adding_reactions
@@ -19,6 +19,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 AUTH_UID = 164900704526401545
 up_arrow = '↑'
 down_arrow = '↓'
+time_string_format = time_string_format
 
 class Maplexp(commands.Cog):
     '''
@@ -30,7 +31,7 @@ class Maplexp(commands.Cog):
             self.level_chart = json.load(j)
         self.total_net = sum(self.level_chart.values())
         self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'001'),  force_registration=True)
-        self.base_time = datetime.timestamp(datetime.strptime('1900/01/01','%Y/%m/%d'))
+        self.base_time = datetime.timestamp(datetime.strptime('1900/01/01', time_string_format))
         self.default_profile = {
             'net_exp' : 0,
             'avg_exp' : 0.0,
@@ -73,7 +74,17 @@ class Maplexp(commands.Cog):
         e.add_field(name='經驗成長日平均', value=f'{round(avg_exp):,}', inline=False)
         if aim:
             e.add_field(name='目標等級達成度', value=f'{(net/aim)*100:.2f}%', inline=False)
-        e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime('%Y/%m/%d'))
+
+            diff = aim - net
+            if new_avg != 0:
+                day_req = round(diff/avg_exp+.5)
+                estimate_date = datetime.now() + timedelta(days=day_req)
+                val = estimate_date.strftime(time_string_format)
+            else:
+                val = '未知'
+
+            e.add_field(name='預計達成目標日期', value=f'{val}', inline=True)
+        e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime(time_string_format))
 
         return e
 
@@ -209,9 +220,12 @@ class Maplexp(commands.Cog):
                 udc[char]['net_exp'] = net # update net
                 old_date = udc[char]['date']
                 if old_date != self.base_time:
-                    date_timedelta = datetime.now() - datetime.fromtimestamp(old_date)
-                    new_avg = round((net - old_net)/(date_timedelta.total_seconds()/86400)) # 86400 is the total seconds in a day
-                    udc[char]['avg_exp'] = round(((udc[char]['avg_exp']+new_avg)/2), 2)
+                    date_td = datetime.now() - datetime.fromtimestamp(old_date)
+                    new_avg = round((net - old_net)/(date_td.total_seconds()/86400)) # 86400 is the total seconds in a day
+                    new_avg = round(((udc[char]['avg_exp']+new_avg)/2), 2)
+                    udc[char]['avg_exp'] = new_avg
+                else:
+                    new_avg = 0
 
                 udc[char]['date'] = datetime.timestamp(datetime.now())
                 try:
@@ -384,7 +398,7 @@ class Maplexp(commands.Cog):
         self, ctx: commands.Context,
         char: str,
         level: str, exp: str,
-        date = datetime.now().strftime('%Y/%m/%d'),
+        date = datetime.now().strftime(time_string_format),
         user: discord.User = None):
         '''
             新增角色資料
@@ -402,7 +416,7 @@ class Maplexp(commands.Cog):
         async with self.config.user(user).usr_d() as ud:
             ud[char] = self.default_profile
             ud[char]['net_exp'] = net
-            ud[char]['date'] = datetime.timestamp(datetime.strptime(date, '%Y/%m/%d'))
+            ud[char]['date'] = datetime.timestamp(datetime.strptime(date, time_string_format))
 
         if await self.config.user(user).ptr_d() == '':
             await self.config.user(user).ptr_d.set(char)
@@ -453,7 +467,7 @@ class Maplexp(commands.Cog):
         async with self.config.user(user).usr_d() as ud:
             u_size = len(ud)
             for item in ud:
-                date = datetime.fromtimestamp(ud[item]['date']).strftime('%Y/%m/%d')
+                date = datetime.fromtimestamp(ud[item]['date']).strftime(time_string_format)
                 level, exp = self._net_levelexp(ud[item]['net_exp'])
                 req = self.level_chart[str(level)]
                 exp = (exp/req)*100 if req != 0 else 0.0
