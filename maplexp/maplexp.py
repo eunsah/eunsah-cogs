@@ -736,9 +736,9 @@ class Maplexp(commands.Cog):
                 id_list.append('<@'+str(user.id)+'>')
 
             await ctx.send(f'目前使用者數量：{len(id_list)}')
-        import random
-        await ctx.send(f'使用者列表：{id_list}')
-        await ctx.send(f'隨機抽：{random.choice(id_list)}')
+            import random
+            await ctx.send(f'使用者列表：{id_list}')
+            await ctx.send(f'隨機抽：{random.choice(id_list)}')
 
     @commands.command(name='fuckmylife', hidden=True)
     @checks.is_owner()
