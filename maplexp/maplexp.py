@@ -635,7 +635,7 @@ class Maplexp(commands.Cog):
             注意! 圖片連結需要為.png .jpg或是其他圖片檔結尾
 
             捏角色連結在：https://maples.im/
-            使用方式去問小佑
+            使用方式去問小佑#8565
         '''
         if char is None:
             char = await self.config.user(ctx.author).ptr_d()
