@@ -484,12 +484,7 @@ class Maplexp(commands.Cog):
                 req = self.level_chart[str(level)]
                 exp = (exp/req)*100 if req != 0 else 0.0
 
-                # u_name += str(item)+'\n'
-                # u_level += f'{level}({exp:.2f}%)\n'
-                # u_date += str(date)+'\n'
-
                 char_list.append((net, f'{level}({exp:.2f}%)', str(item), str(date)))
-
                 sum_level += level
 
         if u_size == 0:
