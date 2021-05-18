@@ -19,6 +19,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 AUTH_UID = 164900704526401545
 up_arrow = '↑'
 down_arrow = '↓'
+flat_arrow = '-'
 time_string_format = '%Y/%m/%d'
 
 class Maplexp(commands.Cog):
@@ -288,11 +289,11 @@ class Maplexp(commands.Cog):
         )
         e.add_field(name="經驗成長更新 (每日)", value=f'{new_avg:,}', inline=True)
         val = growth_perc
-        symbol = up_arrow if val > 0 else down_arrow
+        symbol = up_arrow if val > 0 else flat_arrow if val == 0 else down_arrow
         e.add_field(name="經驗成長幅度", value=f'{exp_growth:,} ({val:,.2f}%) {symbol}', inline=True)
         if aim:
             val = exp_growth/aim
-            symbol = up_arrow if val > 0 else down_arrow
+            symbol = up_arrow if val > 0 else flat_arrow if val == 0 else down_arrow
             e.add_field(name='目標進度更新', value=f'{val*100:.2f}% {symbol}', inline=True)
         await ctx.send(embed=e)
         await ctx.tick()
