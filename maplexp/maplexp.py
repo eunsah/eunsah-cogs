@@ -510,9 +510,13 @@ class Maplexp(commands.Cog):
             color = user.color
         )
         char_list.sort()
+        char_list_string = ''
+        for item in char_list:
+            char_list_string += f'{item[2]}{item[1]}{item[3]}\n'
+
         e.add_field(
             name = f'角色名稱   等級   最後更新時間',
-            value = [f'{item[2]}' for item in char_list]
+            value =char_list_string
         )
 
 
