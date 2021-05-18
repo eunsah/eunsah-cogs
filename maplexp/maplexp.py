@@ -475,18 +475,24 @@ class Maplexp(commands.Cog):
         u_level = str()
         u_date = str()
         u_size = 0
-        u_sum = 0
+        sum_level = 0
+        char_list = list()
         async with self.config.user(user).usr_d() as ud:
             u_size = len(ud)
             for item in ud:
                 date = datetime.fromtimestamp(ud[item]['date']).strftime(time_string_format)
-                level, exp = self._net_levelexp(ud[item]['net_exp'])
+                net = ud[item]['net_exp']
+                level, exp = self._net_levelexp(net)
                 req = self.level_chart[str(level)]
                 exp = (exp/req)*100 if req != 0 else 0.0
-                u_name += str(item)+'\n'
-                u_level += f'{level}({exp:.2f}%)\n'
-                u_date += str(date)+'\n'
-                u_sum += level
+
+                # u_name += str(item)+'\n'
+                # u_level += f'{level}({exp:.2f}%)\n'
+                # u_date += str(date)+'\n'
+
+                char_list.append((net, f'{level}({exp:.2f}%)', str(item), str(date)))
+
+                sum_level += level
 
         if u_size == 0:
             if ctx.author == user:
@@ -503,10 +509,17 @@ class Maplexp(commands.Cog):
             description = user.display_name+'的角色列表',
             color = user.color
         )
-        e.add_field(name='角色名稱', value=u_name, inline=True)
-        e.add_field(name='等級', value=u_level, inline=True)
-        e.add_field(name='最後更新時間', value=u_date, inline=True)
-        e.set_footer(text=f'角色總等級：{u_sum}')
+        char_list.sort()
+        e.add_field(
+            name = f'角色名稱   等級   最後更新時間',
+            value = [f'{item[2]}' for item in char_list]
+        )
+
+
+        # e.add_field(name='角色名稱', value=u_name, inline=True)
+        # e.add_field(name='等級', value=u_level, inline=True)
+        # e.add_field(name='最後更新時間', value=u_date, inline=True)
+        e.set_footer(text=f'角色總等級：{sum_level}')
 
         await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
