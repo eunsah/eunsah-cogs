@@ -506,7 +506,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='角色名稱', value=u_name, inline=True)
         e.add_field(name='等級', value=u_level, inline=True)
         e.add_field(name='最後更新時間', value=u_date, inline=True)
-        e.set_footer(name=f'角色總等級：{u_sum}')
+        e.set_footer(text=f'角色總等級：{u_sum}')
 
         await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
