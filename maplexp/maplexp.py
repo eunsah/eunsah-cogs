@@ -475,6 +475,7 @@ class Maplexp(commands.Cog):
         u_level = str()
         u_date = str()
         u_size = 0
+        u_sum = 0
         async with self.config.user(user).usr_d() as ud:
             u_size = len(ud)
             for item in ud:
@@ -485,6 +486,7 @@ class Maplexp(commands.Cog):
                 u_name += str(item)+'\n'
                 u_level += f'{level}({exp:.2f}%)\n'
                 u_date += str(date)+'\n'
+                u_sum += level
 
         if u_size == 0:
             if ctx.author == user:
@@ -504,6 +506,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='角色名稱', value=u_name, inline=True)
         e.add_field(name='等級', value=u_level, inline=True)
         e.add_field(name='最後更新時間', value=u_date, inline=True)
+        e.set_footer(name=f'角色總等級：{u_sum}')
 
         await ctx.send(embed=e)
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
