@@ -512,10 +512,10 @@ class Maplexp(commands.Cog):
         char_list.sort(reverse=True)
 
 
-        e.add_field(name = f'角色名稱', value = "", inline=True)
-        e.add_field(name = f'等級', value = "", inline=True)
-        e.add_field(name = f'最後更新時間', value = "", inline=True)
-        e.add_field(name = "", value = f'item', inline=False)
+        e.add_field(name = f'角色名稱', value = " ", inline=True)
+        e.add_field(name = f'等級', value = " ", inline=True)
+        e.add_field(name = f'最後更新時間', value = " ", inline=True)
+        e.add_field(name = " ", value = f'item', inline=False)
 
 
 
