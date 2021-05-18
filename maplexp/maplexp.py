@@ -513,9 +513,9 @@ class Maplexp(commands.Cog):
         u_date = str()
 
         for item in char_list:
-            u_name += str(item)+'\n'
-            u_level += f'{level}({exp:.2f}%)\n'
-            u_date += str(date)+'\n'
+            u_name += str(item[2])+'\n'
+            u_level += str(item[1])+'\n'
+            u_date += str(item[3])+'\n'
 
         e.add_field(name='角色名稱', value=u_name, inline=True)
         e.add_field(name='等級', value=u_level, inline=True)
