@@ -471,9 +471,7 @@ class Maplexp(commands.Cog):
         '''
         if user is None:
             user = ctx.author
-        u_name = str()
-        u_level = str()
-        u_date = str()
+
         u_size = 0
         sum_level = 0
         char_list = list()
@@ -510,18 +508,18 @@ class Maplexp(commands.Cog):
             color = user.color
         )
         char_list.sort(reverse=True)
+        u_name = str()
+        u_level = str()
+        u_date = str()
 
+        for item in char_list:
+            u_name += str(item)+'\n'
+            u_level += f'{level}({exp:.2f}%)\n'
+            u_date += str(date)+'\n'
 
-        e.add_field(name = f'角色名稱', value = " ", inline=True)
-        e.add_field(name = f'等級', value = " ", inline=True)
-        e.add_field(name = f'最後更新時間', value = " ", inline=True)
-        e.add_field(name = " ", value = f'item', inline=False)
-
-
-
-        # e.add_field(name='角色名稱', value=u_name, inline=True)
-        # e.add_field(name='等級', value=u_level, inline=True)
-        # e.add_field(name='最後更新時間', value=u_date, inline=True)
+        e.add_field(name='角色名稱', value=u_name, inline=True)
+        e.add_field(name='等級', value=u_level, inline=True)
+        e.add_field(name='最後更新時間', value=u_date, inline=True)
         e.set_footer(text=f'角色總等級：{sum_level}')
 
         await ctx.send(embed=e)
