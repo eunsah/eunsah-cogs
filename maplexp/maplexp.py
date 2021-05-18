@@ -286,14 +286,14 @@ class Maplexp(commands.Cog):
             data_d = usr_dict[char],
             usr_c = ctx.author.color
         )
-        e.add_field(name="經驗成長日平均 (更新)", value=f'{new_avg:,}', inline=True)
+        e.add_field(name="經驗成長日平均 (更新)", value=f'{new_avg:,}', inline=False)
         val = growth_perc
         symbol = up_arrow if val > 0 else down_arrow
-        e.add_field(name="總經驗成長幅", value=f'{exp_growth:,} ({val:,.2f}%) {symbol}', inline=True)
+        e.add_field(name="總經驗成長幅", value=f'{exp_growth:,} ({val:,.2f}%) {symbol}', inline=False)
         if aim:
             val = exp_growth/aim
             symbol = up_arrow if val > 0 else down_arrow
-            e.add_field(name='目標等級達成度變化', value=f'{val*100:.2f}% {symbol}', inline=False)
+            e.add_field(name='目標等級達成度變化', value=f'{val*100:.2f}% {symbol}', inline=True)
         await ctx.send(embed=e)
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
