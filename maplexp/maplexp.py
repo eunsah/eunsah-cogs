@@ -509,7 +509,7 @@ class Maplexp(commands.Cog):
             description = user.display_name+'的角色列表',
             color = user.color
         )
-        char_list.sort()
+        char_list.sort(reverse=True)
         char_list_string = ''
         for item in char_list:
             char_list_string += f'{item[2]}{item[1]}{item[3]}\n'
