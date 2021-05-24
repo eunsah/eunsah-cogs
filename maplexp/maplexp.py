@@ -625,16 +625,17 @@ class Maplexp(commands.Cog):
         async with self.config.user(ctx.author).usr_d() as udc:
             if target_level == 0:
                 target_level = False
+                net_target = False
             else:
                 aim_net = 0
                 for k in self.level_chart:
                     if int(k) == target_level:
                         break
                     aim_net += self.level_chart[k]
-                target_level = aim_net
+                net_target = aim_net
 
             try:
-                udc[char]['aim'] = target_level
+                udc[char]['aim'] = net_target
             except KeyError:
                 await self._error_char_not_found(ctx, char)
                 return
