@@ -93,8 +93,7 @@ class Maplexp(commands.Cog):
             else:
                 val = '未知'
 
-            # e.add_field(name='預計達成日期', value=f'{val}', inline=True)
-            footer_text = f'預計完成->{val}\n' + footer_text
+            footer_text = f'預計完成：{val}\n' + footer_text
         e.add_field(name='平均經驗成長', value=f'{round(avg_exp):,}', inline=True)
 
         if pfp:
