@@ -77,7 +77,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='名稱', value=name, inline=True)
         e.add_field(name='等級', value=level, inline=True)
         e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
-        e.add_field(name='經驗成長(每日)', value=f'{round(avg_exp):,}', inline=True)
+        e.add_field(name='平均經驗成長', value=f'{round(avg_exp):,}', inline=True)
         if aim:
             e.add_field(name='目標等級進度', value=f'{(net/aim)*100:.2f}%', inline=True)
 
@@ -287,7 +287,7 @@ class Maplexp(commands.Cog):
             data_d = usr_dict[char],
             usr_c = ctx.author.color
         )
-        e.add_field(name="經驗成長更新 (每日)", value=f'{new_avg:,}', inline=True)
+        e.add_field(name="本次經驗成長", value=f'{new_avg:,}', inline=True)
         val = exp_growth
         symbol = up_arrow if val > 0 else flat_arrow if val == 0 else down_arrow
         e.add_field(name="經驗成長幅度", value=f'{exp_growth:,} ({growth_perc:,.2f}%) {symbol}', inline=True)
