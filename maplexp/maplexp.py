@@ -396,7 +396,7 @@ class Maplexp(commands.Cog):
         date = tar_d['date']
 
         e = self._dict_to_embed(
-            title = str(user.display_name)+'的玩家資料',
+            title = str(user.name)+'的玩家資料',
             name = char,
             data_d = tar_d,
             usr_c = user.color
