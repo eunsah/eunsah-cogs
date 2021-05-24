@@ -79,7 +79,7 @@ class Maplexp(commands.Cog):
         e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
         e.add_field(name='平均經驗成長', value=f'{round(avg_exp):,}', inline=True)
         if aim:
-            e.add_field(name='目標等級進度', value=f'{(net/aim)*100:.2f}%', inline=True)
+            e.add_field(name='目標等級達成%', value=f'{(net/aim)*100:.2f}%', inline=True)
 
             diff = aim - net
             if avg_exp != 0:
@@ -290,10 +290,12 @@ class Maplexp(commands.Cog):
         e.add_field(name="本次成長(經驗/日)", value=f'{new_avg:,}', inline=True)
         val = exp_growth
         symbol = up_arrow if val > 0 else flat_arrow if val == 0 else down_arrow
-        e.add_field(name="經驗成長幅度", value=f'{exp_growth:,} ({growth_perc:,.2f}%) {symbol}', inline=True)
         if aim:
             val = exp_growth/aim
             e.add_field(name='目標進度更新', value=f'{val*100:.2f}% {symbol}', inline=True)
+
+        e.add_field(name="經驗成長幅度", value=f'{exp_growth:,} ({growth_perc:,.2f}%) {symbol}', inline=False)
+
         await ctx.send(embed=e)
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
