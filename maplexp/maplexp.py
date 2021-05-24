@@ -95,7 +95,7 @@ class Maplexp(commands.Cog):
                 val = '未知'
 
             # e.add_field(name='預計達成日期', value=f'{val}', inline=True)
-            footer_text += f', 預計完成日：{val}'
+            footer_text += f'\n預計完成日：{val}'
 
         if pfp:
             e.set_thumbnail(url=pfp)
