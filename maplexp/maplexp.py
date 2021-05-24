@@ -290,13 +290,13 @@ class Maplexp(commands.Cog):
             data_d = usr_dict[char],
             usr_c = ctx.author.color
         )
-        e.add_field(name="本次成長(經驗/日)", value=f'{new_avg:,}', inline=False)
         val = exp_growth
         symbol = up_arrow if val > 0 else flat_arrow if val == 0 else down_arrow
         e.add_field(name="經驗成長幅度", value=f'{exp_growth:,} ({growth_perc:,.2f}%) {symbol}', inline=True)
         if aim:
             val = exp_growth/aim
             e.add_field(name='目標進度更新', value=f'{val*100:.2f}% {symbol}', inline=True)
+        e.add_field(name="本次成長(經驗/日)", value=f'{new_avg:,}', inline=False)
 
 
         await ctx.send(embed=e)
