@@ -77,9 +77,8 @@ class Maplexp(commands.Cog):
             color = usr_c
         )
         e.add_field(name='名稱', value=name, inline=True)
-        e.add_field(name='等級', value=level, inline=False)
-        e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=True)
-        e.add_field(name='平均經驗成長', value=f'{round(avg_exp):,}', inline=False)
+        e.add_field(name='等級', value=level, inline=True)
+        e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=False)
         if aim:
             e.add_field(name='目標等級達成%', value=f'{(net/aim)*100:.2f}%', inline=False)
 
@@ -95,7 +94,8 @@ class Maplexp(commands.Cog):
                 val = '未知'
 
             # e.add_field(name='預計達成日期', value=f'{val}', inline=True)
-            footer_text = f'> 預計完成：{val}\n' + footer_text
+            footer_text = f'預計完成->{val}\n' + footer_text
+        e.add_field(name='平均經驗成長', value=f'{round(avg_exp):,}', inline=True)
 
         if pfp:
             e.set_thumbnail(url=pfp)
