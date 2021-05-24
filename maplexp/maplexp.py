@@ -282,7 +282,7 @@ class Maplexp(commands.Cog):
         usr_dict = await self.config.user(ctx.author).usr_d() # refesh usr_dict
 
         e = self._dict_to_embed(
-            title = ctx.author.display_name+'的角色資料更新',
+            title = ctx.author.name+'的角色資料更新',
             name = char,
             data_d = usr_dict[char],
             usr_c = ctx.author.color
