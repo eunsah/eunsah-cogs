@@ -76,8 +76,8 @@ class Maplexp(commands.Cog):
             description = title,
             color = usr_c
         )
-        e.add_field(name='名稱', value=name, inline=False)
-        e.add_field(name='等級', value=level, inline=True)
+        e.add_field(name='名稱', value=name, inline=True)
+        e.add_field(name='等級', value=level, inline=False)
         e.add_field(name='經驗值', value=f'{exp:,} ({exp_perc:.2f}%)', inline=True)
         e.add_field(name='平均經驗成長', value=f'{round(avg_exp):,}', inline=False)
         if aim:
