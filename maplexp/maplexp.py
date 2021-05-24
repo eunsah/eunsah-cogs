@@ -287,7 +287,7 @@ class Maplexp(commands.Cog):
             data_d = usr_dict[char],
             usr_c = ctx.author.color
         )
-        e.add_field(name="本次經驗成長", value=f'{new_avg:,}', inline=True)
+        e.add_field(name="本次成長(經驗/日)", value=f'{new_avg:,}', inline=True)
         val = exp_growth
         symbol = up_arrow if val > 0 else flat_arrow if val == 0 else down_arrow
         e.add_field(name="經驗成長幅度", value=f'{exp_growth:,} ({growth_perc:,.2f}%) {symbol}', inline=True)
