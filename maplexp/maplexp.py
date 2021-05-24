@@ -71,7 +71,7 @@ class Maplexp(commands.Cog):
             pfp = False
 
 
-        footer_text = f'最後更新日期：{datetime.fromtimestamp(data_d['date']).strftime(time_string_format)}'
+        footer_text = f'''最後更新日期：{datetime.fromtimestamp(data_d['date']).strftime(time_string_format)}'''
         e = discord.Embed(
             description = title,
             color = usr_c
