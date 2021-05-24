@@ -70,6 +70,8 @@ class Maplexp(commands.Cog):
         except KeyError:
             pfp = False
 
+
+        footer_text = f'最後更新日期：{datetime.fromtimestamp(data_d['date']).strftime(time_string_format)}'
         e = discord.Embed(
             description = title,
             color = usr_c
@@ -92,12 +94,13 @@ class Maplexp(commands.Cog):
             else:
                 val = '未知'
 
-            e.add_field(name='預計達成日期', value=f'{val}', inline=True)
+            # e.add_field(name='預計達成日期', value=f'{val}', inline=True)
+            footer_text += f', 預計完成日：{val}'
 
         if pfp:
             e.set_thumbnail(url=pfp)
 
-        e.set_footer(text='更新日期: ' + datetime.fromtimestamp(data_d['date']).strftime(time_string_format))
+        e.set_footer(text=footer_text)
 
         return e
 
