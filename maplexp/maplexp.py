@@ -292,7 +292,7 @@ class Maplexp(commands.Cog):
         symbol = up_arrow if val > 0 else flat_arrow if val == 0 else down_arrow
         e.add_field(name="經驗成長幅度", value=f'{exp_growth:,} ({growth_perc:,.2f}%) {symbol}', inline=True)
         if aim:
-            val = exp_growth
+            val = exp_growth/aim
             e.add_field(name='目標進度更新', value=f'{val*100:.2f}% {symbol}', inline=True)
         await ctx.send(embed=e)
         await ctx.tick()
