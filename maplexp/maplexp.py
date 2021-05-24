@@ -235,8 +235,8 @@ class Maplexp(commands.Cog):
                 if old_date != self.base_time:
                     date_td = datetime.now() - datetime.fromtimestamp(old_date)
                     new_avg = round((net - old_net)/(date_td.total_seconds()/86400)) # 86400 is the total seconds in a day
-                    new_avg = round(((udc[char]['avg_exp']+new_avg)/2), 2)
-                    udc[char]['avg_exp'] = new_avg
+                    updated_avg = round(((udc[char]['avg_exp']+new_avg)/2), 2)
+                    udc[char]['avg_exp'] = updated_avg
                 else:
                     new_avg = 0
 
