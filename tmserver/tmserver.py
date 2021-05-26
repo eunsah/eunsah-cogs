@@ -335,7 +335,9 @@ class Tmserver(commands.Cog):
         updatecheck = await self.config.TMServer()
         updatecheck = updatecheck['Public']['update']
         if (time() - updatecheck) > 60:
+            plswait = await ctx.send('Updating Serverinfo...')
             await self.server_refresh('Public')
+            await plswait.delete()
 
         pu = dict()
         async with self.config.TMServer() as tms:
