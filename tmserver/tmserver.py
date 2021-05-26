@@ -308,7 +308,7 @@ class Tmserver(commands.Cog):
 
         s_runtime = (time() - s_start) * 1000
 
-        return float(s_runtime)
+        return float(s_runtime)-140
 
     async def server_refresh(self, server: str) -> None:
         async with self.config.TMServer() as tms:
@@ -335,8 +335,10 @@ class Tmserver(commands.Cog):
 
         return pu
 
-    def make_embed(self, content: dict):
-        pass
+    def make_embed(self, title: str, content: dict):
+        e = discord.Embed(
+            title =
+        )
 
     @commands.group(name='tmserver', aliases=['tms'])
     async def commands_tmserver(self, ctx):
@@ -351,7 +353,7 @@ class Tmserver(commands.Cog):
         pu = self.latency_dict(ctx, 'Public')
 
 
-        await ctx.send(pu)
+        await ctx.send('公用', pu)
 
 
 
