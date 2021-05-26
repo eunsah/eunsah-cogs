@@ -351,7 +351,7 @@ class Tmserver(commands.Cog):
     async def tms_public(self, ctx):
         '''
         '''
-        pu = self.latency_dict(ctx, 'Public')
+        pu = await self.latency_dict(ctx, 'Public')
 
         e = discord.Embed(
             title = '公用伺服器'
