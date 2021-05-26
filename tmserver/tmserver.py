@@ -322,15 +322,15 @@ class Tmserver(commands.Cog):
 
     async def latency_dict(self, ctx: commands.Context, server: str) -> dict:
         updatecheck = await self.config.TMServer()
-        updatecheck = updatecheck['Public']['update']
+        updatecheck = updatecheck[server]['update']
         if (time() - updatecheck) > 60:
             plswait = await ctx.send('Updating Serverinfo...')
-            await self.server_refresh('Public')
+            await self.server_refresh(server)
             await plswait.delete()
 
         pu = dict()
         async with self.config.TMServer() as tms:
-            pu = tms['Public']
+            pu = tms[server]
         pu.pop('update')
 
         return pu
