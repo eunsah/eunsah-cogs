@@ -352,10 +352,11 @@ class Tmserver(commands.Cog):
         except KeyError:
             market = '沒有拍賣'
 
+        int_val = int(info[title][1], 16)
         e = discord.Embed(
             title = info[title][0],
             description = f'''**副本**：{content['副本']}        **商城**：{content['商城']}        **拍賣**：{market}''',
-            color = info[title][1]
+            color = hex(int_val)
             )
         e.set_thumbnail(url=info[title][2])
 
