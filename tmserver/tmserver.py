@@ -315,7 +315,7 @@ class Tmserver(commands.Cog):
             for key in tms[server]:
                 if key != 'update':
                     port = self.server_ip[server][key].split(':')
-                    host = '.'.join(ip_head, port[0])
+                    host = '.'.join([ip_head, port[0]])
                     latency = self.latency_point(host=host, port=port[1])
                     tms[server][key] = f'{latency:2f}ms' if latency != None else 'Timeout!'
             tms[server]['update'] = time()
