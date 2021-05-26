@@ -310,7 +310,7 @@ class Tmserver(commands.Cog):
 
         return float(s_runtime)
 
-    async def server_refresh(self, server:str):
+    async def server_refresh(self, server: str) -> None:
         async with self.config.TMServer() as tms:
             for key in tms[server]:
                 if key != 'update':
@@ -320,18 +320,7 @@ class Tmserver(commands.Cog):
                     tms[server][key] = f'{latency:2f}ms' if latency != None else 'Timeout!'
             tms[server]['update'] = time()
 
-    def server_embed_handler(self, content: list):
-        pass
-
-    @commands.group(name='tmserver', aliases=['tms'])
-    async def commands_tmserver(self, ctx):
-        '''
-        '''
-        pass
-
-    @commands_tmserver.command(name='public', aliases=['pu'])
-    async def tms_public(self, ctx):
-
+    async def latency_dict(self, ctx: commands.Context, server: str) -> dict:
         updatecheck = await self.config.TMServer()
         updatecheck = updatecheck['Public']['update']
         if (time() - updatecheck) > 60:
@@ -342,8 +331,28 @@ class Tmserver(commands.Cog):
         pu = dict()
         async with self.config.TMServer() as tms:
             pu = tms['Public']
+        pu.pop('update')
+
+        return pu
+
+    def make_embed(self, content: dict):
+        pass
+
+    @commands.group(name='tmserver', aliases=['tms'])
+    async def commands_tmserver(self, ctx):
+        '''
+        '''
+        pass
+
+    @commands_tmserver.command(name='Public', aliases=['pu'])
+    async def tms_public(self, ctx):
+        '''
+        '''
+        pu = self.latency_dict(ctx, 'Public')
+
 
         await ctx.send(pu)
+
 
 
     # @commands_tmserver.command(name='Aria', aliases=['ar'])
