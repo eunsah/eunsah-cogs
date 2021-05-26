@@ -333,6 +333,7 @@ class Tmserver(commands.Cog):
     async def tms_public(self, ctx):
 
         updatecheck = await self.config.TMServer()
+        updatecheck = updatecheck['Public']['update']
         # if (updatecheck - time.time()) > 60:
         #     await self.server_refresh('public')
 
