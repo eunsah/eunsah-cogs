@@ -384,27 +384,45 @@ class Tmserver(commands.Cog):
         await ctx.send(embed = self.make_embed('艾麗亞', await self.latency_dict(ctx, 'Aria')))
 
 
-    # @commands_tmserver.command(name='Freud', aliases=['fr'])
-    # async def tms_freud(self, ctx):
+    @commands_tmserver.command(name='Freud', aliases=['fr'])
+    async def tms_freud(self, ctx):
+        '''
+        '''
+        await ctx.send(embed = self.make_embed('普力特', await self.latency_dict(ctx, 'Freud')))
 
 
-    # @commands_tmserver.command(name='Ryude', aliases=['ry'])
-    # async def tms_ryude(self, ctx):
+    @commands_tmserver.command(name='Ryude', aliases=['ry'])
+    async def tms_ryude(self, ctx):
+        '''
+        '''
+        await ctx.send(embed = self.make_embed('琉德', await self.latency_dict(ctx, 'Ryude')))
 
 
-    # @commands_tmserver.command(name='Rhinne', aliases=['rh'])
-    # async def tms_rhinne(self, ctx):
+    @commands_tmserver.command(name='Rhinne', aliases=['rh'])
+    async def tms_rhinne(self, ctx):
+        '''
+        '''
+        await ctx.send(embed = self.make_embed('優伊娜', await self.latency_dict(ctx, 'Rhinne')))
 
 
-    # @commands_tmserver.command(name='Alicia', aliases=['al'])
-    # async def tms_alicia(self, ctx):
+    @commands_tmserver.command(name='Alicia', aliases=['al'])
+    async def tms_alicia(self, ctx):
+        '''
+        '''
+        await ctx.send(embed = self.make_embed('愛麗西亞', await self.latency_dict(ctx, 'Alicia')))
 
 
-    # @commands_tmserver.command(name='Orca', aliases=['or'])
-    # async def tms_orca(self, ctx):
+    @commands_tmserver.command(name='Orca', aliases=['or'])
+    async def tms_orca(self, ctx):
+        '''
+        '''
+        await ctx.send(embed = self.make_embed('殺人鯨 ', await self.latency_dict(ctx, 'Orca')))
 
 
-    # @commands_tmserver.command(name='Reboot', aliases=['rb'])
-    # async def tms_reboot(self, ctx):
+    @commands_tmserver.command(name='Reboot', aliases=['rb'])
+    async def tms_reboot(self, ctx):
+        '''
+        '''
+        await ctx.send(embed = self.make_embed('Reboot', await self.latency_dict(ctx, 'Reboot')))
 
 
