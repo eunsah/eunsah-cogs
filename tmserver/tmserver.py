@@ -298,7 +298,7 @@ class Tmserver(commands.Cog):
         s_start = time()
 
         try:
-            s.connect(host, int(port))
+            s.connect((host, int(port)))
             s.shutdown(socket.SHUT_RD)
 
         except socket.timeout:
