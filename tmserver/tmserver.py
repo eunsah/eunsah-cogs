@@ -332,15 +332,15 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='public', aliases=['pu'])
     async def tms_public(self, ctx):
 
-        updatecheck = await self.config.TMServer()['Public']['update']
-        if (updatecheck - time.time()) > 60:
-            await self.server_refresh('public')
+        updatecheck = await self.config.TMServer()
+        # if (updatecheck - time.time()) > 60:
+        #     await self.server_refresh('public')
 
-        pu = dict()
-        async with self.config.TMServer() as tms:
-            pu = tms['Public']
+        # pu = dict()
+        # async with self.config.TMServer() as tms:
+        #     pu = tms['Public']
 
-        await ctx.send(pu)
+        await ctx.send(updatecheck)
 
 
     # @commands_tmserver.command(name='Aria', aliases=['ar'])
