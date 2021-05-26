@@ -341,7 +341,7 @@ class Tmserver(commands.Cog):
         # async with self.config.TMServer() as tms:
         #     pu = tms['Public']
 
-        await ctx.send(type(updatecheck))
+        await ctx.send(updatecheck)
 
 
     # @commands_tmserver.command(name='Aria', aliases=['ar'])
