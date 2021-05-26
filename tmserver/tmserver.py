@@ -19,6 +19,7 @@ AUTH_UID = 164900704526401545
 
 class Tmserver(commands.Cog):
     '''
+        Tmserver 楓之谷伺服器狀態列
     '''
     def __init__(self, bot):
         self.bot = bot
