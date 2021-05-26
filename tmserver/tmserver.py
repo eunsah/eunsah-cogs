@@ -356,8 +356,8 @@ class Tmserver(commands.Cog):
         e = discord.Embed(
             title = '公用伺服器'
         )
-        e.add_field(name='登入', value=f"**登入1** ({pu['登入1']})   \t*登入2** ({pu['登入2']})   \t*登入3** ({pu['登入3']})   \t **登入4** ({pu['登入4']})   \t*登入5** ({pu['登入5']})   \t*登入6** ({pu['登入6']})   \t **登入測試**( {pu['登入測試']})   \t", inline=False)
-        e.add_field(name='跨服', value=f'''**跨服1** ({pu['跨服1']})   \t*跨服2** ({pu['跨服2']})   \t*跨服3** ({pu['跨服3']})   \t **跨服4** ({pu['跨服4']})   \t*跨服5** ({pu['跨服5']})   \t''', inline=False)
+        e.add_field(name='登入', value=f"**登入1** ({pu['登入1']})   \t **登入2** ({pu['登入2']})   \t **登入3** ({pu['登入3']})   \t\n **登入4** ({pu['登入4']})   \t **登入5** ({pu['登入5']})   \t **登入6** ({pu['登入6']})   \t\n **登入測試**( {pu['登入測試']})   \t ", inline=False)
+        e.add_field(name='跨服', value=f'''**跨服1** ({pu['跨服1']})   \t **跨服2** ({pu['跨服2']})   \t **跨服3** ({pu['跨服3']})   \t\n **跨服4** ({pu['跨服4']})   \t **跨服5** ({pu['跨服5']})   \t ''', inline=False)
 
         await ctx.send(embed = e)
 
