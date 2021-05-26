@@ -374,9 +374,7 @@ class Tmserver(commands.Cog):
     async def tms_aria(self, ctx):
         '''
         '''
-        ar = await self.latency_dict(ctx, 'Aria')
-        # await ctx.send(ar)
-        await ctx.send(embed = self.make_embed('艾麗亞', ar))
+        await ctx.send(embed = self.make_embed('艾麗亞', await self.latency_dict(ctx, 'Aria')))
 
 
     # @commands_tmserver.command(name='Freud', aliases=['fr'])
