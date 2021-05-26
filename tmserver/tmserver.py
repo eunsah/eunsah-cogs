@@ -318,7 +318,7 @@ class Tmserver(commands.Cog):
                     host = ip_head + port[0]
                     latency = self.latency_point(host=host, port=port[1])
                     tms[server][key] = f'{latency:2f}ms' if latency != None else 'Timeout!'
-            tms[server]['update'] = time.time()
+            tms[server]['update'] = time()
 
     def server_embed_handler(self, content: list):
         pass
@@ -334,7 +334,7 @@ class Tmserver(commands.Cog):
 
         updatecheck = await self.config.TMServer()
         updatecheck = updatecheck['Public']['update']
-        if (updatecheck - time.time()) > 60:
+        if (updatecheck - time()) > 60:
             await self.server_refresh('public')
 
         pu = dict()
