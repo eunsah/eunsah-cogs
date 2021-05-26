@@ -419,7 +419,7 @@ class Tmserver(commands.Cog):
         '''
         await ctx.send(embed = self.make_embed('Rhinne', await self.latency_dict(ctx, 'Rhinne')))
 
-    @commands_tmserver.command(name='Alicia', aliases=['al'])
+    @commands_tmserver.command(name='Alicia', aliases=['al', 'ii'])
     async def tms_alicia(self, ctx):
         '''
             愛麗西亞 伺服器
