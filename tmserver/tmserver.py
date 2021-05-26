@@ -392,49 +392,49 @@ class Tmserver(commands.Cog):
 
         await ctx.send(embed = e)
 
-    @commands_tmserver.command(name='Aria', aliases=['ar'])
+    @commands_tmserver.command(name='Aria', aliases=['ar', 'w0'])
     async def tms_aria(self, ctx):
         '''
             艾麗亞 伺服器
         '''
         await ctx.send(embed = self.make_embed('Aria', await self.latency_dict(ctx, 'Aria')))
 
-    @commands_tmserver.command(name='Freud', aliases=['fr'])
+    @commands_tmserver.command(name='Freud', aliases=['fr', 'w1'])
     async def tms_freud(self, ctx):
         '''
             普力特 伺服器
         '''
         await ctx.send(embed = self.make_embed('Freud', await self.latency_dict(ctx, 'Freud')))
 
-    @commands_tmserver.command(name='Ryude', aliases=['ry'])
+    @commands_tmserver.command(name='Ryude', aliases=['ry', 'w2'])
     async def tms_ryude(self, ctx):
         '''
             琉德 伺服器
         '''
         await ctx.send(embed = self.make_embed('Ryude', await self.latency_dict(ctx, 'Ryude')))
 
-    @commands_tmserver.command(name='Rhinne', aliases=['rh'])
+    @commands_tmserver.command(name='Rhinne', aliases=['rh', 'w3'])
     async def tms_rhinne(self, ctx):
         '''
             優伊娜 伺服器
         '''
         await ctx.send(embed = self.make_embed('Rhinne', await self.latency_dict(ctx, 'Rhinne')))
 
-    @commands_tmserver.command(name='Alicia', aliases=['al', 'ii'])
+    @commands_tmserver.command(name='Alicia', aliases=['al', 'ii', 'w4'])
     async def tms_alicia(self, ctx):
         '''
             愛麗西亞 伺服器
         '''
         await ctx.send(embed = self.make_embed('Alicia', await self.latency_dict(ctx, 'Alicia')))
 
-    @commands_tmserver.command(name='Orca', aliases=['or'])
+    @commands_tmserver.command(name='Orca', aliases=['or', 'w6'])
     async def tms_orca(self, ctx):
         '''
             殺人鯨 伺服器
         '''
         await ctx.send(embed = self.make_embed('Orca ', await self.latency_dict(ctx, 'Orca')))
 
-    @commands_tmserver.command(name='Reboot', aliases=['rb'])
+    @commands_tmserver.command(name='Reboot', aliases=['rb', 'w45'])
     async def tms_reboot(self, ctx):
         '''
             Reboot 伺服器
