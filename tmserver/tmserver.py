@@ -337,6 +337,15 @@ class Tmserver(commands.Cog):
 
     def make_embed(self, title: str, content: dict):
 
+        info = {
+            'Aria':     ['艾麗亞'   ,'0x5151A2', 'https://i.imgur.com/4Zpashj.png'],
+            'Freud':    ['普力特'   ,'0xFF8000', 'https://i.imgur.com/aoiB4fo.png'],
+            'Ryude':    ['琉德'     ,'0x004B97', 'https://i.imgur.com/xabVrds.png'],
+            'Rhinne':   ['優伊娜'   ,'0x844200', 'https://i.imgur.com/4jNiuGA.png'],
+            'Alicia':   ['愛麗西亞' ,'0x00DB00', 'https://i.imgur.com/rdzMel4.png'],
+            'Orca':     ['殺人鯨'   ,'0x00FFFF', 'https://i.imgur.com/TMqMsaN.png'],
+            'Reboot':   ['Reboot'   ,'0x336666', 'https://i.imgur.com/bQra31g.png']
+        }
         try:
             # exception for reboot
             market = content['拍賣']
@@ -344,9 +353,11 @@ class Tmserver(commands.Cog):
             market = '沒有拍賣'
 
         e = discord.Embed(
-            title = title,
-            description = f'''**副本**：{content['副本']}        **商城**：{content['商城']}        **拍賣**：{market}'''
+            title = info[title][0],
+            description = f'''**副本**：{content['副本']}        **商城**：{content['商城']}        **拍賣**：{market}''',
+            color = info[title][1]
             )
+        e.set_thumbnail(url=info[title][2])
 
         e.add_field(name='頻道列表', value=f'''**CH.01**：{content['CH.01']}\n**CH.04**：{content['CH.04']}\n**CH.07**：{content['CH.07']}\n**CH.10**：{content['CH.10']}\n**CH.13**：{content['CH.13']}\n**CH.16**：{content['CH.16']}\n**CH.19**：{content['CH.19']}\n**CH.22**：{content['CH.22']}\n**CH.25**：{content['CH.25']}\n**CH.28**：{content['CH.28']}\n''', inline=True)
         e.add_field(name='\a', value=f'''**CH.02**：{content['CH.02']}\n**CH.05**：{content['CH.05']}\n**CH.08**：{content['CH.08']}\n**CH.11**：{content['CH.11']}\n**CH.14**：{content['CH.14']}\n**CH.17**：{content['CH.17']}\n**CH.20**：{content['CH.20']}\n**CH.23**：{content['CH.23']}\n**CH.26**：{content['CH.26']}\n**CH.29**：{content['CH.29']}\n''', inline=True)
@@ -384,42 +395,42 @@ class Tmserver(commands.Cog):
         '''
             艾麗亞 伺服器
         '''
-        await ctx.send(embed = self.make_embed('艾麗亞', await self.latency_dict(ctx, 'Aria')))
+        await ctx.send(embed = self.make_embed('Aria', await self.latency_dict(ctx, 'Aria')))
 
     @commands_tmserver.command(name='Freud', aliases=['fr'])
     async def tms_freud(self, ctx):
         '''
             普力特 伺服器
         '''
-        await ctx.send(embed = self.make_embed('普力特', await self.latency_dict(ctx, 'Freud')))
+        await ctx.send(embed = self.make_embed('Freud', await self.latency_dict(ctx, 'Freud')))
 
     @commands_tmserver.command(name='Ryude', aliases=['ry'])
     async def tms_ryude(self, ctx):
         '''
             琉德 伺服器
         '''
-        await ctx.send(embed = self.make_embed('琉德', await self.latency_dict(ctx, 'Ryude')))
+        await ctx.send(embed = self.make_embed('Ryude', await self.latency_dict(ctx, 'Ryude')))
 
     @commands_tmserver.command(name='Rhinne', aliases=['rh'])
     async def tms_rhinne(self, ctx):
         '''
             優伊娜 伺服器
         '''
-        await ctx.send(embed = self.make_embed('優伊娜', await self.latency_dict(ctx, 'Rhinne')))
+        await ctx.send(embed = self.make_embed('Rhinne', await self.latency_dict(ctx, 'Rhinne')))
 
     @commands_tmserver.command(name='Alicia', aliases=['al'])
     async def tms_alicia(self, ctx):
         '''
             愛麗西亞 伺服器
         '''
-        await ctx.send(embed = self.make_embed('愛麗西亞', await self.latency_dict(ctx, 'Alicia')))
+        await ctx.send(embed = self.make_embed('Alicia', await self.latency_dict(ctx, 'Alicia')))
 
     @commands_tmserver.command(name='Orca', aliases=['or'])
     async def tms_orca(self, ctx):
         '''
             殺人鯨 伺服器
         '''
-        await ctx.send(embed = self.make_embed('殺人鯨 ', await self.latency_dict(ctx, 'Orca')))
+        await ctx.send(embed = self.make_embed('Orca ', await self.latency_dict(ctx, 'Orca')))
 
     @commands_tmserver.command(name='Reboot', aliases=['rb'])
     async def tms_reboot(self, ctx):
