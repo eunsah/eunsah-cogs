@@ -450,6 +450,11 @@ class Tmserver(commands.Cog):
             await asyncio.sleep(1)
             latency.append(self.latency_point(host=host, port=port))
 
-        latency = sum(latency)/10
+        try:
+            latency = sum(latency)/10
+            await ctx.send(f'{ctx.author.mention}該頻道的延遲為：{round(latency, 2)}ms')
+            return
+        except TypeError:
+            await ctx.send(f'{ctx.author.mention}該頻道的延遲炸了：{latency}')
 
-        await ctx.send(f'{ctx.author.mention}該頻道的延遲為：{round(latency, 2)}ms')
+
