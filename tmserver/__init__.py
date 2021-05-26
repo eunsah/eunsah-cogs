@@ -1,8 +1,8 @@
 import asyncio
 from redbot.core.bot import Red
 
-from .mapletcp import Mapletcp
+from .tmserver import Tmserver
 
 async def setup(bot):
-    this = Mapletcp(bot)
+    this = Tmserver(bot)
     bot.add_cog(this)
