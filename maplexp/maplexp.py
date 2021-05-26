@@ -778,7 +778,7 @@ class Maplexp(commands.Cog):
             users_d = await self.config.all_users()
             for usr_id in list(users_d.keys()):
                 user = await self.bot.get_or_fetch_user(usr_id)
-                id_list.append('<@'+str(user.id)+'>')
+                id_list.append(user.name)
 
             await ctx.send(f'目前使用者數量：{len(id_list)}')
             import random
@@ -792,7 +792,6 @@ class Maplexp(commands.Cog):
             del user_d[item]
 
         await ctx.tick()
-
 
 
 # end of file
