@@ -87,8 +87,9 @@ def _human_output(host: str, port: int, timeout: int, latency_point: float, seq_
         print(f'{host}: tcp seq={seq_number} port={port} timeout={timeout} failed')
 
 async def main():
-    host = 'www.google.com'
-    a = await measure_latency(host=host, runs=5)
+    host = '202.80.104.24'
+    port = '8484'
+    a = await measure_latency(host=host, port=port, runs=5)
     print (a)
 
 new = asyncio.run(main())
