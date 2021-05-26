@@ -334,7 +334,7 @@ class Tmserver(commands.Cog):
 
         updatecheck = await self.config.TMServer()
         updatecheck = updatecheck['Public']['update']
-        if (updatecheck - time()) > 60:
+        if (time() - updatecheck) > 60:
             await self.server_refresh('public')
 
         pu = dict()
