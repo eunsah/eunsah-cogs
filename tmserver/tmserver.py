@@ -452,4 +452,4 @@ class Tmserver(commands.Cog):
 
         latency = sum(latency)/10
 
-        await ctx.send(f'該頻道的延遲為：{round(latency, 2)}')
+        await ctx.send(f'{ctx.author.mention}該頻道的延遲為：{round(latency, 2)}ms')
