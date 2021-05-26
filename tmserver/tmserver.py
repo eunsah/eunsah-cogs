@@ -356,7 +356,7 @@ class Tmserver(commands.Cog):
         e = discord.Embed(
             title = info[title][0],
             description = f'''**副本**：{content['副本']}        **商城**：{content['商城']}        **拍賣**：{market}''',
-            color = hex(int_val)
+            color = int_val
             )
         e.set_thumbnail(url=info[title][2])
 
