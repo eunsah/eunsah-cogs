@@ -336,9 +336,16 @@ class Tmserver(commands.Cog):
         return pu
 
     def make_embed(self, title: str, content: dict):
+
+        try:
+            # exception for reboot
+            market = content['拍賣']
+        except KeyError:
+            market = '沒有拍賣'
+
         e = discord.Embed(
             title = title,
-            description = f'''**副本**：{content['副本']}        **商城**：{content['商城']}        **拍賣**：{content['拍賣']}'''
+            description = f'''**副本**：{content['副本']}        **商城**：{content['商城']}        **拍賣**：{market}'''
             )
 
         e.add_field(name='頻道列表', value=f'''**CH.01**：{content['CH.01']}\n**CH.04**：{content['CH.04']}\n**CH.07**：{content['CH.07']}\n**CH.10**：{content['CH.10']}\n**CH.13**：{content['CH.13']}\n**CH.16**：{content['CH.16']}\n**CH.19**：{content['CH.19']}\n**CH.22**：{content['CH.22']}\n**CH.25**：{content['CH.25']}\n**CH.28**：{content['CH.28']}\n''', inline=True)
