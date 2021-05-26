@@ -386,14 +386,12 @@ class Tmserver(commands.Cog):
         '''
         await ctx.send(embed = self.make_embed('艾麗亞', await self.latency_dict(ctx, 'Aria')))
 
-
     @commands_tmserver.command(name='Freud', aliases=['fr'])
     async def tms_freud(self, ctx):
         '''
             普力特 伺服器
         '''
         await ctx.send(embed = self.make_embed('普力特', await self.latency_dict(ctx, 'Freud')))
-
 
     @commands_tmserver.command(name='Ryude', aliases=['ry'])
     async def tms_ryude(self, ctx):
@@ -402,14 +400,12 @@ class Tmserver(commands.Cog):
         '''
         await ctx.send(embed = self.make_embed('琉德', await self.latency_dict(ctx, 'Ryude')))
 
-
     @commands_tmserver.command(name='Rhinne', aliases=['rh'])
     async def tms_rhinne(self, ctx):
         '''
             優伊娜 伺服器
         '''
         await ctx.send(embed = self.make_embed('優伊娜', await self.latency_dict(ctx, 'Rhinne')))
-
 
     @commands_tmserver.command(name='Alicia', aliases=['al'])
     async def tms_alicia(self, ctx):
@@ -418,14 +414,12 @@ class Tmserver(commands.Cog):
         '''
         await ctx.send(embed = self.make_embed('愛麗西亞', await self.latency_dict(ctx, 'Alicia')))
 
-
     @commands_tmserver.command(name='Orca', aliases=['or'])
     async def tms_orca(self, ctx):
         '''
             殺人鯨 伺服器
         '''
         await ctx.send(embed = self.make_embed('殺人鯨 ', await self.latency_dict(ctx, 'Orca')))
-
 
     @commands_tmserver.command(name='Reboot', aliases=['rb'])
     async def tms_reboot(self, ctx):
@@ -434,4 +428,29 @@ class Tmserver(commands.Cog):
         '''
         await ctx.send(embed = self.make_embed('Reboot', await self.latency_dict(ctx, 'Reboot')))
 
+    @commands_tmserver.command(name='check', aliases=['c'])
+    async def tms_check(self, ctx, server: str, channel: int):
+        '''
+            確認伺服器單一頻道，準確度較高
+            使用方式：[p]tms check <伺服器> <頻道>
+        '''
+        if server not in ['Aira', 'Freud', 'Ryude', 'Rhinne', 'Alicia', 'Orca', 'Reboot',
+                             'ar', 'fr', 'ry', 'rh', 'al', 'or', 'rb']:
+            await ctx.help()
+            return
+        if channel not in range(31):
+            await ctx.help()
+            return
 
+        port = self.server_ip[server][f'CH.{channel.zfill(2)}'].split(':')
+        host = '.'.join([ip_head, port[0]])
+        port = port[1]
+
+        latency = []
+        for i in range(10):
+            await asyncio.sleep(1)
+            latency.append(self.latency_point(host=host, port=port))
+
+        latency = sum(latency)/10
+
+        await ctx.send(f'該頻道的延遲為：{round(latency, 2)}')
