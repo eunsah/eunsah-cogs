@@ -27,21 +27,21 @@ class Tmserver(commands.Cog):
             self.server_ip = json.load(j)
         self.config = Config.get_conf(self, identifier=int(str(AUTH_UID)+'002'),  force_registration=True)
         default_global = {
-            "TMServer":{
-                "Public":{
-                    "update": 0,
-                    "登入1": 0,
-                    "登入2": 0,
-                    "登入3": 0,
-                    "登入4": 0,
-                    "登入5": 0,
-                    "登入6": 0,
-                    "登入測試": 0,
-                    "跨服1": 0,
-                    "跨服2": 0,
-                    "跨服3": 0,
-                    "跨服4": 0,
-                    "跨服5": 0},
+            'TMServer':{
+                'Public':{
+                    'update': 0,
+                    '登入1': 0,
+                    '登入2': 0,
+                    '登入3': 0,
+                    '登入4': 0,
+                    '登入5': 0,
+                    '登入6': 0,
+                    '登入測試': 0,
+                    '跨服1': 0,
+                    '跨服2': 0,
+                    '跨服3': 0,
+                    '跨服4': 0,
+                    '跨服5': 0},
                 "Aria": {
                     "update": 0,
                     "副本": 0,
