@@ -381,7 +381,8 @@ class Tmserver(commands.Cog):
 
         e = discord.Embed(title = '公用')
 
-        e.add_field(name='登入伺服器', value=f'''**登入1**：{pu['登入1']:>8s}\n**登入4**：{pu['登入4']:>8s}\n**測試**：{pu['登入測試']:>8s}''', inline=True)
+        e.add_field(name='登入伺服器', value=f'''**登入1**：{pu['登入1']:>8s}\n**登入4**：{pu['登入4']:>8s}''', inline=True)
+        # e.add_field(name='登入伺服器', value=f'''**登入1**：{pu['登入1']:>8s}\n**登入4**：{pu['登入4']:>8s}\n**測試**：{pu['登入測試']:>8s}''', inline=True)
         e.add_field(name='\a', value=f'''**登入2**：{pu['登入2']:>8s}\n**登入5**：{pu['登入5']:>8s}''', inline=True)
         e.add_field(name='\a', value=f'''**登入5**：{pu['登入3']:>8s}\n**登入5**：{pu['登入6']:>8s}''', inline=True)
 
