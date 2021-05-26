@@ -342,8 +342,8 @@ class Tmserver(commands.Cog):
             )
 
         e.add_field(name='頻道列表', value=f'''**CH.01**：{content['CH.01']}\n**CH.04**：{content['CH.04']}\n**CH.07**：{content['CH.07']}\n**CH.10**：{content['CH.10']}\n**CH.13**：{content['CH.13']}\n**CH.16**：{content['CH.16']}\n**CH.19**：{content['CH.19']}\n**CH.22**：{content['CH.22']}\n**CH.25**：{content['CH.25']}\n**CH.28**：{content['CH.28']}\n''', inline=True)
-        e.add_field(name='頻道列表', value=f'''**CH.02**：{content['CH.02']}\n**CH.05**：{content['CH.05']}\n**CH.08**：{content['CH.08']}\n**CH.11**：{content['CH.11']}\n**CH.14**：{content['CH.14']}\n**CH.17**：{content['CH.17']}\n**CH.20**：{content['CH.20']}\n**CH.23**：{content['CH.23']}\n**CH.26**：{content['CH.26']}\n**CH.29**：{content['CH.29']}\n''', inline=True)
-        e.add_field(name='頻道列表', value=f'''**CH.03**：{content['CH.03']}\n**CH.06**：{content['CH.06']}\n**CH.09**：{content['CH.09']}\n**CH.12**：{content['CH.12']}\n**CH.15**：{content['CH.15']}\n**CH.18**：{content['CH.18']}\n**CH.21**：{content['CH.21']}\n**CH.24**：{content['CH.24']}\n**CH.27**：{content['CH.27']}\n**CH.30**：{content['CH.30']}\n''', inline=True)
+        e.add_field(name='\a', value=f'''**CH.02**：{content['CH.02']}\n**CH.05**：{content['CH.05']}\n**CH.08**：{content['CH.08']}\n**CH.11**：{content['CH.11']}\n**CH.14**：{content['CH.14']}\n**CH.17**：{content['CH.17']}\n**CH.20**：{content['CH.20']}\n**CH.23**：{content['CH.23']}\n**CH.26**：{content['CH.26']}\n**CH.29**：{content['CH.29']}\n''', inline=True)
+        e.add_field(name='\a', value=f'''**CH.03**：{content['CH.03']}\n**CH.06**：{content['CH.06']}\n**CH.09**：{content['CH.09']}\n**CH.12**：{content['CH.12']}\n**CH.15**：{content['CH.15']}\n**CH.18**：{content['CH.18']}\n**CH.21**：{content['CH.21']}\n**CH.24**：{content['CH.24']}\n**CH.27**：{content['CH.27']}\n**CH.30**：{content['CH.30']}\n''', inline=True)
         return e
 
     @commands.group(name='tmserver', aliases=['tms'])
