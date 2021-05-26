@@ -335,7 +335,7 @@ class Tmserver(commands.Cog):
         updatecheck = await self.config.TMServer()
         updatecheck = updatecheck['Public']['update']
         if (time() - updatecheck) > 60:
-            await self.server_refresh('public')
+            await self.server_refresh('Public')
 
         pu = dict()
         async with self.config.TMServer() as tms:
