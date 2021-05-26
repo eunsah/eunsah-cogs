@@ -356,6 +356,8 @@ class Tmserver(commands.Cog):
     @commands.group(name='tmserver', aliases=['tms'])
     async def commands_tmserver(self, ctx):
         '''
+            各伺服器列表
+            可以使用 [p]tmserver <伺服器> 或是 [p]tms <伺服器>
         '''
         pass
 
@@ -380,6 +382,7 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='Aria', aliases=['ar'])
     async def tms_aria(self, ctx):
         '''
+            艾麗亞 伺服器
         '''
         await ctx.send(embed = self.make_embed('艾麗亞', await self.latency_dict(ctx, 'Aria')))
 
@@ -387,6 +390,7 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='Freud', aliases=['fr'])
     async def tms_freud(self, ctx):
         '''
+            普力特 伺服器
         '''
         await ctx.send(embed = self.make_embed('普力特', await self.latency_dict(ctx, 'Freud')))
 
@@ -394,6 +398,7 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='Ryude', aliases=['ry'])
     async def tms_ryude(self, ctx):
         '''
+            琉德 伺服器
         '''
         await ctx.send(embed = self.make_embed('琉德', await self.latency_dict(ctx, 'Ryude')))
 
@@ -401,6 +406,7 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='Rhinne', aliases=['rh'])
     async def tms_rhinne(self, ctx):
         '''
+            優伊娜 伺服器
         '''
         await ctx.send(embed = self.make_embed('優伊娜', await self.latency_dict(ctx, 'Rhinne')))
 
@@ -408,6 +414,7 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='Alicia', aliases=['al'])
     async def tms_alicia(self, ctx):
         '''
+            愛麗西亞 伺服器
         '''
         await ctx.send(embed = self.make_embed('愛麗西亞', await self.latency_dict(ctx, 'Alicia')))
 
@@ -415,6 +422,7 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='Orca', aliases=['or'])
     async def tms_orca(self, ctx):
         '''
+            殺人鯨 伺服器
         '''
         await ctx.send(embed = self.make_embed('殺人鯨 ', await self.latency_dict(ctx, 'Orca')))
 
@@ -422,6 +430,7 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='Reboot', aliases=['rb'])
     async def tms_reboot(self, ctx):
         '''
+            Reboot 伺服器
         '''
         await ctx.send(embed = self.make_embed('Reboot', await self.latency_dict(ctx, 'Reboot')))
 
