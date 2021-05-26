@@ -434,8 +434,7 @@ class Tmserver(commands.Cog):
             確認伺服器單一頻道，準確度較高
             使用方式：[p]tms check <伺服器> <頻道>
         '''
-        if server not in ['Aira', 'Freud', 'Ryude', 'Rhinne', 'Alicia', 'Orca', 'Reboot',
-                             'ar', 'fr', 'ry', 'rh', 'al', 'or', 'rb']:
+        if server not in ['Aira', 'Freud', 'Ryude', 'Rhinne', 'Alicia', 'Orca', 'Reboot']:
             await ctx.help()
             return
         if channel not in range(31):
