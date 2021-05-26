@@ -441,7 +441,7 @@ class Tmserver(commands.Cog):
             await ctx.help()
             return
 
-        port = self.server_ip[server][f'CH.{channel.zfill(2)}'].split(':')
+        port = self.server_ip[server][f'CH.{str(channel).zfill(2)}'].split(':')
         host = '.'.join([ip_head, port[0]])
         port = port[1]
 
