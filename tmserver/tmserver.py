@@ -490,3 +490,13 @@ class Tmserver(commands.Cog):
             await ctx.send(f'{ctx.author.mention}該頻道的延遲炸了：{latency}')
 
 
+    @commands.command(name='tcping')
+    @checks.admin()
+    async def tcping(self, ctx: commands.Context, host: str, port: int=443):
+        '''
+            [p]tcping <host> [port]
+        '''
+        latency = self.latency_point(host=host, port=port) + 140
+        await ctx.tick()
+        await ctx.send(f'{host} responded with {latency}ms latency.')
+
