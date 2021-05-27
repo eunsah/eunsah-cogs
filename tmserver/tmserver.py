@@ -7,7 +7,6 @@ from datetime import datetime
 from typing import Optional
 from redbot.core import commands, checks, Config
 from time import time
-from statistics import mean
 import socket
 
 # log = logging.getLogger('red.eunsahcogs.mapletcp')
@@ -364,21 +363,25 @@ class Tmserver(commands.Cog):
         e.add_field(name='\a',      value=f'''**CH.11**：{content['CH.11']}\n**CH.12**：{content['CH.12']}\n**CH.13**：{content['CH.13']}\n**CH.14**：{content['CH.14']}\n**CH.15**：{content['CH.15']}\n**CH.16**：{content['CH.16']}\n**CH.17**：{content['CH.17']}\n**CH.18**：{content['CH.18']}\n**CH.19**：{content['CH.19']}\n**CH.20**：{content['CH.20']}\n''', inline=True)
         e.add_field(name='\a',      value=f'''**CH.21**：{content['CH.21']}\n**CH.22**：{content['CH.22']}\n**CH.23**：{content['CH.23']}\n**CH.24**：{content['CH.24']}\n**CH.25**：{content['CH.25']}\n**CH.26**：{content['CH.26']}\n**CH.27**：{content['CH.27']}\n**CH.28**：{content['CH.28']}\n**CH.29**：{content['CH.29']}\n**CH.30**：{content['CH.30']}\n''', inline=True)
 
-        low = float(content['CH.01'][:4])
-        high = float(content['CH.01'][:4])
+        low = 10.00
+        high = 1.00
         best = 'CH.01'
         worst = 'CH.01'
-
+        
         for key in content:
             if key in ['副本', '商城', '拍賣']:
                 continue
-            if float(content[key][:4]) < low:
-                low = float(content[key][:4])
-                best = key
+                
+            try:    
+                if float(content[key][:4]) < low:
+                    low = float(content[key][:4])
+                    best = key
 
-            if float(content[key][:4]) > high:
-                high = float(content[key][:4])
-                worst = key
+                if float(content[key][:4]) > high:
+                    high = float(content[key][:4])
+                    worst = key
+            except ValueError:
+                pass
 
         e.set_footer(text=f'''建議_{best}：{low} 避開_{worst}：{high}''')
 
@@ -440,7 +443,7 @@ class Tmserver(commands.Cog):
         '''
         await ctx.send(embed = self.make_embed('Rhinne', await self.latency_dict(ctx, 'Rhinne')))
 
-    @commands_tmserver.command(name='Alicia', aliases=['alicia', 'ii', 'w4'])
+    @commands_tmserver.command(name='Alicia', aliases=['alicia', 'al', 'ii', 'w4'])
     async def tms_alicia(self, ctx):
         '''
             愛麗西亞 伺服器
@@ -452,7 +455,7 @@ class Tmserver(commands.Cog):
         '''
             殺人鯨 伺服器
         '''
-        await ctx.send(embed = self.make_embed('Orca ', await self.latency_dict(ctx, 'Orca')))
+        await ctx.send(embed = self.make_embed('Orca', await self.latency_dict(ctx, 'Orca')))
 
     @commands_tmserver.command(name='Reboot', aliases=['reboot', 'rb', 'w45'])
     async def tms_reboot(self, ctx):
@@ -480,9 +483,13 @@ class Tmserver(commands.Cog):
         port = port[1]
 
         latency = []
+        temp_reply = await ctx.send(f'正在處理中...')
         for i in range(10):
-            await asyncio.sleep(1)
             latency.append(self.latency_point(host=host, port=port))
+            await temp_reply.edit(content=f'正在處理中...({i}/10)')
+            await asyncio.sleep(1)
+            
+        await temp_reply.delete()
 
         try:
             latency = sum(latency)/10

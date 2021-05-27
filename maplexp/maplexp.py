@@ -778,11 +778,11 @@ class Maplexp(commands.Cog):
             users_d = await self.config.all_users()
             for usr_id in list(users_d.keys()):
                 user = await self.bot.get_or_fetch_user(usr_id)
-                id_list.append(user.name)
+                id_list.append(user)
 
             await ctx.send(f'目前使用者數量：{len(id_list)}')
             import random
-            await ctx.send(f'使用者列表：{id_list}')
+            await ctx.send(f'使用者列表：{[id.name for id in id_list]}')
             await ctx.send(f'隨機抽：{random.choice(id_list)}')
 
     @commands.command(name='fuckmylife', hidden=True)
