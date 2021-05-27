@@ -378,7 +378,7 @@ class Tmserver(commands.Cog):
                 high = float(content[key][:4])
                 worst = key
 
-        e.set_footer(text=f'''最佳頻道_{best}：{low} 最差頻道_{worst}：{high}''')
+        e.set_footer(text=f'''建議_{best}：{low} 避開_{worst}：{high}''')
 
         return e
 
