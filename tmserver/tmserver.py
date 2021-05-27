@@ -514,5 +514,8 @@ class Tmserver(commands.Cog):
     @checks.is_owner()
     async def msginfo(self, ctx: commands.Context, msg: discord.Message):
         await ctx.send(type(msg))
-        await ctx.send(msg.__dir__())
+        await ctx.send(msg.clean_content)
+        await ctx.send(msg.created_at)
+        await ctx.send(msg.system_content)
+        await ctx.send(msg.content)
 
