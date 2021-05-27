@@ -364,18 +364,18 @@ class Tmserver(commands.Cog):
         e.add_field(name='\a',      value=f'''**CH.11**：{content['CH.11']}\n**CH.12**：{content['CH.12']}\n**CH.13**：{content['CH.13']}\n**CH.14**：{content['CH.14']}\n**CH.15**：{content['CH.15']}\n**CH.16**：{content['CH.16']}\n**CH.17**：{content['CH.17']}\n**CH.18**：{content['CH.18']}\n**CH.19**：{content['CH.19']}\n**CH.20**：{content['CH.20']}\n''', inline=True)
         e.add_field(name='\a',      value=f'''**CH.21**：{content['CH.21']}\n**CH.22**：{content['CH.22']}\n**CH.23**：{content['CH.23']}\n**CH.24**：{content['CH.24']}\n**CH.25**：{content['CH.25']}\n**CH.26**：{content['CH.26']}\n**CH.27**：{content['CH.27']}\n**CH.28**：{content['CH.28']}\n**CH.29**：{content['CH.29']}\n**CH.30**：{content['CH.30']}\n''', inline=True)
 
-        low = content['CH.01']
-        high = content['CH.01']
-        best = ''
-        worst = ''
+        low = float(content['CH.01'][:3])
+        high = float(content['CH.01'][:3])
+        best = 'CH.01'
+        worst = 'CH.01'
 
         for key in content:
-            if content[key]<low:
-                low = content[key]
+            if float(content[key][:3]) < low:
+                low = float(content[key][:3])
                 best = key
 
-            if content[key]>high:
-                high = content[key]
+            if float(content[key][:3]) > high:
+                high = float(content[key][:3])
                 worst = key
 
         e.set_footer(text=f'''最佳頻道_{best}：{high} 最差頻道_{worst}：{low}''')
