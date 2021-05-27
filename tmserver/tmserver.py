@@ -376,6 +376,7 @@ class Tmserver(commands.Cog):
     @commands_tmserver.command(name='Public', aliases=['public', 'pu'])
     async def tms_public(self, ctx):
         '''
+            公用伺服器
         '''
         pu = await self.latency_dict(ctx, 'Public')
 
