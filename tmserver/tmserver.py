@@ -502,3 +502,10 @@ class Tmserver(commands.Cog):
         await ctx.tick()
         await ctx.send(f'{host} responded with {latency:.2}ms latency.')
 
+
+    @commands.commnd(name='msginfo')
+    @checks.is_owner()
+    async def msginfo(self, ctx: commands.Context, msg: discord.Message):
+        await ctx.send(type(msg))
+        await ctx.send(msg.__dir__())
+
