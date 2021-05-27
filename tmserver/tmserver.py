@@ -502,3 +502,7 @@ class Tmserver(commands.Cog):
         await ctx.tick()
         await ctx.send(f'{host} responded with {latency:.2}ms latency.')
 
+
+    @commands.command(name='奶喵')
+    async def meow(self, ctx):
+        await ctx.send('奶喵好胖 奶喵養')
