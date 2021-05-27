@@ -370,6 +370,8 @@ class Tmserver(commands.Cog):
         worst = 'CH.01'
 
         for key in content:
+            if key in ['副本', '商城', '拍賣']:
+                continue
             if float(content[key][:4]) < low:
                 low = float(content[key][:4])
                 best = key
