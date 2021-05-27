@@ -447,11 +447,12 @@ class Tmserver(commands.Cog):
             確認伺服器單一頻道，準確度較高
             使用方式：[p]tms check <伺服器> <頻道>
         '''
+        server = server.title()
         if server not in ['Aria', 'Freud', 'Ryude', 'Rhinne', 'Alicia', 'Orca', 'Reboot']:
-            await ctx.help()
+            await ctx.send_help()
             return
         if channel not in range(31):
-            await ctx.help()
+            await ctx.send_help()
             return
 
         port = self.server_ip[server][f'CH.{str(channel).zfill(2)}'].split(':')
