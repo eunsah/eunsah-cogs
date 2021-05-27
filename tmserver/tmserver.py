@@ -367,12 +367,12 @@ class Tmserver(commands.Cog):
         high = 1.00
         best = 'CH.01'
         worst = 'CH.01'
-        
+
         for key in content:
             if key in ['副本', '商城', '拍賣']:
                 continue
-                
-            try:    
+
+            try:
                 if float(content[key][:4]) < low:
                     low = float(content[key][:4])
                     best = key
@@ -488,7 +488,7 @@ class Tmserver(commands.Cog):
             latency.append(self.latency_point(host=host, port=port))
             await temp_reply.edit(content=f'正在處理中...({i}/10)')
             await asyncio.sleep(1)
-            
+
         await temp_reply.delete()
 
         try:
@@ -510,7 +510,7 @@ class Tmserver(commands.Cog):
         await ctx.send(f'{host} responded with {latency:.2}ms latency.')
 
 
-    @commands.commnd(name='msginfo')
+    @commands.command(name='msginfo')
     @checks.is_owner()
     async def msginfo(self, ctx: commands.Context, msg: discord.Message):
         await ctx.send(type(msg))
