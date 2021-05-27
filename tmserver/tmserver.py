@@ -501,3 +501,4 @@ class Tmserver(commands.Cog):
         latency = self.latency_point(host=host, port=port) + 140
         await ctx.tick()
         await ctx.send(f'{host} responded with {latency:.2}ms latency.')
+
