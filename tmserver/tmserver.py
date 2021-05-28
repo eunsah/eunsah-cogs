@@ -515,7 +515,7 @@ class Tmserver(commands.Cog):
     async def msginfo(self, ctx: commands.Context, msg: discord.Message):
         await ctx.send(type(msg))
         await ctx.send(msg.created_at)
-        await ctx.send(msg.attachments)
+        await ctx.send(msg.attachments.url)
 
 
 

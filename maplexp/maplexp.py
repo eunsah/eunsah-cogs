@@ -658,6 +658,12 @@ class Maplexp(commands.Cog):
         if char is None:
             char = await self.config.user(ctx.author).ptr_d()
 
+        if link is None:
+            try:
+                link = ctx.message.attachments.url
+            except:
+                link = None
+
         async with self.config.user(ctx.author).usr_d() as udc:
             udc[char]['pfp'] = link
 
