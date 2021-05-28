@@ -456,7 +456,7 @@ class Tmserver(commands.Cog):
         '''
             殺人鯨 伺服器
         '''
-        await ctx.send(embed = self.make_embed('Orca ', await self.latency_dict(ctx, 'Orca')))
+        await ctx.send(embed = self.make_embed('Orca', await self.latency_dict(ctx, 'Orca')))
 
     @commands_tmserver.command(name='Reboot', aliases=['reboot', 'rb', 'w45'])
     async def tms_reboot(self, ctx):
