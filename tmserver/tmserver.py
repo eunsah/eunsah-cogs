@@ -7,7 +7,6 @@ from datetime import datetime
 from typing import Optional
 from redbot.core import commands, checks, Config
 from time import time
-from statistics import mean
 import socket
 
 # log = logging.getLogger('red.eunsahcogs.mapletcp')
