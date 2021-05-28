@@ -486,7 +486,7 @@ class Tmserver(commands.Cog):
         temp_reply = await ctx.send(f'正在處理中...')
         for i in range(10):
             latency.append(self.latency_point(host=host, port=port))
-            await temp_reply.edit(f'正在處理中...({i}/10)')
+            await temp_reply.edit(content=f'正在處理中...({i}/10)')
             await asyncio.sleep(1)
             
         await temp_reply.delete()
