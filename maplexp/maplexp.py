@@ -660,7 +660,7 @@ class Maplexp(commands.Cog):
 
         if link is None:
             try:
-                link = ctx.message.attachments.url
+                link = ctx.message.attachments[0].url
             except:
                 link = None
 
