@@ -368,17 +368,21 @@ class Tmserver(commands.Cog):
         high = float(content['CH.01'][:4])
         best = 'CH.01'
         worst = 'CH.01'
-
+        
         for key in content:
             if key in ['副本', '商城', '拍賣']:
                 continue
-            if float(content[key][:4]) < low:
-                low = float(content[key][:4])
-                best = key
+                
+            try:    
+                if float(content[key][:4]) < low:
+                    low = float(content[key][:4])
+                    best = key
 
-            if float(content[key][:4]) > high:
-                high = float(content[key][:4])
-                worst = key
+                if float(content[key][:4]) > high:
+                    high = float(content[key][:4])
+                    worst = key
+            except ValueError:
+                pass
 
         e.set_footer(text=f'''建議_{best}：{low} 避開_{worst}：{high}''')
 
