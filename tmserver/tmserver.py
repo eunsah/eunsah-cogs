@@ -505,7 +505,7 @@ class Tmserver(commands.Cog):
         '''
             [p]tcping <host> [port]
         '''
-        latency = self.latency_point(host=host, port=port)
+        latency = self.latency_point(host=host, port=port, offset=True)
         await ctx.tick()
         if latency is None:
             await ctx.send(f'{host} connection timed out!')
