@@ -510,7 +510,7 @@ class Tmserver(commands.Cog):
         if latency is None:
             await ctx.send(f'{host} connection timed out!')
             return
-        await ctx.send(f'{host} responded with {latency:.2}ms latency.')
+        await ctx.send(f'{host} responded with {latency:.6f}ms latency.')
 
 
     @commands.command(name='msginfo')
