@@ -824,6 +824,7 @@ class Maplexp(commands.Cog):
         if user is not None:
             data = await self.config.user(user)()
             await ctx.send(data)
+            return
         else:
             users_d = await self.config.all_users()
             for usr_id in list(users_d.keys()):
@@ -833,7 +834,46 @@ class Maplexp(commands.Cog):
             await ctx.send(f'目前使用者數量：{len(id_list)}')
             import random
             await ctx.send(f'使用者列表：{[id.name for id in id_list]}')
-            await ctx.send(f'隨機抽：{random.choice(id_list)}')
+            result = await ctx.send(f'隨機抽：{random.choice(id_list)}')
+
+            for i in range(10):
+                await temp_reply.edit(content=f'正在處理中...({i}/10)')
+                await asyncio.sleep(1)
+
+    @commands.command(name='xpraffle')
+    @checks.admin()
+    async def maple_raffle(
+        self,
+        ctx: commands.Context,
+        winner: Optional[int]
+        ):
+        '''
+            xp 抽獎系統
+        '''
+        usr_l = []
+        users_d = await self.config.all_users()
+        for usr_id in list(users_d.keys()):
+            user = await self.bot.get_or_fetch_user(usr_id)
+            usr_l.append(user)
+
+        import random
+
+        if winner is None:
+            winner = 1
+
+        result = await ctx.send(f'隨機抽：{random.choice(usr_l)}')
+        win_res = ''
+
+        rand = random.randint(20, 60) # n/rand sleep time
+        for n in range(rand):
+            choice = random.choices(usr_l, k = winner)
+            head = '隨機抽：'
+            win_res = ', '.join(choice)
+            await result.edit(content=head+win_res)
+            await asyncio.sleep(int(n/rand))
+
+        await result.edit(content='恭喜中獎!\n'+win_res)
+
 
     @commands.command(name='fuckmylife', hidden=True)
     @checks.is_owner()
