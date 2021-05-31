@@ -836,10 +836,6 @@ class Maplexp(commands.Cog):
             await ctx.send(f'使用者列表：{[id.name for id in id_list]}')
             result = await ctx.send(f'隨機抽：{random.choice(id_list)}')
 
-            for i in range(10):
-                await temp_reply.edit(content=f'正在處理中...({i}/10)')
-                await asyncio.sleep(1)
-
     @commands.command(name='xpraffle')
     @checks.admin()
     async def maple_raffle(
@@ -854,14 +850,14 @@ class Maplexp(commands.Cog):
         users_d = await self.config.all_users()
         for usr_id in list(users_d.keys()):
             user = await self.bot.get_or_fetch_user(usr_id)
-            usr_l.append(user)
+            usr_l.append(user.__str__())
 
         import random
 
         if winner is None:
             winner = 1
 
-        result = await ctx.send(f'隨機抽：{random.choice(usr_l)}')
+        result = await ctx.send(f'開始隨機抽獎...')
         win_res = ''
 
         rand = random.randint(20, 60) # n/rand sleep time
