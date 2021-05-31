@@ -500,7 +500,7 @@ class Tmserver(commands.Cog):
 
 
     @commands.command(name='tcping')
-    @checks.admin()
+    @checks.admin_or_permissions(administrator=True)
     async def tcping(self, ctx: commands.Context, host: str, port: int=443):
         '''
             [p]tcping <host> [port]
