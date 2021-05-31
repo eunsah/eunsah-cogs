@@ -860,7 +860,7 @@ class Maplexp(commands.Cog):
         result = await ctx.send(f'開始隨機抽獎...')
         win_res = ''
 
-        rand = random.randint(20, 60) # n/rand sleep time
+        rand = random.randint(5, 30) # n/rand sleep time
         for n in range(rand):
             choice = random.choices(usr_l, k = winner)
             head = '隨機抽：'
