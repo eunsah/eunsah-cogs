@@ -225,12 +225,16 @@ class Maplexp(commands.Cog):
         net = await self._levelexp_net(ctx, level, exp)
         aim = False
         if net is False:
+            await ctx.send('經驗錯誤，請聯繫作者')
             return
 
         async with self.config.user(ctx.author).usr_d() as udc:
             # update dict net_exp, avg_exp, date
             try:
                 old_net = udc[char]['net_exp']
+                if old_net > net:
+                    await ctx.send('欸，你不可以降...\n如果需要重置等級，麻煩使用 >m reset char [角色名稱]')
+                    return
                 # exp_growth = net - udc[char]['net_exp']
                 udc[char]['net_exp'] = net # update net
                 old_date = udc[char]['date']
@@ -677,11 +681,11 @@ class Maplexp(commands.Cog):
         pass
 
     @maple_reset.command(name='average')
-    async def maple_set_reset(
+    async def maple_set_reset_avg(
         self,
         ctx: commands.Context,
-        char: str = None,
-        user: discord.User = None
+        char: Optional[str],
+        user: Optional[discord.User]
         ):
         '''
             重置日平均
@@ -715,7 +719,7 @@ class Maplexp(commands.Cog):
 
     @commands.bot_has_permissions(add_reactions=True)
     @maple_reset.command(name='mydata')
-    async def maple_set_clear_my_userdata(self, ctx):
+    async def maple_set_reset_mydata(self, ctx):
         '''
             移除你的使用者資料
             使用方式：[p]maple reset mydata
@@ -739,9 +743,49 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
+    @maple_reset.command(name='char')
+    async def maple_set_reset_char(
+        self,
+        ctx: commands.Context,
+        char: Optional[str],
+        user: Optional[discord.User]
+        ):
+        '''
+            重置角色經驗等級進度
+            [p]maple reset char [角色名稱]
+        '''
+        user = await self._user_check(ctx, user)
+        if user is False:
+            return
+        if char is None:
+            char = await self.config.user(user).ptr_d()
+
+        verify = await ctx.send(f'確定要去重置角色\'{char}\'嗎?')
+        start_adding_reactions(verify, ReactionPredicate.YES_OR_NO_EMOJIS)
+        pred = ReactionPredicate.yes_or_no(verify, ctx.author)
+        try:
+            await ctx.bot.wait_for('reaction_add', check=pred, timeout=60)
+        except asyncio.TimeoutError:
+            await self._clear_react(verify)
+            return
+        if not pred.result:
+            await verify.delete()
+            await self._remove_after_seconds(ctx.message, 3)
+            return
+        await verify.delete()
+
+        async with self.config.user(user).usr_d() as ud:
+            ud[char]['net_exp'] = 0
+            ud[char]['aim'] = False
+            ud[char]['pfp'] = False
+            ud[char]['avg_exp'] = 0.0
+            ud[char]['date'] = self.base_time
+        await ctx.tick()
+        await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
+
     @commands.bot_has_permissions(add_reactions=True)
     @maple_reset.command(name='alluserdata', hidden=True)
-    async def maple_set_clear_all_userdata(self, ctx):
+    async def maple_set_reset_alluserdata(self, ctx):
         '''
             移除所有使用者資料 (擁有者限定)
             使用方式：[p]maple reset alluserdata
