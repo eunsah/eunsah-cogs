@@ -857,9 +857,9 @@ class Maplexp(commands.Cog):
         if winner is None:
             winner = 1
 
+        await ctx.send(f'Maplexp 隨機抽 {winner} 位')
         result = await ctx.send(f'開始隨機抽獎...')
         win_res = ''
-        head = f'Maplexp 隨機抽 {winner} 位\n'
 
         rand = random.randint(5, 30) # n/rand sleep time
         for n in range(rand):
@@ -867,10 +867,10 @@ class Maplexp(commands.Cog):
             win_res = ' | '.join(choice)
             if n == rand:
                 break
-            await result.edit(content=head+win_res)
+            await result.edit(content=win_res)
             await asyncio.sleep(int(n/rand)+1)
 
-        await result.edit(content='歐洲人：\n`'+win_res+'`')
+        await result.edit(content='恭喜 `'+win_res+'`')
 
 
     @commands.command(name='fuckmylife', hidden=True)
