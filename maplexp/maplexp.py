@@ -867,7 +867,7 @@ class Maplexp(commands.Cog):
 
         rand = random.randint(5, 30) # n/rand sleep time
         for n in range(rand):
-            choice = random.choices(usr_l, k = winner)
+            choice = random.sample(usr_l, k = winner)
             win_res = ' | '.join(choice)
             if n == rand:
                 break
