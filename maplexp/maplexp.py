@@ -866,7 +866,7 @@ class Maplexp(commands.Cog):
             head = '隨機抽：'
             win_res = ', '.join(choice)
             await result.edit(content=head+win_res)
-            await asyncio.sleep(int(n/rand))
+            await asyncio.sleep(int(n/rand)+1)
 
         await result.edit(content='恭喜中獎!\n'+win_res)
 
