@@ -859,11 +859,11 @@ class Maplexp(commands.Cog):
 
         result = await ctx.send(f'開始隨機抽獎...')
         win_res = ''
+        head = f'Maplexp 隨機抽 {winner} 位\n'
 
         rand = random.randint(5, 30) # n/rand sleep time
         for n in range(rand):
             choice = random.choices(usr_l, k = winner)
-            head = f'Maplexp 隨機抽 {winner}位\n'
             win_res = ' | '.join(choice)
             if n == rand:
                 break
