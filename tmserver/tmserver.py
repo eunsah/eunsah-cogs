@@ -505,9 +505,9 @@ class Tmserver(commands.Cog):
         '''
             [p]tcping <host> [port]
         '''
-        latency = self.latency_point(host=host, port=port) + 140
+        latency = self.latency_point(host=host, port=port)
         await ctx.tick()
-        await ctx.send(f'{host} responded with {latency:.2}ms latency.')
+        await ctx.send(f'{host} responded with {latency+140:.2}ms latency.')
 
 
     @commands.command(name='msginfo')
