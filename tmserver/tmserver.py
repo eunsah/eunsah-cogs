@@ -288,7 +288,7 @@ class Tmserver(commands.Cog):
                 }}}
         self.config.register_global(**default_global)
 
-    def latency_point(self, host: str, port: str, timeout: float = 5) -> Optional[float]:
+    def latency_point(self, host: str, port: str, timeout: float = 5, offset: bool = False) -> Optional[float]:
         '''
             credit to : https://github.com/dgzlopes/tcp-latency
         '''
@@ -307,7 +307,7 @@ class Tmserver(commands.Cog):
 
         s_runtime = (time() - s_start) * 1000
 
-        return round(float(s_runtime)-140, 2)
+        return round(float(s_runtime)-140, 2) if offset is False else round(float(s_runtime), 2)
 
     async def server_refresh(self, server: str) -> None:
         async with self.config.TMServer() as tms:
@@ -507,7 +507,10 @@ class Tmserver(commands.Cog):
         '''
         latency = self.latency_point(host=host, port=port)
         await ctx.tick()
-        await ctx.send(f'{host} responded with {latency+140:.2}ms latency.')
+        if latency is None:
+            await ctx.send(f'{host} connection timed out!')
+            return
+        await ctx.send(f'{host} responded with {latency:.2}ms latency.')
 
 
     @commands.command(name='msginfo')
