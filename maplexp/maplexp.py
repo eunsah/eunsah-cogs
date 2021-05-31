@@ -233,7 +233,7 @@ class Maplexp(commands.Cog):
             try:
                 old_net = udc[char]['net_exp']
                 if old_net > net:
-                    await ctx.send('欸，你不可以降...\n如果需要重置等級，麻煩使用 >m reset char [角色名稱]')
+                    await ctx.send('欸，你不可以降...\n如需重置等級，可以用`>m reset char [角色名稱]`')
                     return
                 # exp_growth = net - udc[char]['net_exp']
                 udc[char]['net_exp'] = net # update net
