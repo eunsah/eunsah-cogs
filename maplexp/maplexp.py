@@ -870,7 +870,7 @@ class Maplexp(commands.Cog):
             await result.edit(content=head+win_res)
             await asyncio.sleep(int(n/rand)+1)
 
-        await result.edit(content='恭喜中獎!\n'+win_res)
+        await result.edit(content='歐洲人：\n`'+win_res+'`')
 
 
     @commands.command(name='fuckmylife', hidden=True)
