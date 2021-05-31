@@ -863,7 +863,7 @@ class Maplexp(commands.Cog):
         rand = random.randint(5, 30) # n/rand sleep time
         for n in range(rand):
             choice = random.choices(usr_l, k = winner)
-            head = '> 隨機抽：\n'
+            head = 'Maplexp隨機抽：\n'
             win_res = ' | '.join(choice)
             await result.edit(content=head+win_res)
             await asyncio.sleep(int(n/rand)+1)
