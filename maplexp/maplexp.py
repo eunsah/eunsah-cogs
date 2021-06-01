@@ -852,14 +852,16 @@ class Maplexp(commands.Cog):
             user = await self.bot.get_or_fetch_user(usr_id)
             usr_l.append(user.__str__())
 
-        if winner > len(usr_l):
-            await ctx.send(f'抽獎人數超過總人數 {len(usr_l)}... ')
-            return
+        
 
         import random
 
         if winner is None:
             winner = 1
+            
+        if winner > len(usr_l):
+            await ctx.send(f'抽獎人數超過總人數 {len(usr_l)}... ')
+            return
 
         await ctx.send(f'Maplexp 隨機抽 {winner} 位')
         result = await ctx.send(f'開始隨機抽獎...')
