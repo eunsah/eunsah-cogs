@@ -837,7 +837,7 @@ class Maplexp(commands.Cog):
             result = await ctx.send(f'隨機抽：{random.choice(id_list)}')
 
     @commands.command(name='xpraffle')
-    #@checks.admin_or_permissions(administrator=True)
+    @checks.admin_or_permissions(administrator=True)
     async def maple_raffle(
         self,
         ctx: commands.Context,
