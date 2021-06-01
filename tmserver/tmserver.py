@@ -364,7 +364,7 @@ class Tmserver(commands.Cog):
         e.add_field(name='\a',      value=f'''**CH.21**：{content['CH.21']}\n**CH.22**：{content['CH.22']}\n**CH.23**：{content['CH.23']}\n**CH.24**：{content['CH.24']}\n**CH.25**：{content['CH.25']}\n**CH.26**：{content['CH.26']}\n**CH.27**：{content['CH.27']}\n**CH.28**：{content['CH.28']}\n**CH.29**：{content['CH.29']}\n**CH.30**：{content['CH.30']}\n''', inline=True)
 
         low = 10.00
-        high = 1.00
+        high = -10.00
         best = 'CH.01'
         worst = 'CH.01'
 
@@ -383,6 +383,8 @@ class Tmserver(commands.Cog):
             except ValueError:
                 pass
 
+        if low == 10.00: low = 'timeout'
+        if high == -10.00: high = 'timeout'
         e.set_footer(text=f'''建議_{best}：{low} 避開_{worst}：{high}''')
 
         return e
