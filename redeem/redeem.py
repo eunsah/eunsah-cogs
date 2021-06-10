@@ -43,8 +43,8 @@ class Redeem(commands.Cog):
 
         codes = code.split(' ')
 
-        content_0 = f'{ctx.author} 提供了{title}序號\n剩餘'
-        content_1 = f'組，反應{self.lock_emoji}來領取'
+        content_0 = f'{ctx.author} 提供了{title}序號\n剩餘 '
+        content_1 = f' 組，反應{self.lock_emoji}來領取'
         content = content_0 + "{}" + content_1
 
         message = await ctx.send(content.format(codes.__len__()))
@@ -52,7 +52,7 @@ class Redeem(commands.Cog):
 
         async with self.config.redeem() as redeem:
             redeem[message.id] = {
-                'msg' : message,
+                'msg' : [message.id, ctx.channel.id],
                 'content' : content,
                 'codes' : codes,
                 'time' : time(),
