@@ -36,7 +36,7 @@ class Redeem(commands.Cog):
     @commands.guild_only()
     @commands.command(name='redeem')
     @commands.bot_has_permissions(add_reactions=True, manage_messages=True)
-    async def redeem(self, ctx: commands.Context, title: str, code: list):
+    async def redeem(self, ctx: commands.Context, title: str, *code: str):
         '''
         '''
         # await ctx.message.delete()
