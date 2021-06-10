@@ -66,7 +66,8 @@ class Redeem(commands.Cog):
         if reaction.emoji == self.lock_emoji and str(msg_id) in msg_list and user.id != self.bot.user.id:
             await user.send('waited')
             async with self.config.redeem() as redeem:
-                leech = redeem[msg_id]['leech']
+                leech = redeem[msg_id]
+                await user.send(leech)
                 if str(user.id) in leech:
                     await user.send('waited0')
                     leech[str(user.id)] += 1
