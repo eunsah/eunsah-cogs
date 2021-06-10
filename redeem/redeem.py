@@ -85,3 +85,10 @@ class Redeem(commands.Cog):
         if msg_id in msg_list and ctx.author.id != self.bot.user.id:
             async with self.config.redeem() as redeem:
                 await ctx.send(content=redeem[msg_id]['leech'])
+
+
+    @commands.command(name = 'devredeem')
+    @checks.is_owner()
+    async def devredeem(self, ctx: commands.Context):
+        async with self.config.redeem() as redeem:
+            await ctx.send(redeem)
