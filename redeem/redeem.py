@@ -60,9 +60,9 @@ class Redeem(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        await user.send('received reaction add')
-        msg_id =  reaction.message.id
+        msg_id =  reaction.message.idf
         msg_list = list(await self.config.redeem().keys())
+        await user.send(f'id {msg_id} | list {msg_list}')
         if reaction.emoji == self.lock_emoji and msg_id in msg_list and user.id != self.bot.user.id:
             async with self.config.redeem() as redeem:
                 redeem[msg_id]['leech'][user.id] += 1
