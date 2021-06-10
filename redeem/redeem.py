@@ -67,6 +67,7 @@ class Redeem(commands.Cog):
             await user.send('waited')
             async with self.config.redeem() as redeem:
                 redeem[msg_id]['leech'][user.id] += 1
+                await user.send('leeched')
                 rc = redeem[msg_id]['codes'].pop()
                 ch = self.bot.get_channel(redeem[msg_id]['msg'][0])
                 msg = await ch.fetch_message(redeem[msg_id]['msg'][1])
@@ -77,7 +78,8 @@ class Redeem(commands.Cog):
     @checks.admin_or_permissions()
     async def redeemed(self, ctx: commands.Context, message: discord.Message):
         msg_id =  message.id
-        msg_list = list(await self.config.redeem().keys())
+        msg_list = await self.config.redeem()
+        msg_list = list(msg_list.keys())
         if msg_id in msg_list and ctx.author.id != self.bot.user.id:
             async with self.config.redeem() as redeem:
                 await ctx.send(content=redeem[msg_id]['leech'])
