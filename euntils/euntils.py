@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 import discord
 from redbot.core import commands, checks
@@ -21,7 +21,9 @@ class Euntils(commands.Cog):
             force_registration=True,
         )
 
+
+        self.config.register_global(**default_global)
+
     async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
-        # TODO: Replace this with the proper end user data removal handling.
-        # i don't think i will
         super().red_delete_data_for_user(requester=requester, user_id=user_id)
+
