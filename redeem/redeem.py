@@ -70,7 +70,7 @@ class Redeem(commands.Cog):
         msg_id =  str(reaction.message.id)
         msg_list = await self.config.redeem()
         msg_list = list(msg_list.keys())
-        remain = int()
+        remain = 0
         if reaction.emoji == self.lock_emoji and msg_id in msg_list and user.id != self.bot.user.id:
             async with self.config.redeem() as redeem:
                 leech = redeem[msg_id]['leech']
@@ -81,7 +81,8 @@ class Redeem(commands.Cog):
                 rc = redeem[msg_id]['codes'].pop()
                 ch = self.bot.get_channel(redeem[msg_id]['msg'][0])
                 msg = await ch.fetch_message(redeem[msg_id]['msg'][1])
-                remain = redeem[msg_id]['codes'].__len__()
+                codes = redeem[msg_id]['codes']
+                remain = len(codes)
                 await user.send(f'獲得了{redeem[msg_id]["title"]}序號：{rc}')
                 if remain != 0:
                     await msg.edit(content=f'{redeem[msg_id]["author"]}提供{redeem[msg_id]["title"]}序號 {redeem[msg_id]["count"]} 組\n目前剩餘 {remain} 組，反應{self.lock_emoji}來領取')
