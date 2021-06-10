@@ -52,7 +52,7 @@ class Redeem(commands.Cog):
 
         async with self.config.redeem() as redeem:
             redeem[message.id] = {
-                'msg' : [message.id, ctx.channel.id],
+                'msg' : [ctx.channel.id, message.id],
                 'content' : content,
                 'codes' : codes,
                 'time' : time(),
@@ -67,7 +67,9 @@ class Redeem(commands.Cog):
             async with self.config.redeem() as redeem:
                 redeem[msg_id]['leech'][user.id] += 1
                 rc = redeem[msg_id]['codes'].pop()
-                await redeem[msg_id]['msg'].edit(content=redeem[msg_id]['content'].format(redeem[msg_id]['codes'].__len__()))
+                ch = self.bot.get_channel(redeem[msg_id]['msg'][0])
+                msg = await ch.fetch_message(redeem[msg_id]['msg'][1])
+                await msg.edit(content=redeem[msg_id]['content'].format(redeem[msg_id]['codes'].__len__()))
                 await user.send(f'序號：{rc}')
 
     @commands.command(name='redeemed')
