@@ -24,7 +24,7 @@ class Redeem(commands.Cog):
             force_registration=True,
         )
         default_global = {
-            "redeem" : {}
+            'redeem' : {}
         }
 
         self.config.register_global(**default_global)
@@ -86,4 +86,5 @@ class Redeem(commands.Cog):
         msg_list = list(msg_list.keys())
         if msg_id in msg_list and ctx.author.id != self.bot.user.id:
             async with self.config.redeem() as redeem:
+                await ctx.send('hi?')
                 await ctx.send(content=redeem[msg_id]['leech'])
