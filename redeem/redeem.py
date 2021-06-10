@@ -60,10 +60,10 @@ class Redeem(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        msg_id =  reaction.message.id
+        msg_id =  str(reaction.message.id)
         msg_list = await self.config.redeem()
         msg_list = list(msg_list.keys())
-        if reaction.emoji == self.lock_emoji and str(msg_id) in msg_list and user.id != self.bot.user.id:
+        if reaction.emoji == self.lock_emoji and msg_id in msg_list and user.id != self.bot.user.id:
             await user.send('waited')
             async with self.config.redeem() as redeem:
                 leech = redeem[msg_id]
@@ -84,9 +84,9 @@ class Redeem(commands.Cog):
     @commands.command(name='redeemed')
     @checks.admin_or_permissions()
     async def redeemed(self, ctx: commands.Context, message: discord.Message):
-        msg_id =  message.id
+        msg_id =  str(message.id)
         msg_list = await self.config.redeem()
         msg_list = list(msg_list.keys())
-        if str(msg_id) in msg_list and ctx.author.id != self.bot.user.id:
+        if msg_id in msg_list and ctx.author.id != self.bot.user.id:
             async with self.config.redeem() as redeem:
                 await ctx.send(content=redeem[msg_id]['leech'])
