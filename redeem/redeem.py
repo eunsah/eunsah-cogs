@@ -61,7 +61,7 @@ class Redeem(commands.Cog):
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         await user.send(f'hi')
-        msg_id =  reaction.message.idf
+        msg_id =  reaction.message.id
         await user.send(f'hi2')
         msg_list = await self.config.redeem()
         await user.send(f'hi3')
