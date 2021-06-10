@@ -64,17 +64,12 @@ class Redeem(commands.Cog):
         msg_list = await self.config.redeem()
         msg_list = list(msg_list.keys())
         if reaction.emoji == self.lock_emoji and msg_id in msg_list and user.id != self.bot.user.id:
-            await user.send('waited')
             async with self.config.redeem() as redeem:
-                leech = redeem[msg_id]
-                await user.send(leech)
+                leech = redeem[msg_id]['leech']
                 if str(user.id) in leech:
-                    await user.send('waited0')
                     leech[str(user.id)] += 1
                 else:
-                    await user.send('waited1')
                     leech[str(user.id)] = 1
-                await user.send('leeched')
                 rc = redeem[msg_id]['codes'].pop()
                 ch = self.bot.get_channel(redeem[msg_id]['msg'][0])
                 msg = await ch.fetch_message(redeem[msg_id]['msg'][1])
