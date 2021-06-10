@@ -50,7 +50,7 @@ class Redeem(commands.Cog):
         await message.add_reaction(self.lock_emoji)
 
         async with self.config.redeem() as redeem:
-            redeem[message.id] = {
+            redeem[str(message.id)] = {
                 'msg' : [ctx.channel.id, message.id],
                 'content' : content,
                 'codes' : codes,
