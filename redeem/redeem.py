@@ -86,8 +86,8 @@ class Redeem(commands.Cog):
                 if remain != 0:
                     await msg.edit(content=f'{redeem[msg_id]["author"]}提供{redeem[msg_id]["title"]}序號 {redeem[msg_id]["count"]} 組\n目前剩餘 {remain} 組，反應{self.lock_emoji}來領取')
                 else:
+                    await msg.edit(content=f'{redeem[msg_id]["author"]}提供{redeem[msg_id]["title"]}序號 {redeem[msg_id]["count"]} 組\n已領取完畢')
                     await self._redeem_delete(msg_id)
-                    await msg.edit(content=f'{redeem[msg_id]["author"]}提供{redeem[msg_id]["title"]}序號 {redeem[msg_id]["count"]} 組\n目前已經領取完畢~ 下次請早')
 
 
 
