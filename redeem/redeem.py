@@ -57,7 +57,7 @@ class Redeem(commands.Cog):
         async with self.config.redeem() as redeem:
             redeem[str(message.id)] = {
                 'msg' : [ctx.channel.id, message.id],
-                'author' : ctx.author,
+                'author' : str(ctx.author),
                 'title' : title,
                 'count' : codes.__len__(),
                 'codes' : codes,
