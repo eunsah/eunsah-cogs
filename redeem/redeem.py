@@ -38,27 +38,25 @@ class Redeem(commands.Cog):
     @commands.bot_has_permissions(add_reactions=True, manage_messages=True)
     async def redeem(self, ctx: commands.Context, title: str, *code: str):
         '''
+            help message here
         '''
-        # await ctx.message.delete()
+        await ctx.message.delete()
 
-        await ctx.send(f'title = {title}')
-        await ctx.send(f'code = {code}')
+        content_0 = f'{ctx.author} 提供了{title}序號\n剩餘 '
+        content_1 = f' 組，反應{self.lock_emoji}來領取'
+        content = content_0 + "{}" + content_1
 
-        # content_0 = f'{ctx.author} 提供了{title}序號\n剩餘 '
-        # content_1 = f' 組，反應{self.lock_emoji}來領取'
-        # content = content_0 + "{}" + content_1
+        message = await ctx.send(content.format(codes.__len__()))
+        await message.add_reaction(self.lock_emoji)
 
-        # message = await ctx.send(content.format(codes.__len__()))
-        # await message.add_reaction(self.lock_emoji)
-
-        # async with self.config.redeem() as redeem:
-        #     redeem[message.id] = {
-        #         'msg' : [ctx.channel.id, message.id],
-        #         'content' : content,
-        #         'codes' : codes,
-        #         'time' : time(),
-        #         'leech' : defaultdict(int)
-        #     }
+        async with self.config.redeem() as redeem:
+            redeem[message.id] = {
+                'msg' : [ctx.channel.id, message.id],
+                'content' : content,
+                'codes' : codes,
+                'time' : time(),
+                'leech' : defaultdict(int)
+            }
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
