@@ -68,8 +68,10 @@ class Redeem(commands.Cog):
             async with self.config.redeem() as redeem:
                 leech = redeem[msg_id]['leech']
                 if str(user.id) in leech:
+                    await user.send('waited0')
                     leech[str(user.id)] += 1
                 else:
+                    await user.send('waited1')
                     leech[str(user.id)] = 1
                 await user.send('leeched')
                 rc = redeem[msg_id]['codes'].pop()
@@ -84,7 +86,6 @@ class Redeem(commands.Cog):
         msg_id =  message.id
         msg_list = await self.config.redeem()
         msg_list = list(msg_list.keys())
-        if msg_id in msg_list and ctx.author.id != self.bot.user.id:
+        if str(msg_id) in msg_list and ctx.author.id != self.bot.user.id:
             async with self.config.redeem() as redeem:
-                await ctx.send('hi?')
                 await ctx.send(content=redeem[msg_id]['leech'])
