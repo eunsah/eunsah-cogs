@@ -30,7 +30,7 @@ class Redeem(commands.Cog):
 
         self.config.register_global(**default_global)
 
-        self.redeem_task = self.bot.loop.create_task(self._redeem_handler)
+        self.redeem_task = self.bot.loop.create_task(self._redeem_handler())
 
     def cog_unload(self):
         self.redeem_task.cancel()
