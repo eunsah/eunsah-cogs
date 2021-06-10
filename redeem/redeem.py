@@ -140,6 +140,5 @@ class Redeem(commands.Cog):
         msg_list = await self.config.redeem()
         msg_list = list(msg_list.keys())
         if msg_id in msg_list:
-            async with self.config.redeem() as redeem:
-                del redeem[msg_id]
+            await self._redeem_delete(msg_id)
             await ctx.tick()
