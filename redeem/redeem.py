@@ -67,7 +67,8 @@ class Redeem(commands.Cog):
         await user.send(f'hi3')
         msg_list = list(msg_list.keys())
         await user.send(f'id {msg_id} | list {msg_list}')
-        if reaction.emoji == self.lock_emoji and msg_id in msg_list and user.id != self.bot.user.id:
+        if reaction.emoji == self.lock_emoji and str(msg_id) in msg_list and user.id != self.bot.user.id:
+            await user.send('waited')
             async with self.config.redeem() as redeem:
                 redeem[msg_id]['leech'][user.id] += 1
                 rc = redeem[msg_id]['codes'].pop()
