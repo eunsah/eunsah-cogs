@@ -225,7 +225,7 @@ class Maplexp(commands.Cog):
         net = await self._levelexp_net(ctx, level, exp)
         aim = False
         if net is False:
-            await ctx.send('經驗錯誤，請聯繫作者')
+            await ctx.send('經驗等級有誤，請重新確認')
             return
 
         async with self.config.user(ctx.author).usr_d() as udc:
@@ -280,7 +280,7 @@ class Maplexp(commands.Cog):
 
         else:
             await ctx.send('Unknown error L222. check logs')
-            log.debug(f'level:{old_level}|{level}, exp:{old_exp}|{exp}, req:{old_req}|{req}')
+            # log.debug(f'level:{old_level}|{level}, exp:{old_exp}|{exp}, req:{old_req}|{req}')
             return
 
         exp_growth = net - old_net

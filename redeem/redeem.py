@@ -66,7 +66,7 @@ class Redeem(commands.Cog):
             }
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
+    async def on_reaction_add(self, reaction: discord.Reaction, user: discord.User):
         msg_id =  str(reaction.message.id)
         msg_list = await self.config.redeem()
         msg_list = list(msg_list.keys())
