@@ -225,7 +225,6 @@ class Maplexp(commands.Cog):
         net = await self._levelexp_net(ctx, level, exp)
         aim = False
         if net is False:
-            await ctx.send('經驗等級有誤，請重新確認')
             return
 
         async with self.config.user(ctx.author).usr_d() as udc:
