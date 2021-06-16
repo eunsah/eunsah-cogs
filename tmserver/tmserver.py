@@ -395,7 +395,7 @@ class Tmserver(commands.Cog):
             各伺服器列表
             可以使用 [p]tmserver <伺服器> 或是 [p]tms <伺服器>
         '''
-        if ctx.channel.id in ['477755023787556866', '842742981371232277']: return
+        if str(ctx.channel.id) in ['477755023787556866', '842742981371232277']: return
         pass
 
     @commands_tmserver.command(name='Public', aliases=['public', 'pu'])
