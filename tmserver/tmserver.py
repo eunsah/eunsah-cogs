@@ -393,7 +393,7 @@ class Tmserver(commands.Cog):
         return str(ctx.channel.id) not in ['477755023787556866', '842742981371232277']
 
     @commands.group(name='tmserver', aliases=['tms'])
-    @checks.add_check(forbid_channel)
+    @commands.check(forbid_channel)
     async def commands_tmserver(self, ctx):
         '''
             各伺服器列表
