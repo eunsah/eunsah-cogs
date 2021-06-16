@@ -186,7 +186,6 @@ class Maplexp(commands.Cog):
             await self._remove_after_seconds(ctx.message, 3)
             await self._remove_after_seconds(msg, 20)
 
-
         return have_perm
 
     async def _user_check(self, ctx, user) -> discord.User:
