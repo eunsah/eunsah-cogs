@@ -580,7 +580,7 @@ class Maplexp(commands.Cog):
         await ctx.tick()
         await self._remove_after_seconds(ctx.message, MESSAGE_REMOVE_DELAY)
 
-    @maple_set.command(name='levelexp', hidden=False)
+    @maple_set.command(name='levelexp', hidden=True)
     async def maple_set_setlevelexp(
         self, ctx: commands.Context,
         level: str, exp: str,
