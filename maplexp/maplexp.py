@@ -11,7 +11,7 @@ from redbot.core.utils.menus import start_adding_reactions
 from redbot.core.utils.predicates import ReactionPredicate
 
 # log = logging.getLogger('red.eunsahcogs.maplexp')
-MAX_LEVEL = 275
+MAX_LEVEL = 300
 MESSAGE_REMOVE_DELAY = 30
 folder = 'leveling'
 level_json = 'exp_' + str(MAX_LEVEL) + '.json'
@@ -887,3 +887,9 @@ class Maplexp(commands.Cog):
 
 
 # end of file
+'''
+
+
+
+
+'''
