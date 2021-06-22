@@ -374,7 +374,9 @@ class Tmserver(commands.Cog):
         e.add_field(name='\a',      value=f'''**CH.11**：{content['CH.11']}\n**CH.12**：{content['CH.12']}\n**CH.13**：{content['CH.13']}\n**CH.14**：{content['CH.14']}\n**CH.15**：{content['CH.15']}\n**CH.16**：{content['CH.16']}\n**CH.17**：{content['CH.17']}\n**CH.18**：{content['CH.18']}\n**CH.19**：{content['CH.19']}\n**CH.20**：{content['CH.20']}\n''', inline=True)
         e.add_field(name='\a',      value=f'''**CH.21**：{content['CH.21']}\n**CH.22**：{content['CH.22']}\n**CH.23**：{content['CH.23']}\n**CH.24**：{content['CH.24']}\n**CH.25**：{content['CH.25']}\n**CH.26**：{content['CH.26']}\n**CH.27**：{content['CH.27']}\n**CH.28**：{content['CH.28']}\n**CH.29**：{content['CH.29']}\n**CH.30**：{content['CH.30']}\n''', inline=True)
         try:
-            e.add_field(name='\a',      value=f'''**CH.31**：{content['CH.31']}\n**CH.32**：{content['CH.32']}\n**CH.33**：{content['CH.33']}\n**CH.34**：{content['CH.34']}\n**CH.35**：{content['CH.35']}\n**CH.36**：{content['CH.36']}\n**CH.37**：{content['CH.37']}\n**CH.38**：{content['CH.38']}\n**CH.39**：{content['CH.39']}\n**CH.40**：{content['CH.40']}\n''', inline=True)
+            e.add_field(name='\a',      value=f'''**CH.31**：{content['CH.31']}\n**CH.32**：{content['CH.32']}\n**CH.33**：{content['CH.33']}\n**CH.34**：{content['CH.34']}\n''', inline=True)
+            e.add_field(name='\a',      value=f'''**CH.35**：{content['CH.35']}\n**CH.36**：{content['CH.36']}\n**CH.37**：{content['CH.37']}\n**CH.38**：{content['CH.38']}\n''', inline=True)
+            e.add_field(name='\a',      value=f'''**CH.39**：{content['CH.39']}\n**CH.40**：{content['CH.40']}\n''', inline=True)
         except KeyError:
             pass
 
